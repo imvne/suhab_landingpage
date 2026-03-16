@@ -815,184 +815,6 @@ function TwoPaths() {
       );
 }
 
-// ── Pricing ─────────────────────────────────────────────────────────────
-function Pricing() {
-      const isMobile = useMediaQuery("(max-width: 768px)");
-      const isTablet = useMediaQuery("(max-width: 1024px)");
-
-      return (
-            <StyledPricingSection
-                  id="pricing"
-                  $isMobile={isMobile}
-                  $isTablet={isTablet}
-            >
-                  <StyledPricingInner>
-                        <StyledPricingHeader $isMobile={isMobile}>
-                              <StyledFeaturesTag>Tarifs</StyledFeaturesTag>
-                              <StyledFeaturesH2 $isMobile={isMobile}>
-                                    Simple, transparent,
-                                    <br />
-                                    sans publicité.
-                              </StyledFeaturesH2>
-                        </StyledPricingHeader>
-
-                        <StyledPricingGrid
-                              $isMobile={isMobile}
-                              $isTablet={isTablet}
-                        >
-                              <StyledPricingTier
-                                    $dark={false}
-                                    $isMobile={isMobile}
-                                    $order={isMobile ? 2 : undefined}
-                              >
-                                    <StyledPricingLabel $dark={false}>
-                                          Essai gratuit
-                                    </StyledPricingLabel>
-                                    <StyledPricingPrice
-                                          $dark={false}
-                                          $isMobile={isMobile}
-                                    >
-                                          0 €
-                                    </StyledPricingPrice>
-                                    <StyledPricingSub $dark={false}>
-                                          Pendant 7 jours
-                                    </StyledPricingSub>
-
-                                    <StyledPricingUl>
-                                          {[
-                                                "Accès complet à toutes les fonctionnalités",
-                                                "Aucune carte requise",
-                                                "Annulable à tout moment",
-                                          ].map((f) => (
-                                                <StyledPricingLi
-                                                      key={f}
-                                                      $dark={false}
-                                                      $isMobile={isMobile}
-                                                >
-                                                      <StyledPricingCheck
-                                                            $dark={false}
-                                                      >
-                                                            ✓
-                                                      </StyledPricingCheck>
-                                                      {f}
-                                                </StyledPricingLi>
-                                          ))}
-                                    </StyledPricingUl>
-
-                                    <StyledPricingGhostBtn>
-                                          Commencer gratuitement
-                                    </StyledPricingGhostBtn>
-                              </StyledPricingTier>
-
-                              <StyledPricingTier
-                                    $dark={true}
-                                    $isMobile={isMobile}
-                                    $order={isMobile ? 1 : undefined}
-                              >
-                                    <StyledRamadanBadge>
-                                          🌙 -40% Ramadan
-                                    </StyledRamadanBadge>
-
-                                    <StyledPricingLabel $dark={true}>
-                                          Annuel · Le plus populaire
-                                    </StyledPricingLabel>
-
-                                    <StyledPricingPrice
-                                          $dark={true}
-                                          $isMobile={isMobile}
-                                    >
-                                          X,XX €
-                                    </StyledPricingPrice>
-                                    <StyledPricingSub $dark={true}>
-                                          / mois, facturé annuellement
-                                    </StyledPricingSub>
-                                    <StyledPricingNote $isMobile={isMobile}>
-                                          -40% si tu t'abonnes avant le 5ᵉ jour
-                                          du Ramadan
-                                    </StyledPricingNote>
-
-                                    <StyledPricingUl>
-                                          {[
-                                                "Accès complet",
-                                                "Challenge Ramadan 30j",
-                                                "Écoute audio",
-                                                "Habitudes personnalisées",
-                                                "Lecture hybride papier + app",
-                                          ].map((f) => (
-                                                <StyledPricingLi
-                                                      key={f}
-                                                      $dark={true}
-                                                      $isMobile={isMobile}
-                                                >
-                                                      <StyledPricingCheck
-                                                            $dark={true}
-                                                      >
-                                                            ✓
-                                                      </StyledPricingCheck>
-                                                      {f}
-                                                </StyledPricingLi>
-                                          ))}
-                                    </StyledPricingUl>
-
-                                    <CTAButton
-                                          style={{
-                                                width: "100%",
-                                                display: "block",
-                                          }}
-                                    >
-                                          Choisir l'annuel
-                                    </CTAButton>
-                              </StyledPricingTier>
-
-                              <StyledPricingTier
-                                    $dark={false}
-                                    $isMobile={isMobile}
-                                    $order={isMobile ? 3 : undefined}
-                              >
-                                    <StyledPricingLabel $dark={false}>
-                                          Mensuel
-                                    </StyledPricingLabel>
-                                    <StyledPricingPrice
-                                          $dark={false}
-                                          $isMobile={isMobile}
-                                    >
-                                          X,XX €
-                                    </StyledPricingPrice>
-                                    <StyledPricingSub $dark={false}>
-                                          Par mois
-                                    </StyledPricingSub>
-
-                                    <StyledPricingUl>
-                                          {[
-                                                "Accès complet",
-                                                "Sans engagement",
-                                                "Tarif plein (pas de promo Ramadan)",
-                                          ].map((f) => (
-                                                <StyledPricingLi
-                                                      key={f}
-                                                      $dark={false}
-                                                      $isMobile={isMobile}
-                                                >
-                                                      <StyledPricingCheck
-                                                            $dark={false}
-                                                      >
-                                                            ✓
-                                                      </StyledPricingCheck>
-                                                      {f}
-                                                </StyledPricingLi>
-                                          ))}
-                                    </StyledPricingUl>
-
-                                    <StyledPricingGhostBtn>
-                                          Choisir le mensuel
-                                    </StyledPricingGhostBtn>
-                              </StyledPricingTier>
-                        </StyledPricingGrid>
-                  </StyledPricingInner>
-            </StyledPricingSection>
-      );
-}
-
 // ── Download CTA (avant footer) ───────────────────────────────────────────
 function DownloadCTA() {
       const isMobile = useMediaQuery("(max-width: 768px)");
@@ -1386,78 +1208,6 @@ const StyledNavLogo = styled.img<{ $isMobile: boolean }>`
       height: ${(p) => (p.$isMobile ? 28 : 34)}px;
 `;
 
-const StyledHamburgerBtn = styled.button`
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      padding: 8px;
-`;
-
-const StyledHamburgerLine = styled.div<{
-      $open: boolean;
-      $i: number;
-}>`
-      width: 20px;
-      height: 2px;
-      background-color: ${C.text};
-      border-radius: 1px;
-      transition: all 0.2s ease;
-      opacity: 0.7;
-      transform: ${(p) =>
-            p.$open
-                  ? p.$i === 1
-                        ? "rotate(45deg) translateY(6px)"
-                        : p.$i === 2
-                          ? "opacity(0)"
-                          : "rotate(-45deg) translateY(-6px)"
-                  : "none"};
-`;
-
-const StyledMobileMenuOverlay = styled.div`
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(238, 235, 230, 0.96);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 32px;
-      z-index: 99;
-`;
-
-const StyledMobileNavLink = styled.a`
-      font-family: "Epilogue", sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      color: ${C.text};
-      text-decoration: none;
-      opacity: 0.8;
-`;
-
-const StyledDesktopNav = styled.div`
-      display: flex;
-      gap: 40px;
-      align-items: center;
-`;
-
-const StyledDesktopNavLink = styled.a`
-      font-family: "Roboto Mono", monospace;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: ${C.text};
-      text-decoration: none;
-      opacity: 0.55;
-`;
-
 const StyledHeroWrapper = styled.div`
       width: 100%;
       background-color: ${C.beigeMid};
@@ -1564,17 +1314,6 @@ const StyledHeroCTAs = styled.div<{ $isMobile: boolean }>`
       justify-content: ${(p) => (p.$isMobile ? "center" : "flex-start")};
 `;
 
-const StyledHeroDisclaimer = styled.p<{ $isMobile: boolean }>`
-      margin-top: 18px;
-      font-family: "Roboto Mono", monospace;
-      font-size: 10px;
-      color: ${C.text};
-      opacity: 0.38;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      text-align: ${(p) => (p.$isMobile ? "center" : "left")};
-`;
-
 const StyledHeroVisual = styled.div<{ $isMobile: boolean }>`
       flex: 1;
       display: flex;
@@ -1672,26 +1411,6 @@ const StyledQuoteSection = styled.section<{ $isMobile: boolean }>`
       text-align: ${(p) => (p.$isMobile ? "left" : "center")};
       position: relative;
       overflow: hidden;
-`;
-
-const StyledQuoteAsterixeBig = styled.img`
-      position: absolute;
-      left: 80px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 44px;
-      opacity: 0.1;
-      filter: invert(1);
-`;
-
-const StyledQuoteAsterixeBigR = styled.img`
-      position: absolute;
-      right: 80px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 44px;
-      opacity: 0.1;
-      filter: invert(1);
 `;
 
 const StyledQuoteInner = styled.div<{ $isMobile?: boolean }>`
@@ -1880,11 +1599,6 @@ const StyledFeaturesSection = styled.section<{
                     : "108px 56px"};
       max-width: 1280px;
       margin: 0 auto;
-`;
-
-const StyledFeaturesHeader = styled.div<{ $isMobile: boolean }>`
-      margin-bottom: ${(p) => (p.$isMobile ? 40 : 56)}px;
-      text-align: ${(p) => (p.$isMobile ? "center" : "left")};
 `;
 
 const StyledFeaturesTag = styled.span`
@@ -2206,10 +1920,6 @@ const StyledPathH3 = styled.h3<{ $dark: boolean; $isMobile: boolean }>`
       margin: 0;
 `;
 
-const StyledPathSpan = styled.span`
-      opacity: 0.38;
-`;
-
 const StyledPathP = styled.p<{ $dark: boolean; $isMobile: boolean }>`
       font-family: "Epilogue", sans-serif;
       font-size: ${(p) => (p.$isMobile ? 14 : 15)}px;
@@ -2269,150 +1979,6 @@ const StyledPathScreenshot = styled.img<{
                         ? "rgba(238, 235, 230, 0.25)"
                         : "rgba(59, 35, 10, 0.2)"};
       object-fit: contain;
-`;
-
-const StyledPricingSection = styled.section<{
-      $isMobile: boolean;
-      $isTablet: boolean;
-}>`
-      padding: ${(p) =>
-            p.$isMobile
-                  ? "80px 24px"
-                  : p.$isTablet
-                    ? "96px 40px"
-                    : "108px 56px"};
-      background-color: ${C.beigeMid};
-`;
-
-const StyledPricingInner = styled.div`
-      max-width: 1280px;
-      margin: 0 auto;
-`;
-
-const StyledPricingHeader = styled.div<{ $isMobile: boolean }>`
-      text-align: center;
-      margin-bottom: ${(p) => (p.$isMobile ? 48 : 64)}px;
-`;
-
-const StyledPricingGrid = styled.div<{
-      $isMobile: boolean;
-      $isTablet: boolean;
-}>`
-      display: grid;
-      grid-template-columns: ${(p) =>
-            p.$isMobile
-                  ? "1fr"
-                  : p.$isTablet
-                    ? "1fr 1.2fr 1fr"
-                    : "1fr 1.08fr 1fr"};
-      gap: 18px;
-      align-items: start;
-`;
-
-const StyledPricingTier = styled.div<{
-      $dark: boolean;
-      $isMobile: boolean;
-      $order?: number;
-}>`
-      background-color: ${(p) => (p.$dark ? C.text : C.beige)};
-      border-radius: 20px;
-      padding: ${(p) => (p.$isMobile ? "28px 24px" : "36px 32px")};
-      ${(p) => (p.$order === 1 ? "position: relative; overflow: hidden;" : "")}
-      ${(p) => (p.$order !== undefined ? `order: ${p.$order};` : "")}
-`;
-
-const StyledPricingLabel = styled.div<{ $dark: boolean }>`
-      font-family: "Roboto Mono", monospace;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.13em;
-      color: ${(p) => (p.$dark ? C.bg : C.text)};
-      opacity: ${(p) => (p.$dark ? 0.48 : 0.42)};
-      margin-bottom: 24px;
-`;
-
-const StyledPricingPrice = styled.div<{ $dark: boolean; $isMobile: boolean }>`
-      font-family: "Epilogue", sans-serif;
-      font-size: ${(p) => (p.$isMobile ? 38 : 46)}px;
-      font-weight: 900;
-      color: ${(p) => (p.$dark ? C.bg : C.text)};
-      letter-spacing: -0.025em;
-      line-height: 1;
-      margin-bottom: 6px;
-`;
-
-const StyledPricingSub = styled.div<{ $dark: boolean }>`
-      font-family: "Roboto Mono", monospace;
-      font-size: 11px;
-      color: ${(p) => (p.$dark ? C.bg : C.text)};
-      opacity: ${(p) => (p.$dark ? 0.38 : 0.4)};
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      margin-bottom: 28px;
-`;
-
-const StyledPricingNote = styled.div<{ $isMobile: boolean }>`
-      font-family: "Epilogue", sans-serif;
-      font-size: ${(p) => (p.$isMobile ? 12 : 13)}px;
-      color: ${C.accent};
-      margin-bottom: 28px;
-      font-weight: 500;
-`;
-
-const StyledPricingUl = styled.ul`
-      list-style: none;
-      padding: 0;
-      margin: 0 0 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-`;
-
-const StyledPricingLi = styled.li<{ $dark: boolean; $isMobile: boolean }>`
-      font-family: "Epilogue", sans-serif;
-      font-size: ${(p) => (p.$isMobile ? 13 : 14)}px;
-      color: ${(p) => (p.$dark ? C.bg : C.text)};
-      opacity: ${(p) => (p.$dark ? 0.78 : 0.68)};
-      display: flex;
-      gap: 9px;
-      align-items: flex-start;
-      line-height: 1.45;
-`;
-
-const StyledPricingCheck = styled.span<{ $dark: boolean }>`
-      color: ${(p) => (p.$dark ? C.accent : C.cta)};
-      flex-shrink: 0;
-      line-height: 1.6;
-`;
-
-const StyledPricingGhostBtn = styled.button`
-      width: 100%;
-      padding: 13px;
-      border: 1.5px solid rgba(59, 35, 10, 0.3);
-      border-radius: 10px;
-      background-color: transparent;
-      font-family: "Roboto Mono", monospace;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: ${C.text};
-      cursor: pointer;
-      opacity: 0.72;
-`;
-
-const StyledRamadanBadge = styled.div`
-      position: absolute;
-      top: 18px;
-      right: 18px;
-      background-color: ${C.accent};
-      border-radius: 100px;
-      padding: 4px 10px;
-      font-family: "Roboto Mono", monospace;
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #fff;
-      font-weight: 700;
 `;
 
 const StyledDownloadCTA = styled.section<{ $isMobile: boolean }>`
