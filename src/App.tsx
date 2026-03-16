@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
@@ -197,6 +197,7 @@ function PhoneMockup({ dark = false }: { dark?: boolean }) {
 function Navbar() {
       const [scrolled, setScrolled] = useState(false);
       const isMobile = useMediaQuery("(max-width: 768px)");
+      const location = useLocation();
 
       useEffect(() => {
             const handler = () => setScrolled(window.scrollY > 40);
@@ -204,13 +205,24 @@ function Navbar() {
             return () => window.removeEventListener("scroll", handler);
       }, []);
 
+      const handleLogoClick = () => {
+            if (location.pathname === "/") {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+      };
+
       return (
             <StyledNav $scrolled={scrolled} $isMobile={isMobile}>
-                  <Link to="/" aria-label="Retour à l'accueil">
+                  <Link
+                        to="/"
+                        aria-label="Retour à l'accueil"
+                        onClick={handleLogoClick}
+                  >
                         <StyledNavLogo
                               src="/images/logosuhab.png"
                               alt="Suhab"
                               $isMobile={isMobile}
+                              $scrolled={scrolled}
                         />
                   </Link>
             </StyledNav>
@@ -238,30 +250,10 @@ function Hero() {
                                     <StyledHeroBadgeImg
                                           src="/images/asterixe.png"
                                           alt=""
+                                          $isMobile={isMobile}
                                     />
-                                    <StyledHeroBadgeText>
-                                          Disponible sur{" "}
-                                          {deviceStore === "ios" ? (
-                                                <StyledStoreLink
-                                                      href={APP_STORE_LINK}
-                                                      target="_blank"
-                                                      rel="noopener noreferrer"
-                                                      aria-label="Télécharger sur l'App Store"
-                                                >
-                                                      App Store
-                                                </StyledStoreLink>
-                                          ) : deviceStore === "android" ? (
-                                                <StyledStoreLink
-                                                      href={PLAY_STORE_LINK}
-                                                      target="_blank"
-                                                      rel="noopener noreferrer"
-                                                      aria-label="Télécharger sur le Play Store"
-                                                >
-                                                      Play Store
-                                                </StyledStoreLink>
-                                          ) : (
-                                                <>App Store & Play Store</>
-                                          )}
+                                    <StyledHeroBadgeText $isMobile={isMobile}>
+                                          Disponible sur App Store & Play Store
                                     </StyledHeroBadgeText>
                               </StyledHeroBadge>
 
@@ -276,7 +268,22 @@ function Hero() {
                                     Fais du Coran un compagnon de vie
                               </StyledHeroSubtitle>
 
-                              <StyledHeroCTAs $isMobile={isMobile}>
+                              {isMobile && (
+                                    <StyledHeroVisual $isMobile={true}>
+                                          <StyledHeroPhoneWrap $isMobile={true}>
+                                                <StyledHeroScreenshot
+                                                      src="/images/IMG_7756.PNG"
+                                                      alt="Aperçu de l'app Suhab"
+                                                      $isMobile={true}
+                                                />
+                                          </StyledHeroPhoneWrap>
+                                    </StyledHeroVisual>
+                              )}
+
+                              <StyledHeroCTAs
+                                    $isMobile={isMobile}
+                                    $hasVisualAbove={isMobile}
+                              >
                                     <CTAButton
                                           href={
                                                 storeLink && storeLink !== "#"
@@ -316,35 +323,56 @@ function Hero() {
                               </StyledHeroCTAs>
                         </StyledHeroLeft>
 
-                        <StyledHeroVisual $isMobile={isMobile}>
-                              <StyledHeroGlowBlob2
-                                    $isMobile={isMobile}
-                                    aria-hidden="true"
-                              />
-
-                              <StyledHeroMascotWrap $isMobile={isMobile}>
-                                    <StyledHeroGlowBlob
+                        {!isMobile && (
+                              <StyledHeroVisual $isMobile={false}>
+                                    <StyledHeroGlowBlob2
                                           $isMobile={isMobile}
                                           aria-hidden="true"
                                     />
-                                    <StyledHeroMascot
-                                          src="/images/lantern_thumb.png"
-                                          alt="Mascotte Suhab — lanterne avec pouces en l'air"
-                                          $isMobile={isMobile}
-                                    />
-                              </StyledHeroMascotWrap>
 
-                              {!isMobile && (
-                                    <StyledHeroPhoneWrap>
-                                          <StyledHeroScreenshot
-                                                src="/images/IMG_7756.PNG"
-                                                alt="Aperçu de l'app Suhab"
-                                          />
-                                    </StyledHeroPhoneWrap>
-                              )}
-                        </StyledHeroVisual>
+                                    <>
+                                          <StyledHeroMascotWrap
+                                                $isMobile={false}
+                                          >
+                                                <StyledHeroGlowBlob
+                                                      $isMobile={false}
+                                                      aria-hidden="true"
+                                                />
+                                                <StyledHeroMascot
+                                                      src="/images/lantern_thumb.png"
+                                                      alt="Mascotte Suhab — lanterne avec pouces en l'air"
+                                                      $isMobile={false}
+                                                />
+                                          </StyledHeroMascotWrap>
+                                          <StyledHeroPhoneWrap
+                                                $isMobile={false}
+                                          >
+                                                <StyledHeroScreenshot
+                                                      src="/images/IMG_7756.PNG"
+                                                      alt="Aperçu de l'app Suhab"
+                                                      $isMobile={false}
+                                                />
+                                          </StyledHeroPhoneWrap>
+                                    </>
+                              </StyledHeroVisual>
+                        )}
                   </StyledHeroSection>
             </StyledHeroWrapper>
+      );
+}
+
+// ── Lanterne entre hero et quote (mobile uniquement) ─────────────────────
+function HeroLanternMobile() {
+      const isMobile = useMediaQuery("(max-width: 768px)");
+      if (!isMobile) return null;
+      return (
+            <StyledHeroLanternMobile>
+                  <img
+                        src="/images/lantern_thumb.png"
+                        alt=""
+                        aria-hidden="true"
+                  />
+            </StyledHeroLanternMobile>
       );
 }
 
@@ -926,11 +954,11 @@ function Footer() {
                                                 links: [
                                                       {
                                                             label: "Politique de confidentialité",
-                                                            to: "/politique-confidentialite",
+                                                            to: "/privacy-policy",
                                                       },
                                                       {
                                                             label: "CGU",
-                                                            to: "/cgu",
+                                                            to: "/terms-of-use",
                                                       },
                                                       {
                                                             label: "Contact",
@@ -973,10 +1001,20 @@ function Footer() {
       );
 }
 
+// ── Scroll to top on route change ───────────────────────────────────────
+function ScrollToTop() {
+      const { pathname } = useLocation();
+      useEffect(() => {
+            window.scrollTo(0, 0);
+      }, [pathname]);
+      return null;
+}
+
 // ── App ─────────────────────────────────────────────────────────────────
 export default function App() {
       return (
             <StyledAppRoot>
+                  <ScrollToTop />
                   <Grain />
                   <Navbar />
                   <main>
@@ -986,6 +1024,7 @@ export default function App() {
                                     element={
                                           <>
                                                 <Hero />
+                                                <HeroLanternMobile />
                                                 <QuoteBanner />
                                                 <ReadingInterface />
                                                 <StreakSection />
@@ -995,10 +1034,10 @@ export default function App() {
                                     }
                               />
                               <Route
-                                    path="/politique-confidentialite"
+                                    path="/privacy-policy"
                                     element={<PolitiqueConfidentialite />}
                               />
-                              <Route path="/cgu" element={<CGU />} />
+                              <Route path="/terms-of-use" element={<CGU />} />
                               <Route path="/contact" element={<Contact />} />
                         </Routes>
                   </main>
@@ -1191,7 +1230,12 @@ const StyledNav = styled.nav<{ $scrolled: boolean; $isMobile: boolean }>`
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: ${(p) => (p.$isMobile ? "14px 24px" : "18px 56px")};
+      padding: ${(p) =>
+            p.$isMobile
+                  ? p.$scrolled
+                        ? "2px 24px"
+                        : "14px 24px"
+                  : "18px 56px"};
       background-color: ${C.beigeMid};
       backdrop-filter: ${(p) => (p.$scrolled ? "blur(18px)" : "none")};
       -webkit-backdrop-filter: ${(p) => (p.$scrolled ? "blur(18px)" : "none")};
@@ -1201,11 +1245,17 @@ const StyledNav = styled.nav<{ $scrolled: boolean; $isMobile: boolean }>`
                   : "1px solid transparent"};
       transition:
             background-color 0.35s,
-            border-color 0.35s;
+            border-color 0.35s,
+            padding 0.3s ease;
 `;
 
-const StyledNavLogo = styled.img<{ $isMobile: boolean }>`
-      height: ${(p) => (p.$isMobile ? 28 : 34)}px;
+const StyledNavLogo = styled.img<{
+      $isMobile: boolean;
+      $scrolled?: boolean;
+}>`
+      height: ${(p) =>
+            p.$isMobile && p.$scrolled ? 22 : p.$isMobile ? 28 : 34}px;
+      transition: height 0.3s ease;
 `;
 
 const StyledHeroWrapper = styled.div`
@@ -1213,17 +1263,29 @@ const StyledHeroWrapper = styled.div`
       background-color: ${C.beigeMid};
 `;
 
+const StyledHeroLanternMobile = styled.div`
+      display: flex;
+      justify-content: center;
+      padding: 70px 0;
+      background-color: ${C.beigeMid};
+
+      img {
+            width: 120px;
+            height: auto;
+      }
+`;
+
 const StyledHeroSection = styled.section<{
       $isMobile: boolean;
       $isTablet: boolean;
 }>`
-      min-height: 100vh;
+      min-height: ${(p) => (p.$isMobile ? "100svh" : "100vh")};
       display: flex;
       flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
       align-items: center;
       padding: ${(p) =>
             p.$isMobile
-                  ? "100px 24px 60px"
+                  ? "80px 24px 40px"
                   : p.$isTablet
                     ? "120px 40px 80px"
                     : "120px 56px 80px"};
@@ -1243,24 +1305,26 @@ const StyledHeroLeft = styled.div<{
 const StyledHeroBadge = styled.div<{ $isMobile: boolean }>`
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: ${(p) => (p.$isMobile ? 5 : 8)}px;
       border: 1px solid rgba(59, 35, 10, 0.325);
       border-radius: 100px;
-      padding: 6px 14px 6px 10px;
-      margin-bottom: ${(p) => (p.$isMobile ? 28 : 36)}px;
+      padding: ${(p) =>
+            p.$isMobile ? "4px 10px 4px 8px" : "6px 14px 6px 10px"};
+      margin-bottom: ${(p) => (p.$isMobile ? 20 : 36)}px;
 `;
 
-const StyledHeroBadgeImg = styled.img`
-      width: 15px;
-      height: 15px;
+const StyledHeroBadgeImg = styled.img<{ $isMobile?: boolean }>`
+      width: ${(p) => (p.$isMobile ? 12 : 15)}px;
+      height: ${(p) => (p.$isMobile ? 12 : 15)}px;
       opacity: 1;
 `;
 
-const StyledHeroBadgeText = styled.span`
+const StyledHeroBadgeText = styled.span<{ $isMobile?: boolean }>`
       font-family: "Roboto Mono", monospace;
-      font-size: 10px;
+      font-size: ${(p) => (p.$isMobile ? 9 : 10)}px;
+      font-weight: 400;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: ${(p) => (p.$isMobile ? "0.08em" : "0.12em")};
       color: ${C.text};
       opacity: 0.7;
       display: inline-flex;
@@ -1270,17 +1334,6 @@ const StyledHeroBadgeText = styled.span`
       line-height: 1;
 `;
 
-const StyledStoreLink = styled.a`
-      color: inherit;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      transition: opacity 0.2s ease;
-      &:hover {
-            opacity: 0.85;
-      }
-`;
-
 const StyledHeroH1 = styled.h1<{ $isMobile: boolean }>`
       font-family: "Epilogue", sans-serif;
       font-size: ${(p) => (p.$isMobile ? "36px" : "clamp(42px, 4.5vw, 68px)")};
@@ -1288,7 +1341,8 @@ const StyledHeroH1 = styled.h1<{ $isMobile: boolean }>`
       line-height: 1.05;
       color: ${C.text};
       letter-spacing: -0.025em;
-      margin-bottom: ${(p) => (p.$isMobile ? 20 : 26)}px;
+      margin-bottom: ${(p) => (p.$isMobile ? 16 : 26)}px;
+      margin-top: ${(p) => (p.$isMobile ? 20 : 0)}px;
 `;
 
 const StyledHeroRe = styled.span`
@@ -1302,26 +1356,32 @@ const StyledHeroSubtitle = styled.p<{ $isMobile: boolean }>`
       line-height: 1.65;
       color: ${C.text};
       opacity: 0.68;
-      margin: ${(p) => (p.$isMobile ? "0 auto 32px" : "0 0 44px")};
+      margin: ${(p) => (p.$isMobile ? "0 auto 24px" : "0 0 44px")};
       max-width: ${(p) => (p.$isMobile ? "100%" : "450px")};
 `;
 
-const StyledHeroCTAs = styled.div<{ $isMobile: boolean }>`
+const StyledHeroCTAs = styled.div<{
+      $isMobile: boolean;
+      $hasVisualAbove?: boolean;
+}>`
       display: flex;
       flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
       gap: 14px;
       align-items: center;
       justify-content: ${(p) => (p.$isMobile ? "center" : "flex-start")};
+      margin-top: ${(p) => (p.$hasVisualAbove ? 32 : 0)}px;
 `;
 
 const StyledHeroVisual = styled.div<{ $isMobile: boolean }>`
       flex: 1;
       display: flex;
-      align-items: flex-end;
+      flex-direction: row;
+      align-items: ${(p) => (p.$isMobile ? "center" : "flex-end")};
       justify-content: center;
       position: relative;
-      min-height: ${(p) => (p.$isMobile ? 300 : 500)}px;
+      min-height: ${(p) => (p.$isMobile ? 0 : 500)}px;
       width: 100%;
+      gap: ${(p) => (p.$isMobile ? 0 : 24)}px;
 `;
 
 const StyledHeroMascotWrap = styled.div<{ $isMobile: boolean }>`
@@ -1334,8 +1394,8 @@ const StyledHeroMascotWrap = styled.div<{ $isMobile: boolean }>`
 
 const StyledHeroGlowBlob = styled.div<{ $isMobile: boolean }>`
       position: absolute;
-      width: ${(p) => (p.$isMobile ? 200 : 260)}px;
-      height: ${(p) => (p.$isMobile ? 200 : 260)}px;
+      width: ${(p) => (p.$isMobile ? 120 : 260)}px;
+      height: ${(p) => (p.$isMobile ? 120 : 260)}px;
       border-radius: 50%;
       background: radial-gradient(
             circle,
@@ -1363,27 +1423,27 @@ const StyledHeroGlowBlob2 = styled.div<{ $isMobile: boolean }>`
 `;
 
 const StyledHeroMascot = styled.img<{ $isMobile: boolean }>`
-      width: ${(p) => (p.$isMobile ? 140 : 200)}px;
+      width: ${(p) => (p.$isMobile ? 90 : 200)}px;
       position: relative;
       z-index: 1;
       filter: drop-shadow(0 28px 52px rgba(59, 35, 10, 0.1));
 `;
 
-const StyledHeroPhoneWrap = styled.div`
-      position: absolute;
-      right: -10px;
-      bottom: 10px;
-      z-index: 2;
+const StyledHeroPhoneWrap = styled.div<{ $isMobile?: boolean }>`
+      position: relative;
+      z-index: 1;
 `;
 
-const StyledHeroScreenshot = styled.img`
-      width: 200px;
+const StyledHeroScreenshot = styled.img<{ $isMobile?: boolean }>`
+      width: ${(p) => (p.$isMobile ? 200 : 240)}px;
       height: auto;
-      max-height: 420px;
       display: block;
       object-fit: contain;
-      border-radius: 24px;
+      object-position: center;
+      border-radius: ${(p) => (p.$isMobile ? 24 : 24)}px;
       border: 2px solid rgba(59, 35, 10, 0.2);
+      margin-top: ${(p) => (p.$isMobile ? 20 : 0)}px;
+      margin-bottom: ${(p) => (p.$isMobile ? 20 : 0)}px;
       flex-shrink: 0;
 `;
 
@@ -1582,7 +1642,7 @@ const StyledReadingMockupImg = styled.img<{ $isMobile?: boolean }>`
       max-width: ${(p) => (p.$isMobile ? 120 : 200)}px;
       height: auto;
       display: block;
-      border-radius: 24px;
+      border-radius: ${(p) => (p.$isMobile ? 18 : 24)}px;
       border: 2px solid rgba(59, 35, 10, 0.2);
       object-fit: contain;
 `;
@@ -1972,7 +2032,7 @@ const StyledPathScreenshot = styled.img<{
       max-width: ${(p) => (p.$isMobile ? 120 : 200)}px;
       height: auto;
       display: block;
-      border-radius: 24px;
+      border-radius: ${(p) => (p.$isMobile ? 18 : 24)}px;
       border: 2px solid
             ${(p) =>
                   p.$dark
