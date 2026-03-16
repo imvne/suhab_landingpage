@@ -1,5 +1,15 @@
 import { useState, useEffect } from "react";
 import type { CSSProperties, ReactNode } from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import styled from "styled-components";
+
+import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
+import CGU from "./pages/CGU";
+import Contact from "./pages/Contact";
+
+// ── Store links (à remplacer quand disponibles) ─────────────────────────
+const APP_STORE_LINK = "#"; // TODO: https://apps.apple.com/app/...
+const PLAY_STORE_LINK = "#"; // TODO: https://play.google.com/store/apps/details?id=...
 
 // ── Design tokens ──────────────────────────────────────────────────────
 const C = {
@@ -11,6 +21,24 @@ const C = {
       beige: "#F5F0E8",
       beigeMid: "#E8E0D5",
 } as const;
+
+// ── Device detection (iOS / Android) ───────────────────────────────────
+function useDeviceStore(): "ios" | "android" | "other" {
+      const [store, setStore] = useState<"ios" | "android" | "other">("other");
+
+      useEffect(() => {
+            const ua = navigator.userAgent || navigator.vendor;
+            const isIOS =
+                  /iPad|iPhone|iPod/.test(ua) ||
+                  (navigator.platform === "MacIntel" &&
+                        navigator.maxTouchPoints > 1);
+            const isAndroid = /android/i.test(ua);
+
+            setStore(isIOS ? "ios" : isAndroid ? "android" : "other");
+      }, []);
+
+      return store;
+}
 
 // ── Responsive utilities ───────────────────────────────────────────────
 function useMediaQuery(query: string) {
@@ -32,19 +60,7 @@ function useMediaQuery(query: string) {
 // ── Grain overlay (SVG feTurbulence inline) ────────────────────────────
 function Grain() {
       return (
-            <svg
-                  aria-hidden="true"
-                  style={{
-                        position: "fixed",
-                        inset: 0,
-                        width: "100%",
-                        height: "100%",
-                        pointerEvents: "none",
-                        zIndex: 9999,
-                        opacity: 0.6,
-                        mixBlendMode: "overlay",
-                  }}
-            >
+            <StyledGrainSvg aria-hidden="true">
                   <filter id="grain-filter">
                         <feTurbulence
                               type="fractalNoise"
@@ -59,7 +75,7 @@ function Grain() {
                         height="100%"
                         filter="url(#grain-filter)"
                   />
-            </svg>
+            </StyledGrainSvg>
       );
 }
 
@@ -67,44 +83,48 @@ function Grain() {
 function CTAButton({
       children,
       onClick,
+      href,
       style,
 }: {
       children: ReactNode;
       onClick?: () => void;
+      href?: string;
       style?: CSSProperties;
 }) {
       const [pressed, setPressed] = useState(false);
+
+      if (href) {
+            return (
+                  <StyledCTAButtonLink
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        $pressed={pressed}
+                        onMouseDown={() => setPressed(true)}
+                        onMouseUp={() => setPressed(false)}
+                        onMouseLeave={() => setPressed(false)}
+                        onTouchStart={() => setPressed(true)}
+                        onTouchEnd={() => setPressed(false)}
+                        style={style}
+                  >
+                        {children}
+                  </StyledCTAButtonLink>
+            );
+      }
+
       return (
-            <button
+            <StyledCTAButton
+                  $pressed={pressed}
                   onClick={onClick}
                   onMouseDown={() => setPressed(true)}
                   onMouseUp={() => setPressed(false)}
                   onMouseLeave={() => setPressed(false)}
                   onTouchStart={() => setPressed(true)}
                   onTouchEnd={() => setPressed(false)}
-                  style={{
-                        backgroundColor: C.cta,
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: 10,
-                        padding: "14px 28px",
-                        fontFamily: "'Roboto Mono', monospace",
-                        fontSize: 13,
-                        fontWeight: 700,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.06em",
-                        cursor: "pointer",
-                        transform: pressed
-                              ? "translateY(3px)"
-                              : "translateY(0)",
-                        boxShadow: pressed ? "none" : `0 3px 0 ${C.ctaShadow}`,
-                        transition: "transform 80ms ease, box-shadow 80ms ease",
-                        whiteSpace: "nowrap",
-                        ...style,
-                  }}
+                  style={style}
             >
                   {children}
-            </button>
+            </StyledCTAButton>
       );
 }
 
@@ -120,179 +140,62 @@ function GhostButton({
       light?: boolean;
       style?: CSSProperties;
 }) {
-      const color = light ? C.bg : C.text;
       return (
-            <button
-                  onClick={onClick}
-                  style={{
-                        backgroundColor: "transparent",
-                        color,
-                        border: `1.5px solid ${color}`,
-                        borderRadius: 10,
-                        padding: "13px 28px",
-                        fontFamily: "'Roboto Mono', monospace",
-                        fontSize: 13,
-                        fontWeight: 500,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.06em",
-                        cursor: "pointer",
-                        opacity: 0.75,
-                        whiteSpace: "nowrap",
-                        transition: "opacity 0.18s ease",
-                        ...style,
-                  }}
-            >
+            <StyledGhostButton $light={light} onClick={onClick} style={style}>
                   {children}
-            </button>
+            </StyledGhostButton>
       );
 }
 
 // ── Phone mockup placeholder ───────────────────────────────────────────
 function PhoneMockup({ dark = false }: { dark?: boolean }) {
-      const bg = dark ? "#1E0E02" : "#F5F0E8";
       const bar = dark ? "rgba(238,235,230,0.07)" : "rgba(59,35,10,0.07)";
       const line = dark ? "rgba(238,235,230,0.11)" : "rgba(59,35,10,0.10)";
-      const borderCol = dark ? "rgba(238,235,230,0.16)" : C.text;
-      const shadow = dark
-            ? "4px 5px 0 rgba(238,235,230,0.09)"
-            : `4px 5px 0 ${C.text}`;
 
       return (
-            <div
-                  style={{
-                        width: 178,
-                        height: 356,
-                        borderRadius: 28,
-                        border: `2px solid ${borderCol}`,
-                        backgroundColor: bg,
-                        position: "relative",
-                        boxShadow: shadow,
-                        overflow: "hidden",
-                        flexShrink: 0,
-                  }}
-            >
-                  {/* Status bar */}
-                  <div
-                        style={{
-                              height: 40,
-                              backgroundColor: dark
-                                    ? "rgba(0,0,0,0.28)"
-                                    : C.beigeMid,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                        }}
-                  >
-                        <div
-                              style={{
-                                    width: 58,
-                                    height: 13,
-                                    borderRadius: 7,
-                                    backgroundColor: dark
-                                          ? "rgba(238,235,230,0.18)"
-                                          : "rgba(59,35,10,0.18)",
-                              }}
-                        />
-                  </div>
+            <StyledPhoneMockup $dark={dark}>
+                  <StyledPhoneStatusBar $dark={dark}>
+                        <StyledPhoneNotch $dark={dark} />
+                  </StyledPhoneStatusBar>
 
-                  {/* Fake UI skeleton */}
-                  <div style={{ padding: "14px 14px 0" }}>
-                        {/* Lantern placeholder */}
-                        <div
-                              style={{
-                                    height: 90,
-                                    borderRadius: 14,
-                                    backgroundColor: dark
-                                          ? "rgba(240,94,32,0.10)"
-                                          : "rgba(240,94,32,0.07)",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    marginBottom: 14,
-                              }}
-                        >
-                              <div
-                                    style={{
-                                          width: 46,
-                                          height: 46,
-                                          borderRadius: "50%",
-                                          backgroundColor: dark
-                                                ? "rgba(240,94,32,0.22)"
-                                                : "rgba(240,94,32,0.12)",
-                                    }}
-                              />
-                        </div>
+                  <StyledPhoneContent>
+                        <StyledPhoneLanternPlaceholder $dark={dark}>
+                              <StyledPhoneLanternCircle $dark={dark} />
+                        </StyledPhoneLanternPlaceholder>
 
-                        {/* Skeleton lines */}
                         {[82, 62, 48].map((w, i) => (
-                              <div
+                              <StyledPhoneSkeletonLine
                                     key={i}
-                                    style={{
-                                          height: 8,
-                                          borderRadius: 4,
-                                          width: `${w}%`,
-                                          backgroundColor: line,
-                                          marginBottom: 8,
-                                    }}
+                                    $w={w}
+                                    $line={line}
                               />
                         ))}
 
-                        {/* Skeleton cards */}
                         {[1, 2].map((i) => (
-                              <div
-                                    key={i}
-                                    style={{
-                                          height: 44,
-                                          borderRadius: 10,
-                                          backgroundColor: bar,
-                                          marginBottom: 8,
-                                    }}
-                              />
+                              <StyledPhoneSkeletonCard key={i} $bar={bar} />
                         ))}
 
-                        {/* Skeleton row */}
-                        <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+                        <StyledPhoneSkeletonRow>
                               {[55, 35].map((w, i) => (
-                                    <div
+                                    <StyledPhoneSkeletonBlock
                                           key={i}
-                                          style={{
-                                                height: 34,
-                                                borderRadius: 8,
-                                                width: `${w}%`,
-                                                backgroundColor: bar,
-                                          }}
+                                          $w={w}
+                                          $bar={bar}
                                     />
                               ))}
-                        </div>
-                  </div>
+                        </StyledPhoneSkeletonRow>
+                  </StyledPhoneContent>
 
-                  {/* Label */}
-                  <div
-                        style={{
-                              position: "absolute",
-                              bottom: 14,
-                              left: 0,
-                              right: 0,
-                              textAlign: "center",
-                              fontFamily: "'Roboto Mono', monospace",
-                              fontSize: 8,
-                              textTransform: "uppercase",
-                              letterSpacing: "0.14em",
-                              color: dark
-                                    ? "rgba(238,235,230,0.22)"
-                                    : "rgba(59,35,10,0.18)",
-                        }}
-                  >
+                  <StyledPhoneLabel $dark={dark}>
                         Aperçu à venir
-                  </div>
-            </div>
+                  </StyledPhoneLabel>
+            </StyledPhoneMockup>
       );
 }
 
 // ── Navbar ─────────────────────────────────────────────────────────────
 function Navbar() {
       const [scrolled, setScrolled] = useState(false);
-      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
       const isMobile = useMediaQuery("(max-width: 768px)");
 
       useEffect(() => {
@@ -301,176 +204,16 @@ function Navbar() {
             return () => window.removeEventListener("scroll", handler);
       }, []);
 
-      const navItems = [
-            { label: "Fonctionnalités", href: "#features" },
-            { label: "Parcours", href: "#paths" },
-            { label: "Tarifs", href: "#pricing" },
-      ];
-
       return (
-            <nav
-                  style={{
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        zIndex: 100,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: isMobile ? "14px 24px" : "18px 56px",
-                        backgroundColor: scrolled
-                              ? "rgba(238,235,230,0.86)"
-                              : "transparent",
-                        backdropFilter: scrolled ? "blur(18px)" : "none",
-                        WebkitBackdropFilter: scrolled ? "blur(18px)" : "none",
-                        borderBottom: scrolled
-                              ? "1px solid rgba(59,35,10,0.08)"
-                              : "1px solid transparent",
-                        transition:
-                              "background-color 0.35s, border-color 0.35s",
-                  }}
-            >
-                  <img
-                        src="/images/logosuhab.png"
-                        alt="Suhab"
-                        style={{ height: isMobile ? 28 : 34 }}
-                  />
-
-                  {isMobile ? (
-                        // Mobile hamburger menu
-                        <>
-                              <button
-                                    onClick={() =>
-                                          setMobileMenuOpen(!mobileMenuOpen)
-                                    }
-                                    style={{
-                                          background: "none",
-                                          border: "none",
-                                          cursor: "pointer",
-                                          display: "flex",
-                                          flexDirection: "column",
-                                          gap: 4,
-                                          padding: 8,
-                                    }}
-                              >
-                                    {[1, 2, 3].map((i) => (
-                                          <div
-                                                key={i}
-                                                style={{
-                                                      width: 20,
-                                                      height: 2,
-                                                      backgroundColor: C.text,
-                                                      borderRadius: 1,
-                                                      transition:
-                                                            "all 0.2s ease",
-                                                      opacity: 0.7,
-                                                      transform: mobileMenuOpen
-                                                            ? i === 1
-                                                                  ? "rotate(45deg) translateY(6px)"
-                                                                  : i === 2
-                                                                    ? "opacity(0)"
-                                                                    : "rotate(-45deg) translateY(-6px)"
-                                                            : "none",
-                                                }}
-                                          />
-                                    ))}
-                              </button>
-
-                              {/* Mobile menu overlay */}
-                              {mobileMenuOpen && (
-                                    <div
-                                          style={{
-                                                position: "fixed",
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
-                                                bottom: 0,
-                                                backgroundColor:
-                                                      "rgba(238,235,230,0.96)",
-                                                backdropFilter: "blur(20px)",
-                                                WebkitBackdropFilter:
-                                                      "blur(20px)",
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                gap: 32,
-                                                zIndex: 99,
-                                          }}
-                                    >
-                                          {navItems.map(({ label, href }) => (
-                                                <a
-                                                      key={label}
-                                                      href={href}
-                                                      onClick={() =>
-                                                            setMobileMenuOpen(
-                                                                  false,
-                                                            )
-                                                      }
-                                                      style={{
-                                                            fontFamily:
-                                                                  "'Epilogue', sans-serif",
-                                                            fontSize: 24,
-                                                            fontWeight: 700,
-                                                            color: C.text,
-                                                            textDecoration:
-                                                                  "none",
-                                                            opacity: 0.8,
-                                                      }}
-                                                >
-                                                      {label}
-                                                </a>
-                                          ))}
-                                          <CTAButton
-                                                onClick={() =>
-                                                      setMobileMenuOpen(false)
-                                                }
-                                                style={{ marginTop: 16 }}
-                                          >
-                                                Télécharger
-                                          </CTAButton>
-                                    </div>
-                              )}
-                        </>
-                  ) : (
-                        // Desktop menu
-                        <div
-                              style={{
-                                    display: "flex",
-                                    gap: 40,
-                                    alignItems: "center",
-                              }}
-                        >
-                              {navItems.map(({ label, href }) => (
-                                    <a
-                                          key={label}
-                                          href={href}
-                                          style={{
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 11,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.1em",
-                                                color: C.text,
-                                                textDecoration: "none",
-                                                opacity: 0.55,
-                                          }}
-                                    >
-                                          {label}
-                                    </a>
-                              ))}
-                              <CTAButton
-                                    style={{
-                                          padding: "10px 20px",
-                                          fontSize: 11,
-                                    }}
-                              >
-                                    Télécharger
-                              </CTAButton>
-                        </div>
-                  )}
-            </nav>
+            <StyledNav $scrolled={scrolled} $isMobile={isMobile}>
+                  <Link to="/" aria-label="Retour à l'accueil">
+                        <StyledNavLogo
+                              src="/images/logosuhab.png"
+                              alt="Suhab"
+                              $isMobile={isMobile}
+                        />
+                  </Link>
+            </StyledNav>
       );
 }
 
@@ -478,263 +221,130 @@ function Navbar() {
 function Hero() {
       const isMobile = useMediaQuery("(max-width: 768px)");
       const isTablet = useMediaQuery("(max-width: 1024px)");
+      const deviceStore = useDeviceStore();
+
+      const storeLink =
+            deviceStore === "ios"
+                  ? APP_STORE_LINK
+                  : deviceStore === "android"
+                    ? PLAY_STORE_LINK
+                    : null;
 
       return (
-            <section
-                  style={{
-                        minHeight: "100vh",
-                        display: "flex",
-                        flexDirection: isMobile ? "column" : "row",
-                        alignItems: "center",
-                        padding: isMobile
-                              ? "100px 24px 60px"
-                              : isTablet
-                                ? "120px 40px 80px"
-                                : "120px 56px 80px",
-                        maxWidth: 1280,
-                        margin: "0 auto",
-                        gap: isMobile ? 40 : isTablet ? 40 : 56,
-                  }}
-            >
-                  {/* Left: Text */}
-                  <div
-                        style={{
-                              flex: isMobile ? "none" : "0 0 52%",
-                              maxWidth: isMobile ? "100%" : 560,
-                              textAlign: isMobile ? "center" : "left",
-                        }}
-                  >
-                        {/* Badge */}
-                        <div
-                              style={{
-                                    display: "inline-flex",
-                                    alignItems: "center",
-                                    gap: 8,
-                                    border: "1px solid rgba(59,35,10,0.18)",
-                                    borderRadius: 100,
-                                    padding: "6px 14px 6px 10px",
-                                    marginBottom: isMobile ? 28 : 36,
-                              }}
-                        >
-                              <img
-                                    src="/images/asterixe.png"
-                                    alt=""
-                                    style={{
-                                          width: 15,
-                                          height: 15,
-                                          opacity: 0.6,
-                                    }}
+            <StyledHeroWrapper>
+                  <StyledHeroSection $isMobile={isMobile} $isTablet={isTablet}>
+                        <StyledHeroLeft $isMobile={isMobile}>
+                              <StyledHeroBadge $isMobile={isMobile}>
+                                    <StyledHeroBadgeImg
+                                          src="/images/asterixe.png"
+                                          alt=""
+                                    />
+                                    <StyledHeroBadgeText>
+                                          Disponible sur{" "}
+                                          {deviceStore === "ios" ? (
+                                                <StyledStoreLink
+                                                      href={APP_STORE_LINK}
+                                                      target="_blank"
+                                                      rel="noopener noreferrer"
+                                                      aria-label="Télécharger sur l'App Store"
+                                                >
+                                                      App Store
+                                                </StyledStoreLink>
+                                          ) : deviceStore === "android" ? (
+                                                <StyledStoreLink
+                                                      href={PLAY_STORE_LINK}
+                                                      target="_blank"
+                                                      rel="noopener noreferrer"
+                                                      aria-label="Télécharger sur le Play Store"
+                                                >
+                                                      Play Store
+                                                </StyledStoreLink>
+                                          ) : (
+                                                <>App Store & Play Store</>
+                                          )}
+                                    </StyledHeroBadgeText>
+                              </StyledHeroBadge>
+
+                              <StyledHeroH1 $isMobile={isMobile}>
+                                    <StyledHeroRe>(Re)</StyledHeroRe>
+                                    connecte-toi
+                                    <br />
+                                    au Coran
+                              </StyledHeroH1>
+
+                              <StyledHeroSubtitle $isMobile={isMobile}>
+                                    Fais du Coran un compagnon de vie
+                              </StyledHeroSubtitle>
+
+                              <StyledHeroCTAs $isMobile={isMobile}>
+                                    <CTAButton
+                                          href={
+                                                storeLink && storeLink !== "#"
+                                                      ? storeLink
+                                                      : undefined
+                                          }
+                                          style={{
+                                                width: isMobile
+                                                      ? "100%"
+                                                      : "auto",
+                                                maxWidth: isMobile
+                                                      ? 280
+                                                      : "none",
+                                          }}
+                                    >
+                                          Télécharger l'app
+                                    </CTAButton>
+                                    <GhostButton
+                                          onClick={() => {
+                                                document
+                                                      .getElementById("lecture")
+                                                      ?.scrollIntoView({
+                                                            behavior: "smooth",
+                                                      });
+                                          }}
+                                          style={{
+                                                width: isMobile
+                                                      ? "100%"
+                                                      : "auto",
+                                                maxWidth: isMobile
+                                                      ? 280
+                                                      : "none",
+                                          }}
+                                    >
+                                          Voir les fonctionnalités
+                                    </GhostButton>
+                              </StyledHeroCTAs>
+                        </StyledHeroLeft>
+
+                        <StyledHeroVisual $isMobile={isMobile}>
+                              <StyledHeroGlowBlob2
+                                    $isMobile={isMobile}
+                                    aria-hidden="true"
                               />
-                              <span
-                                    style={{
-                                          fontFamily:
-                                                "'Roboto Mono', monospace",
-                                          fontSize: 10,
-                                          textTransform: "uppercase",
-                                          letterSpacing: "0.12em",
-                                          color: C.text,
-                                          opacity: 0.55,
-                                    }}
-                              >
-                                    Disponible sur App Store
-                              </span>
-                        </div>
 
-                        {/* Headline */}
-                        <h1
-                              style={{
-                                    fontFamily: "'Epilogue', sans-serif",
-                                    fontSize: isMobile
-                                          ? "36px"
-                                          : "clamp(42px, 4.5vw, 68px)",
-                                    fontWeight: 900,
-                                    lineHeight: 1.05,
-                                    color: C.text,
-                                    letterSpacing: "-0.025em",
-                                    marginBottom: isMobile ? 20 : 26,
-                              }}
-                        >
-                              Reconnecte-toi
-                              <br />
-                              au Coran,{" "}
-                              <em
-                                    style={{
-                                          fontFamily:
-                                                "'Playfair Display', serif",
-                                          fontStyle: "italic",
-                                          fontWeight: 700,
-                                          color: C.accent,
-                                    }}
-                              >
-                                    à ton rythme.
-                              </em>
-                        </h1>
+                              <StyledHeroMascotWrap $isMobile={isMobile}>
+                                    <StyledHeroGlowBlob
+                                          $isMobile={isMobile}
+                                          aria-hidden="true"
+                                    />
+                                    <StyledHeroMascot
+                                          src="/images/lantern_thumb.png"
+                                          alt="Mascotte Suhab — lanterne avec pouces en l'air"
+                                          $isMobile={isMobile}
+                                    />
+                              </StyledHeroMascotWrap>
 
-                        {/* Subtitle */}
-                        <p
-                              style={{
-                                    fontFamily: "'Epilogue', sans-serif",
-                                    fontSize: isMobile ? 16 : 18,
-                                    lineHeight: 1.65,
-                                    color: C.text,
-                                    opacity: 0.68,
-                                    marginBottom: isMobile ? 32 : 44,
-                                    maxWidth: isMobile ? "100%" : 450,
-                                    margin: isMobile
-                                          ? "0 auto 32px"
-                                          : "0 0 44px",
-                              }}
-                        >
-                              Construis de petites habitudes régulières avec le
-                              Coran — sans pression, sans surcharge. Ta lanterne
-                              t'accompagne, pas à pas.
-                        </p>
-
-                        {/* CTAs */}
-                        <div
-                              style={{
-                                    display: "flex",
-                                    flexDirection: isMobile ? "column" : "row",
-                                    gap: 14,
-                                    alignItems: "center",
-                                    justifyContent: isMobile
-                                          ? "center"
-                                          : "flex-start",
-                              }}
-                        >
-                              <CTAButton
-                                    style={{
-                                          width: isMobile ? "100%" : "auto",
-                                          maxWidth: isMobile ? 280 : "none",
-                                    }}
-                              >
-                                    Essai gratuit · 7 jours
-                              </CTAButton>
-                              <GhostButton
-                                    style={{
-                                          width: isMobile ? "100%" : "auto",
-                                          maxWidth: isMobile ? 280 : "none",
-                                    }}
-                              >
-                                    Voir les fonctionnalités
-                              </GhostButton>
-                        </div>
-
-                        <p
-                              style={{
-                                    marginTop: 18,
-                                    fontFamily: "'Roboto Mono', monospace",
-                                    fontSize: 10,
-                                    color: C.text,
-                                    opacity: 0.38,
-                                    textTransform: "uppercase",
-                                    letterSpacing: "0.1em",
-                                    textAlign: isMobile ? "center" : "left",
-                              }}
-                        >
-                              Aucune carte requise · Annulable à tout moment
-                        </p>
-                  </div>
-
-                  {/* Right: Visual */}
-                  <div
-                        style={{
-                              flex: 1,
-                              display: "flex",
-                              alignItems: "flex-end",
-                              justifyContent: "center",
-                              position: "relative",
-                              minHeight: isMobile ? 300 : 500,
-                              width: "100%",
-                        }}
-                  >
-                        {/* Warm glow blob */}
-                        <div
-                              aria-hidden="true"
-                              style={{
-                                    position: "absolute",
-                                    width: isMobile ? 280 : 400,
-                                    height: isMobile ? 280 : 400,
-                                    borderRadius: "50%",
-                                    background:
-                                          "radial-gradient(circle, rgba(240,94,32,0.11) 0%, transparent 70%)",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                              }}
-                        />
-
-                        {/* Second softer blob */}
-                        <div
-                              aria-hidden="true"
-                              style={{
-                                    position: "absolute",
-                                    width: isMobile ? 200 : 280,
-                                    height: isMobile ? 200 : 280,
-                                    borderRadius: "50%",
-                                    background:
-                                          "radial-gradient(circle, rgba(200,160,100,0.09) 0%, transparent 70%)",
-                                    top: "30%",
-                                    left: "40%",
-                                    transform: "translate(-50%, -50%)",
-                              }}
-                        />
-
-                        {/* Mascot */}
-                        <img
-                              src="/images/lantern_thumb.png"
-                              alt="Mascotte Suhab — lanterne avec pouces en l'air"
-                              style={{
-                                    width: isMobile ? 200 : 300,
-                                    position: "relative",
-                                    zIndex: 1,
-                                    filter: "drop-shadow(0 28px 52px rgba(59,35,10,0.10))",
-                              }}
-                        />
-
-                        {/* Floating phone mockup */}
-                        {!isMobile && (
-                              <div
-                                    style={{
-                                          position: "absolute",
-                                          right: -10,
-                                          bottom: 10,
-                                          zIndex: 2,
-                                    }}
-                              >
-                                    <PhoneMockup />
-                              </div>
-                        )}
-
-                        {/* Floating asterixe decoration */}
-                        <img
-                              src="/images/asterixe.png"
-                              alt=""
-                              aria-hidden="true"
-                              style={{
-                                    position: "absolute",
-                                    top: isMobile ? 40 : 80,
-                                    right: isMobile ? 40 : 60,
-                                    width: isMobile ? 16 : 22,
-                                    opacity: 0.2,
-                                    zIndex: 0,
-                              }}
-                        />
-                        <img
-                              src="/images/asterixe.png"
-                              alt=""
-                              aria-hidden="true"
-                              style={{
-                                    position: "absolute",
-                                    top: isMobile ? 140 : 200,
-                                    left: isMobile ? 20 : 30,
-                                    width: isMobile ? 12 : 14,
-                                    opacity: 0.15,
-                                    zIndex: 0,
-                              }}
-                        />
-                  </div>
-            </section>
+                              {!isMobile && (
+                                    <StyledHeroPhoneWrap>
+                                          <StyledHeroScreenshot
+                                                src="/images/IMG_7756.PNG"
+                                                alt="Aperçu de l'app Suhab"
+                                          />
+                                    </StyledHeroPhoneWrap>
+                              )}
+                        </StyledHeroVisual>
+                  </StyledHeroSection>
+            </StyledHeroWrapper>
       );
 }
 
@@ -743,104 +353,102 @@ function QuoteBanner() {
       const isMobile = useMediaQuery("(max-width: 768px)");
 
       return (
-            <section
-                  style={{
-                        backgroundColor: C.text,
-                        padding: isMobile ? "64px 24px" : "88px 56px",
-                        textAlign: "center",
-                        position: "relative",
-                        overflow: "hidden",
-                  }}
+            <StyledQuoteSection $isMobile={isMobile}>
+                  <StyledQuoteInner $isMobile={isMobile}>
+                        <StyledQuoteBlockquote $isMobile={isMobile}>
+                              <StyledQuoteIntro>
+                                    Le prophète Muhammad ﷺ a dit :
+                                    <br />
+                                    [...] « Vous devez pratiquer comme acte ce
+                                    dont vous êtes capables car certes Allah ne
+                                    se lasse pas tant que vous ne vous lassez
+                                    pas et certes
+                                    <br />
+                              </StyledQuoteIntro>
+                              les actes les plus aimés par Allah sont ceux faits
+                              avec assiduité, même s'ils sont peu nombreux. »
+                        </StyledQuoteBlockquote>
+
+                        <StyledQuoteCite>
+                              Rapporté par Mouslim dans son Sahih n°782
+                        </StyledQuoteCite>
+                  </StyledQuoteInner>
+            </StyledQuoteSection>
+      );
+}
+
+// ── Interface de lecture ────────────────────────────────────────────────
+function ReadingInterface() {
+      const isMobile = useMediaQuery("(max-width: 768px)");
+      const isTablet = useMediaQuery("(max-width: 1024px)");
+
+      return (
+            <StyledReadingSection
+                  id="lecture"
+                  $isMobile={isMobile}
+                  $isTablet={isTablet}
             >
-                  {/* Large decorative asterisks */}
-                  {!isMobile && (
-                        <>
-                              <img
-                                    src="/images/asterixe.png"
-                                    alt=""
-                                    aria-hidden="true"
-                                    style={{
-                                          position: "absolute",
-                                          left: 80,
-                                          top: "50%",
-                                          transform: "translateY(-50%)",
-                                          width: 44,
-                                          opacity: 0.1,
-                                          filter: "invert(1)",
-                                    }}
+                  <StyledReadingLeft $isMobile={isMobile}>
+                        <StyledReadingHeader $isMobile={isMobile}>
+                              <StyledReadingTag>Interface</StyledReadingTag>
+                              <StyledReadingH2 $isMobile={isMobile}>
+                                    Une lecture sobre
+                                    <br />
+                                    et agréable.
+                              </StyledReadingH2>
+                              <StyledReadingP $isMobile={isMobile}>
+                                    L'interface de lecture du Coran est conçue
+                                    pour rester simple et apaisante. Deux modes
+                                    d'affichage, des langues au choix — tu lis
+                                    comme tu préfères.
+                              </StyledReadingP>
+                        </StyledReadingHeader>
+
+                        <StyledReadingFeatures $isMobile={isMobile}>
+                              <StyledReadingFeature $isMobile={isMobile}>
+                                    <StyledReadingFeatureTitle>
+                                          Modes d'affichage
+                                    </StyledReadingFeatureTitle>
+                                    <StyledReadingFeatureDesc>
+                                          Mode cartes ou mode défilement —
+                                          choisis celui qui te convient.
+                                    </StyledReadingFeatureDesc>
+                              </StyledReadingFeature>
+                              <StyledReadingFeature $isMobile={isMobile}>
+                                    <StyledReadingFeatureTitle>
+                                          Langues
+                                    </StyledReadingFeatureTitle>
+                                    <StyledReadingFeatureDesc>
+                                          Français, arabe ou phonétique —
+                                          affiche les traductions qui t'aident.
+                                    </StyledReadingFeatureDesc>
+                              </StyledReadingFeature>
+                        </StyledReadingFeatures>
+                  </StyledReadingLeft>
+
+                  <StyledReadingMockups $isMobile={isMobile}>
+                        <StyledReadingMockup $isMobile={isMobile}>
+                              <StyledReadingMockupLabel>
+                                    Mode cartes
+                              </StyledReadingMockupLabel>
+                              <StyledReadingMockupImg
+                                    src="/images/IMG_7758.PNG"
+                                    alt="Mode cartes — affichage par cartes"
+                                    $isMobile={isMobile}
                               />
-                              <img
-                                    src="/images/asterixe.png"
-                                    alt=""
-                                    aria-hidden="true"
-                                    style={{
-                                          position: "absolute",
-                                          right: 80,
-                                          top: "50%",
-                                          transform: "translateY(-50%)",
-                                          width: 44,
-                                          opacity: 0.1,
-                                          filter: "invert(1)",
-                                    }}
+                        </StyledReadingMockup>
+                        <StyledReadingMockup $isMobile={isMobile}>
+                              <StyledReadingMockupLabel>
+                                    Mode défilement
+                              </StyledReadingMockupLabel>
+                              <StyledReadingMockupImg
+                                    src="/images/IMG_7757.PNG"
+                                    alt="Mode défilement — affichage en défilement"
+                                    $isMobile={isMobile}
                               />
-                        </>
-                  )}
-
-                  <div
-                        style={{
-                              maxWidth: 760,
-                              margin: "0 auto",
-                              position: "relative",
-                              zIndex: 1,
-                        }}
-                  >
-                        <img
-                              src="/images/asterixe.png"
-                              alt=""
-                              aria-hidden="true"
-                              style={{
-                                    width: isMobile ? 18 : 22,
-                                    height: isMobile ? 18 : 22,
-                                    filter: "invert(1)",
-                                    opacity: 0.45,
-                                    marginBottom: isMobile ? 20 : 28,
-                                    display: "inline-block",
-                              }}
-                        />
-
-                        <blockquote
-                              style={{
-                                    fontFamily: "'Playfair Display', serif",
-                                    fontSize: isMobile
-                                          ? "20px"
-                                          : "clamp(19px, 2.8vw, 29px)",
-                                    fontStyle: "italic",
-                                    fontWeight: 400,
-                                    color: C.bg,
-                                    lineHeight: 1.65,
-                                    margin: "0 0 24px",
-                              }}
-                        >
-                              « Les actes les plus aimés par Allah sont ceux
-                              faits avec assiduité, même s'ils sont peu
-                              nombreux. »
-                        </blockquote>
-
-                        <cite
-                              style={{
-                                    fontFamily: "'Roboto Mono', monospace",
-                                    fontSize: 10,
-                                    textTransform: "uppercase",
-                                    letterSpacing: "0.14em",
-                                    color: C.bg,
-                                    opacity: 0.38,
-                                    fontStyle: "normal",
-                              }}
-                        >
-                              Hadith — Sahih Boukhari & Muslim
-                        </cite>
-                  </div>
-            </section>
+                        </StyledReadingMockup>
+                  </StyledReadingMockups>
+            </StyledReadingSection>
       );
 }
 
@@ -874,166 +482,59 @@ function Features() {
       ];
 
       return (
-            <section
+            <StyledFeaturesSection
                   id="features"
-                  style={{
-                        padding: isMobile
-                              ? "80px 24px"
-                              : isTablet
-                                ? "96px 40px"
-                                : "108px 56px",
-                        maxWidth: 1280,
-                        margin: "0 auto",
-                  }}
+                  $isMobile={isMobile}
+                  $isTablet={isTablet}
             >
-                  {/* Header */}
-                  <div
-                        style={{
-                              marginBottom: isMobile ? 40 : 56,
-                              textAlign: isMobile ? "center" : "left",
-                        }}
-                  >
-                        <span
-                              style={{
-                                    fontFamily: "'Roboto Mono', monospace",
-                                    fontSize: 11,
-                                    textTransform: "uppercase",
-                                    letterSpacing: "0.12em",
-                                    color: C.accent,
-                                    display: "block",
-                                    marginBottom: 14,
-                              }}
-                        >
-                              Fonctionnalités
-                        </span>
-                        <h2
-                              style={{
-                                    fontFamily: "'Epilogue', sans-serif",
-                                    fontSize: isMobile
-                                          ? "32px"
-                                          : "clamp(28px, 3.5vw, 48px)",
-                                    fontWeight: 900,
-                                    color: C.text,
-                                    letterSpacing: "-0.02em",
-                                    lineHeight: 1.1,
-                                    margin: 0,
-                              }}
-                        >
+                  {/* <StyledFeaturesHeader $isMobile={isMobile}>
+                        <StyledFeaturesTag>Fonctionnalités</StyledFeaturesTag>
+                        <StyledFeaturesH2 $isMobile={isMobile}>
                               Conçu pour durer,
                               <br />
                               pas pour impressionner.
-                        </h2>
-                  </div>
+                        </StyledFeaturesH2>
+                  </StyledFeaturesHeader> */}
 
-                  {/* Cards grid */}
-                  <div
-                        style={{
-                              display: "grid",
-                              gridTemplateColumns: isMobile
-                                    ? "1fr"
-                                    : isTablet
-                                      ? "repeat(2, 1fr)"
-                                      : "repeat(3, 1fr)",
-                              gap: 18,
-                        }}
-                  >
+                  <StyledFeaturesGrid $isMobile={isMobile} $isTablet={isTablet}>
                         {cards.map((card, i) => (
-                              <div
+                              <StyledFeatureCard
                                     key={i}
-                                    style={{
-                                          backgroundColor: card.dark
-                                                ? C.text
-                                                : C.beige,
-                                          borderRadius: 22,
-                                          padding: isMobile
-                                                ? "32px 28px"
-                                                : "40px 36px",
-                                          display: "flex",
-                                          flexDirection: "column",
-                                          // En tablet, faire la card sombre sur toute la largeur en bas
-                                          ...(isTablet && !isMobile && i === 1
-                                                ? {
-                                                        gridColumn: "1 / -1",
-                                                        maxWidth: 600,
-                                                        margin: "0 auto",
-                                                  }
-                                                : {}),
-                                    }}
+                                    $dark={card.dark}
+                                    $isMobile={isMobile}
+                                    $isTablet={isTablet}
+                                    $fullWidth={
+                                          isTablet && !isMobile && i === 1
+                                    }
                               >
-                                    <span
-                                          style={{
-                                                fontSize:
-                                                      card.emoji === "✦"
-                                                            ? 28
-                                                            : 34,
-                                                display: "block",
-                                                marginBottom: 22,
-                                                color: card.dark
-                                                      ? C.bg
-                                                      : C.accent,
-                                                lineHeight: 1,
-                                          }}
+                                    <StyledFeatureEmoji
+                                          $emoji={card.emoji}
+                                          $dark={card.dark}
                                     >
                                           {card.emoji}
-                                    </span>
+                                    </StyledFeatureEmoji>
 
-                                    <span
-                                          style={{
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 10,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.13em",
-                                                color: card.dark
-                                                      ? C.bg
-                                                      : C.accent,
-                                                opacity: card.dark ? 0.45 : 1,
-                                                display: "block",
-                                                marginBottom: 12,
-                                          }}
-                                    >
+                                    <StyledFeatureTag $dark={card.dark}>
                                           {card.tag}
-                                    </span>
+                                    </StyledFeatureTag>
 
-                                    <h3
-                                          style={{
-                                                fontFamily:
-                                                      "'Epilogue', sans-serif",
-                                                fontSize: isMobile ? 20 : 22,
-                                                fontWeight: 800,
-                                                color: card.dark
-                                                      ? C.bg
-                                                      : C.text,
-                                                letterSpacing: "-0.015em",
-                                                lineHeight: 1.2,
-                                                marginBottom: 18,
-                                                whiteSpace: "pre-line",
-                                          }}
+                                    <StyledFeatureH3
+                                          $dark={card.dark}
+                                          $isMobile={isMobile}
                                     >
                                           {card.title}
-                                    </h3>
+                                    </StyledFeatureH3>
 
-                                    <p
-                                          style={{
-                                                fontFamily:
-                                                      "'Epilogue', sans-serif",
-                                                fontSize: isMobile ? 14 : 15,
-                                                lineHeight: 1.68,
-                                                color: card.dark
-                                                      ? C.bg
-                                                      : C.text,
-                                                opacity: card.dark
-                                                      ? 0.65
-                                                      : 0.68,
-                                                margin: 0,
-                                          }}
+                                    <StyledFeatureP
+                                          $dark={card.dark}
+                                          $isMobile={isMobile}
                                     >
                                           {card.desc}
-                                    </p>
-                              </div>
+                                    </StyledFeatureP>
+                              </StyledFeatureCard>
                         ))}
-                  </div>
-            </section>
+                  </StyledFeaturesGrid>
+            </StyledFeaturesSection>
       );
 }
 
@@ -1100,92 +601,31 @@ function StreakSection() {
       ];
 
       return (
-            <section
-                  style={{
-                        padding: isMobile
-                              ? "80px 24px"
-                              : isTablet
-                                ? "96px 40px"
-                                : "108px 56px",
-                        backgroundColor: C.beigeMid,
-                  }}
-            >
-                  <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-                        {/* Header */}
-                        <div
-                              style={{
-                                    textAlign: "center",
-                                    marginBottom: isMobile ? 48 : 72,
-                              }}
-                        >
-                              <span
-                                    style={{
-                                          fontFamily:
-                                                "'Roboto Mono', monospace",
-                                          fontSize: 11,
-                                          textTransform: "uppercase",
-                                          letterSpacing: "0.12em",
-                                          color: C.accent,
-                                          display: "block",
-                                          marginBottom: 14,
-                                    }}
-                              >
-                                    Streak
-                              </span>
-                              <h2
-                                    style={{
-                                          fontFamily: "'Epilogue', sans-serif",
-                                          fontSize: isMobile
-                                                ? "32px"
-                                                : "clamp(28px, 3.5vw, 48px)",
-                                          fontWeight: 900,
-                                          color: C.text,
-                                          letterSpacing: "-0.02em",
-                                          lineHeight: 1.1,
-                                          marginBottom: 20,
-                                    }}
-                              >
+            <StyledStreakSection $isMobile={isMobile} $isTablet={isTablet}>
+                  <StyledStreakInner>
+                        <StyledStreakHeader $isMobile={isMobile}>
+                              <StyledStreakTag>Streak</StyledStreakTag>
+                              <StyledStreakH2 $isMobile={isMobile}>
                                     Ta lanterne,
                                     <br />
                                     miroir de ta régularité.
-                              </h2>
-                              <p
-                                    style={{
-                                          fontFamily: "'Epilogue', sans-serif",
-                                          fontSize: isMobile ? 15 : 17,
-                                          color: C.text,
-                                          opacity: 0.62,
-                                          maxWidth: 480,
-                                          margin: "0 auto",
-                                          lineHeight: 1.62,
-                                    }}
-                              >
-                                    Regarde-la s'illuminer au fil de tes jours
-                                    de lecture.
-                                    <br />
-                                    Chaque verset compte.
-                              </p>
-                        </div>
+                              </StyledStreakH2>
+                              <StyledStreakP $isMobile={isMobile}>
+                                    Elle brille davantage avec ton streak et
+                                    s'atténue doucement si tu t'absentes.
+                              </StyledStreakP>
+                        </StyledStreakHeader>
 
-                        {/* Lanterns row */}
-                        <div
-                              style={{
-                                    display: "flex",
-                                    flexDirection: isMobile ? "column" : "row",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    gap: isMobile ? 24 : isTablet ? 24 : 36,
-                                    ...(isMobile
-                                          ? {
-                                                  maxWidth: 200,
-                                                  margin: "0 auto",
-                                            }
-                                          : {}),
-                              }}
+                        <StyledStreakRow
+                              $isMobile={isMobile}
+                              $isTablet={isTablet}
                         >
                               {streaks.map((s, i) => (
-                                    <div
+                                    <StyledStreakItem
                                           key={i}
+                                          $isMobile={isMobile}
+                                          $active={isLanternActive(i)}
+                                          $isRow={isMobile}
                                           onMouseEnter={() =>
                                                 !isMobile &&
                                                 handleLanternInteraction(
@@ -1214,157 +654,45 @@ function StreakSection() {
                                                       false,
                                                 )
                                           }
-                                          style={{
-                                                display: "flex",
-                                                flexDirection: isMobile
-                                                      ? "row"
-                                                      : "column",
-                                                alignItems: "center",
-                                                gap: isMobile ? 16 : 18,
-                                                cursor: isMobile
-                                                      ? "pointer"
-                                                      : "default",
-                                                transition:
-                                                      "transform 0.32s cubic-bezier(0.34,1.56,0.64,1)",
-                                                transform: isLanternActive(i)
-                                                      ? `translateY(${isMobile ? -8 : -16}px)`
-                                                      : "translateY(0)",
-                                                ...(isMobile
-                                                      ? {
-                                                              width: "100%",
-                                                              justifyContent:
-                                                                    "flex-start",
-                                                              padding: "12px 16px",
-                                                              // Suppression du background rectangle
-                                                              WebkitTapHighlightColor:
-                                                                    "transparent",
-                                                              userSelect:
-                                                                    "none",
-                                                        }
-                                                      : {}),
-                                          }}
                                     >
-                                          {/* Image + glow */}
-                                          <div
-                                                style={{
-                                                      position: "relative",
-                                                      display: "flex",
-                                                      alignItems: "flex-end",
-                                                      justifyContent: "center",
-                                                      paddingBottom: 4,
-                                                }}
-                                          >
-                                                {/* Glow blob */}
-                                                <div
+                                          <StyledStreakImgWrap>
+                                                <StyledStreakGlow
                                                       aria-hidden="true"
-                                                      style={{
-                                                            position: "absolute",
-                                                            bottom: -10,
-                                                            left: "50%",
-                                                            transform:
-                                                                  "translateX(-50%)",
-                                                            width: s.size * 2,
-                                                            height: s.size * 2,
-                                                            borderRadius: "50%",
-                                                            backgroundColor:
-                                                                  isLanternActive(
-                                                                        i,
-                                                                  )
-                                                                        ? s.glowHover
-                                                                        : s.glow,
-                                                            filter: "blur(22px)",
-                                                            transition:
-                                                                  "background-color 0.32s ease",
-                                                      }}
+                                                      $color={
+                                                            isLanternActive(i)
+                                                                  ? s.glowHover
+                                                                  : s.glow
+                                                      }
+                                                      $size={s.size}
                                                 />
 
-                                                <img
+                                                <StyledStreakImg
                                                       src={s.src}
                                                       alt={s.label}
-                                                      style={{
-                                                            width: isLanternActive(
-                                                                  i,
-                                                            )
-                                                                  ? s.size *
-                                                                    1.14
-                                                                  : s.size,
-                                                            position: "relative",
-                                                            zIndex: 1,
-                                                            transition:
-                                                                  "width 0.32s cubic-bezier(0.34,1.56,0.64,1)",
-                                                            filter: isLanternActive(
-                                                                  i,
-                                                            )
-                                                                  ? `drop-shadow(0 6px 16px ${s.glowHover})`
-                                                                  : "none",
-                                                      }}
+                                                      $size={s.size}
+                                                      $active={isLanternActive(
+                                                            i,
+                                                      )}
+                                                      $glowHover={s.glowHover}
                                                 />
-                                          </div>
+                                          </StyledStreakImgWrap>
 
-                                          {/* Labels */}
-                                          <div
-                                                style={{
-                                                      textAlign: isMobile
-                                                            ? "left"
-                                                            : "center",
-                                                      flex: isMobile
-                                                            ? 1
-                                                            : "none",
-                                                }}
+                                          <StyledStreakLabels
+                                                $isMobile={isMobile}
                                           >
-                                                <div
-                                                      style={{
-                                                            fontFamily:
-                                                                  "'Epilogue', sans-serif",
-                                                            fontSize: isMobile
-                                                                  ? 13
-                                                                  : 13,
-                                                            fontWeight: 700,
-                                                            color: C.text,
-                                                            marginBottom:
-                                                                  isMobile
-                                                                        ? 2
-                                                                        : 3,
-                                                            opacity: isLanternActive(
-                                                                  i,
-                                                            )
-                                                                  ? 1
-                                                                  : 0.75,
-                                                            transition:
-                                                                  "opacity 0.2s",
-                                                      }}
+                                                <StyledStreakLabel
+                                                      $active={isLanternActive(
+                                                            i,
+                                                      )}
                                                 >
                                                       {s.label}
-                                                </div>
-                                                <div
-                                                      style={{
-                                                            fontFamily:
-                                                                  "'Roboto Mono', monospace",
-                                                            fontSize: isMobile
-                                                                  ? 9
-                                                                  : 9,
-                                                            textTransform:
-                                                                  "uppercase",
-                                                            letterSpacing:
-                                                                  "0.1em",
-                                                            color: C.text,
-                                                            opacity: isLanternActive(
-                                                                  i,
-                                                            )
-                                                                  ? 0.6
-                                                                  : 0.35,
-                                                            transition:
-                                                                  "opacity 0.2s",
-                                                      }}
-                                                >
-                                                      {s.sub}
-                                                </div>
-                                          </div>
-                                    </div>
+                                                </StyledStreakLabel>
+                                          </StyledStreakLabels>
+                                    </StyledStreakItem>
                               ))}
-                        </div>
-                  </div>
-            </section>
+                        </StyledStreakRow>
+                  </StyledStreakInner>
+            </StyledStreakSection>
       );
 }
 
@@ -1373,315 +701,117 @@ function TwoPaths() {
       const isMobile = useMediaQuery("(max-width: 768px)");
       const isTablet = useMediaQuery("(max-width: 1024px)");
 
-      const checkmarkLight = (item: string) => (
-            <li
-                  key={item}
-                  style={{
-                        fontFamily: "'Epilogue', sans-serif",
-                        fontSize: isMobile ? 13 : 14,
-                        color: C.text,
-                        opacity: 0.78,
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 10,
-                        lineHeight: 1.45,
-                  }}
-            >
-                  <span
-                        style={{
-                              color: C.cta,
-                              fontWeight: 700,
-                              fontSize: isMobile ? 13 : 14,
-                              lineHeight: 1.6,
-                              flexShrink: 0,
-                        }}
-                  >
-                        ✓
-                  </span>
+      const pathBulletLight = (item: string) => (
+            <StyledPathLi key={item} $dark={false} $isMobile={isMobile}>
+                  <StyledPathBullet $dark={false}>•</StyledPathBullet>
                   {item}
-            </li>
+            </StyledPathLi>
       );
 
-      const checkmarkDark = (item: string) => (
-            <li
-                  key={item}
-                  style={{
-                        fontFamily: "'Epilogue', sans-serif",
-                        fontSize: isMobile ? 13 : 14,
-                        color: C.bg,
-                        opacity: 0.75,
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 10,
-                        lineHeight: 1.45,
-                  }}
-            >
-                  <span
-                        style={{
-                              color: C.accent,
-                              fontWeight: 700,
-                              fontSize: isMobile ? 13 : 14,
-                              lineHeight: 1.6,
-                              flexShrink: 0,
-                        }}
-                  >
-                        ✓
-                  </span>
+      const pathBulletDark = (item: string) => (
+            <StyledPathLi key={item} $dark={true} $isMobile={isMobile}>
+                  <StyledPathBullet $dark={true}>•</StyledPathBullet>
                   {item}
-            </li>
+            </StyledPathLi>
       );
 
       return (
-            <section
+            <StyledPathsSection
                   id="paths"
-                  style={{
-                        padding: isMobile
-                              ? "80px 24px"
-                              : isTablet
-                                ? "96px 40px"
-                                : "108px 56px",
-                        maxWidth: 1280,
-                        margin: "0 auto",
-                  }}
+                  $isMobile={isMobile}
+                  $isTablet={isTablet}
             >
-                  {/* Header */}
-                  <div
-                        style={{
-                              textAlign: "center",
-                              marginBottom: isMobile ? 40 : 56,
-                        }}
-                  >
-                        <span
-                              style={{
-                                    fontFamily: "'Roboto Mono', monospace",
-                                    fontSize: 11,
-                                    textTransform: "uppercase",
-                                    letterSpacing: "0.12em",
-                                    color: C.accent,
-                                    display: "block",
-                                    marginBottom: 14,
-                              }}
-                        >
-                              Deux parcours
-                        </span>
-                        <h2
-                              style={{
-                                    fontFamily: "'Epilogue', sans-serif",
-                                    fontSize: isMobile
-                                          ? "32px"
-                                          : "clamp(28px, 3.5vw, 48px)",
-                                    fontWeight: 900,
-                                    color: C.text,
-                                    letterSpacing: "-0.02em",
-                                    lineHeight: 1.1,
-                                    margin: 0,
-                              }}
-                        >
-                              Ton niveau,
+                  <StyledPathsHeader $isMobile={isMobile}>
+                        <StyledFeaturesTag>Parcours</StyledFeaturesTag>
+                        <StyledFeaturesH2 $isMobile={isMobile}>
+                              Ton besoin,
                               <br />
                               ton parcours.
-                        </h2>
-                  </div>
+                        </StyledFeaturesH2>
+                  </StyledPathsHeader>
 
-                  <div
-                        style={{
-                              display: "grid",
-                              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-                              gap: 22,
-                        }}
-                  >
-                        {/* Lecture libre */}
-                        <div
-                              style={{
-                                    backgroundColor: C.beige,
-                                    borderRadius: 24,
-                                    padding: isMobile
-                                          ? "36px 28px"
-                                          : "48px 44px",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: 26,
-                              }}
-                        >
-                              <div>
-                                    <span
-                                          style={{
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 10,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.13em",
-                                                color: C.cta,
-                                                display: "block",
-                                                marginBottom: 12,
-                                                fontWeight: 700,
-                                          }}
-                                    >
-                                          ✦ Recommandé · 80–90% des utilisateurs
-                                    </span>
-                                    <h3
-                                          style={{
-                                                fontFamily:
-                                                      "'Epilogue', sans-serif",
-                                                fontSize: isMobile ? 26 : 32,
-                                                fontWeight: 900,
-                                                color: C.text,
-                                                letterSpacing: "-0.02em",
-                                                lineHeight: 1.1,
-                                                margin: 0,
-                                          }}
-                                    >
-                                          Lecture libre
-                                          <br />
-                                          <span style={{ opacity: 0.38 }}>
-                                                +
-                                          </span>{" "}
-                                          Habitudes
-                                    </h3>
-                              </div>
+                  <StyledPathsGrid $isMobile={isMobile}>
+                        <StyledPathCardFree $isMobile={isMobile}>
+                              <StyledPathH3 $dark={false} $isMobile={isMobile}>
+                                    Lecture libre
+                              </StyledPathH3>
 
-                              <p
-                                    style={{
-                                          fontFamily: "'Epilogue', sans-serif",
-                                          fontSize: isMobile ? 14 : 15,
-                                          lineHeight: 1.65,
-                                          color: C.text,
-                                          opacity: 0.68,
-                                          margin: 0,
-                                    }}
-                              >
-                                    Lis à ton rythme et construis des habitudes
-                                    personnalisées. Ton streak, ta progression
-                                    et ta lanterne t'encouragent au quotidien —
-                                    sans pression.
-                              </p>
+                              <StyledPathP $dark={false} $isMobile={isMobile}>
+                                    Lis à ton rythme, en essayant de maintenir
+                                    le streak.
+                              </StyledPathP>
 
-                              <ul
-                                    style={{
-                                          listStyle: "none",
-                                          padding: 0,
-                                          margin: 0,
-                                          display: "flex",
-                                          flexDirection: "column",
-                                          gap: 10,
-                                    }}
-                              >
+                              <StyledPathCtaWrap>
+                                    <StyledPathScreenshot
+                                          src="/images/IMG_7749.png"
+                                          alt="Aperçu lecture libre"
+                                          $isMobile={isMobile}
+                                          $dark={false}
+                                    />
+                              </StyledPathCtaWrap>
+                        </StyledPathCardFree>
+
+                        <StyledPathPlus $isMobile={isMobile}>+</StyledPathPlus>
+
+                        <StyledPathCard $dark={false} $isMobile={isMobile}>
+                              <StyledPathH3 $dark={false} $isMobile={isMobile}>
+                                    Habitudes
+                              </StyledPathH3>
+
+                              <StyledPathP $dark={false} $isMobile={isMobile}>
+                                    Définis tes propres objectifs de lecture
+                                    régulière. Complète ta lecture et créé une
+                                    nouvelle habitude.
+                              </StyledPathP>
+
+                              <StyledPathUl>
                                     {[
-                                          "Streak et progression visible",
-                                          "Habitudes de lecture personnalisables",
-                                          "Lecture & écoute audio",
-                                          "Lanterne de régularité",
-                                          "Lecture hybride papier + app",
-                                    ].map(checkmarkLight)}
-                              </ul>
+                                          "1 verset par jour",
+                                          "Une sourate par semaine",
+                                          "Al-Baqarah le vendredi",
+                                    ].map(pathBulletLight)}
+                              </StyledPathUl>
 
-                              <div
-                                    style={{
-                                          marginTop: "auto",
-                                          paddingTop: 8,
-                                          display: "flex",
-                                          justifyContent: "center",
-                                    }}
-                              >
-                                    <PhoneMockup />
-                              </div>
-                        </div>
+                              <StyledPathCtaWrap>
+                                    <StyledPathScreenshot
+                                          src="/images/IMG_7762.png"
+                                          alt="Aperçu habitudes"
+                                          $isMobile={isMobile}
+                                          $dark={false}
+                                    />
+                              </StyledPathCtaWrap>
+                        </StyledPathCard>
 
-                        {/* Challenge Ramadan */}
-                        <div
-                              style={{
-                                    backgroundColor: C.text,
-                                    borderRadius: 24,
-                                    padding: isMobile
-                                          ? "36px 28px"
-                                          : "48px 44px",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: 26,
-                              }}
-                        >
-                              <div>
-                                    <span
-                                          style={{
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 10,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.13em",
-                                                color: C.bg,
-                                                opacity: 0.4,
-                                                display: "block",
-                                                marginBottom: 12,
-                                          }}
-                                    >
-                                          Lecteurs expérimentés
-                                    </span>
-                                    <h3
-                                          style={{
-                                                fontFamily:
-                                                      "'Epilogue', sans-serif",
-                                                fontSize: isMobile ? 26 : 32,
-                                                fontWeight: 900,
-                                                color: C.bg,
-                                                letterSpacing: "-0.02em",
-                                                lineHeight: 1.1,
-                                                margin: 0,
-                                          }}
-                                    >
-                                          Challenge
-                                          <br />
-                                          Ramadan 30j
-                                    </h3>
-                              </div>
+                        <StyledPathCard $dark={true} $isMobile={isMobile}>
+                              <StyledPathH3 $dark={true} $isMobile={isMobile}>
+                                    Challenges
+                              </StyledPathH3>
 
-                              <p
-                                    style={{
-                                          fontFamily: "'Epilogue', sans-serif",
-                                          fontSize: isMobile ? 14 : 15,
-                                          lineHeight: 1.65,
-                                          color: C.bg,
-                                          opacity: 0.58,
-                                          margin: 0,
-                                    }}
-                              >
-                                    Pour ceux qui ont déjà lu le Coran en entier
-                                    et lisent très régulièrement. Lis
-                                    l'intégralité du Coran en 30 jours pendant
-                                    le Ramadan.
-                              </p>
+                              <StyledPathP $dark={true} $isMobile={isMobile}>
+                                    Un challenge définit avec des parcours sur
+                                    plusieurs jours/semaines. Grille interactive
+                                    et roadmap pour suivre ta progression.
+                              </StyledPathP>
 
-                              <ul
-                                    style={{
-                                          listStyle: "none",
-                                          padding: 0,
-                                          margin: 0,
-                                          display: "flex",
-                                          flexDirection: "column",
-                                          gap: 10,
-                                    }}
-                              >
+                              <StyledPathUl>
                                     {[
-                                          "Grille 30 jours interactive",
-                                          "Roadmap nénuphars",
-                                          "Lanterne d'avancement personnalisée",
-                                          "Lecture hybride papier + app",
-                                          "Retour au parcours libre après le Ramadan",
-                                    ].map(checkmarkDark)}
-                              </ul>
+                                          "Ramadan 30j — Coran en entier",
+                                          "1 juz par jour",
+                                          "D'autres défis à venir",
+                                    ].map(pathBulletDark)}
+                              </StyledPathUl>
 
-                              <div
-                                    style={{
-                                          marginTop: "auto",
-                                          paddingTop: 8,
-                                          display: "flex",
-                                          justifyContent: "center",
-                                    }}
-                              >
-                                    <PhoneMockup dark />
-                              </div>
-                        </div>
-                  </div>
-            </section>
+                              <StyledPathCtaWrap>
+                                    <StyledPathScreenshot
+                                          src="/images/IMG_7761.png"
+                                          alt="Aperçu challenges"
+                                          $isMobile={isMobile}
+                                          $dark={true}
+                                    />
+                              </StyledPathCtaWrap>
+                        </StyledPathCard>
+                  </StyledPathsGrid>
+            </StyledPathsSection>
       );
 }
 
@@ -1691,293 +821,97 @@ function Pricing() {
       const isTablet = useMediaQuery("(max-width: 1024px)");
 
       return (
-            <section
+            <StyledPricingSection
                   id="pricing"
-                  style={{
-                        padding: isMobile
-                              ? "80px 24px"
-                              : isTablet
-                                ? "96px 40px"
-                                : "108px 56px",
-                        backgroundColor: C.beigeMid,
-                  }}
+                  $isMobile={isMobile}
+                  $isTablet={isTablet}
             >
-                  <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-                        {/* Header */}
-                        <div
-                              style={{
-                                    textAlign: "center",
-                                    marginBottom: isMobile ? 48 : 64,
-                              }}
-                        >
-                              <span
-                                    style={{
-                                          fontFamily:
-                                                "'Roboto Mono', monospace",
-                                          fontSize: 11,
-                                          textTransform: "uppercase",
-                                          letterSpacing: "0.12em",
-                                          color: C.accent,
-                                          display: "block",
-                                          marginBottom: 14,
-                                    }}
-                              >
-                                    Tarifs
-                              </span>
-                              <h2
-                                    style={{
-                                          fontFamily: "'Epilogue', sans-serif",
-                                          fontSize: isMobile
-                                                ? "32px"
-                                                : "clamp(28px, 3.5vw, 48px)",
-                                          fontWeight: 900,
-                                          color: C.text,
-                                          letterSpacing: "-0.02em",
-                                          lineHeight: 1.1,
-                                          margin: 0,
-                                    }}
-                              >
+                  <StyledPricingInner>
+                        <StyledPricingHeader $isMobile={isMobile}>
+                              <StyledFeaturesTag>Tarifs</StyledFeaturesTag>
+                              <StyledFeaturesH2 $isMobile={isMobile}>
                                     Simple, transparent,
                                     <br />
                                     sans publicité.
-                              </h2>
-                        </div>
+                              </StyledFeaturesH2>
+                        </StyledPricingHeader>
 
-                        {/* Tiers */}
-                        <div
-                              style={{
-                                    display: "grid",
-                                    gridTemplateColumns: isMobile
-                                          ? "1fr"
-                                          : isTablet
-                                            ? "1fr 1.2fr 1fr"
-                                            : "1fr 1.08fr 1fr",
-                                    gap: 18,
-                                    alignItems: "start",
-                              }}
+                        <StyledPricingGrid
+                              $isMobile={isMobile}
+                              $isTablet={isTablet}
                         >
-                              {/* Essai */}
-                              <div
-                                    style={{
-                                          backgroundColor: C.beige,
-                                          borderRadius: 20,
-                                          padding: isMobile
-                                                ? "28px 24px"
-                                                : "36px 32px",
-                                          ...(isMobile ? { order: 2 } : {}),
-                                    }}
+                              <StyledPricingTier
+                                    $dark={false}
+                                    $isMobile={isMobile}
+                                    $order={isMobile ? 2 : undefined}
                               >
-                                    <div
-                                          style={{
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 10,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.13em",
-                                                color: C.text,
-                                                opacity: 0.42,
-                                                marginBottom: 24,
-                                          }}
-                                    >
+                                    <StyledPricingLabel $dark={false}>
                                           Essai gratuit
-                                    </div>
-                                    <div
-                                          style={{
-                                                fontFamily:
-                                                      "'Epilogue', sans-serif",
-                                                fontSize: isMobile ? 38 : 46,
-                                                fontWeight: 900,
-                                                color: C.text,
-                                                letterSpacing: "-0.025em",
-                                                lineHeight: 1,
-                                                marginBottom: 6,
-                                          }}
+                                    </StyledPricingLabel>
+                                    <StyledPricingPrice
+                                          $dark={false}
+                                          $isMobile={isMobile}
                                     >
                                           0 €
-                                    </div>
-                                    <div
-                                          style={{
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 11,
-                                                color: C.text,
-                                                opacity: 0.4,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.09em",
-                                                marginBottom: 28,
-                                          }}
-                                    >
+                                    </StyledPricingPrice>
+                                    <StyledPricingSub $dark={false}>
                                           Pendant 7 jours
-                                    </div>
+                                    </StyledPricingSub>
 
-                                    <ul
-                                          style={{
-                                                listStyle: "none",
-                                                padding: 0,
-                                                margin: "0 0 28px",
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                gap: 10,
-                                          }}
-                                    >
+                                    <StyledPricingUl>
                                           {[
                                                 "Accès complet à toutes les fonctionnalités",
                                                 "Aucune carte requise",
                                                 "Annulable à tout moment",
                                           ].map((f) => (
-                                                <li
+                                                <StyledPricingLi
                                                       key={f}
-                                                      style={{
-                                                            fontFamily:
-                                                                  "'Epilogue', sans-serif",
-                                                            fontSize: isMobile
-                                                                  ? 13
-                                                                  : 14,
-                                                            color: C.text,
-                                                            opacity: 0.68,
-                                                            display: "flex",
-                                                            gap: 9,
-                                                            alignItems:
-                                                                  "flex-start",
-                                                            lineHeight: 1.45,
-                                                      }}
+                                                      $dark={false}
+                                                      $isMobile={isMobile}
                                                 >
-                                                      <span
-                                                            style={{
-                                                                  color: C.cta,
-                                                                  flexShrink: 0,
-                                                                  lineHeight: 1.6,
-                                                            }}
+                                                      <StyledPricingCheck
+                                                            $dark={false}
                                                       >
                                                             ✓
-                                                      </span>
+                                                      </StyledPricingCheck>
                                                       {f}
-                                                </li>
+                                                </StyledPricingLi>
                                           ))}
-                                    </ul>
+                                    </StyledPricingUl>
 
-                                    <button
-                                          style={{
-                                                width: "100%",
-                                                padding: "13px",
-                                                border: "1.5px solid rgba(59,35,10,0.3)",
-                                                borderRadius: 10,
-                                                backgroundColor: "transparent",
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 11,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.09em",
-                                                color: C.text,
-                                                cursor: "pointer",
-                                                opacity: 0.72,
-                                          }}
-                                    >
+                                    <StyledPricingGhostBtn>
                                           Commencer gratuitement
-                                    </button>
-                              </div>
+                                    </StyledPricingGhostBtn>
+                              </StyledPricingTier>
 
-                              {/* Annuel — featured */}
-                              <div
-                                    style={{
-                                          backgroundColor: C.text,
-                                          borderRadius: 20,
-                                          padding: isMobile
-                                                ? "28px 24px"
-                                                : "36px 32px",
-                                          position: "relative",
-                                          overflow: "hidden",
-                                          ...(isMobile ? { order: 1 } : {}),
-                                    }}
+                              <StyledPricingTier
+                                    $dark={true}
+                                    $isMobile={isMobile}
+                                    $order={isMobile ? 1 : undefined}
                               >
-                                    {/* Ramadan badge */}
-                                    <div
-                                          style={{
-                                                position: "absolute",
-                                                top: 18,
-                                                right: 18,
-                                                backgroundColor: C.accent,
-                                                borderRadius: 100,
-                                                padding: "4px 10px",
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 9,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.1em",
-                                                color: "#fff",
-                                                fontWeight: 700,
-                                          }}
-                                    >
+                                    <StyledRamadanBadge>
                                           🌙 -40% Ramadan
-                                    </div>
+                                    </StyledRamadanBadge>
 
-                                    <div
-                                          style={{
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 10,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.13em",
-                                                color: C.bg,
-                                                opacity: 0.48,
-                                                marginBottom: 24,
-                                          }}
-                                    >
+                                    <StyledPricingLabel $dark={true}>
                                           Annuel · Le plus populaire
-                                    </div>
+                                    </StyledPricingLabel>
 
-                                    <div
-                                          style={{
-                                                fontFamily:
-                                                      "'Epilogue', sans-serif",
-                                                fontSize: isMobile ? 38 : 46,
-                                                fontWeight: 900,
-                                                color: C.bg,
-                                                letterSpacing: "-0.025em",
-                                                lineHeight: 1,
-                                                marginBottom: 6,
-                                          }}
+                                    <StyledPricingPrice
+                                          $dark={true}
+                                          $isMobile={isMobile}
                                     >
                                           X,XX €
-                                    </div>
-                                    <div
-                                          style={{
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 11,
-                                                color: C.bg,
-                                                opacity: 0.38,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.09em",
-                                                marginBottom: 8,
-                                          }}
-                                    >
+                                    </StyledPricingPrice>
+                                    <StyledPricingSub $dark={true}>
                                           / mois, facturé annuellement
-                                    </div>
-                                    <div
-                                          style={{
-                                                fontFamily:
-                                                      "'Epilogue', sans-serif",
-                                                fontSize: isMobile ? 12 : 13,
-                                                color: C.accent,
-                                                marginBottom: 28,
-                                                fontWeight: 500,
-                                          }}
-                                    >
+                                    </StyledPricingSub>
+                                    <StyledPricingNote $isMobile={isMobile}>
                                           -40% si tu t'abonnes avant le 5ᵉ jour
                                           du Ramadan
-                                    </div>
+                                    </StyledPricingNote>
 
-                                    <ul
-                                          style={{
-                                                listStyle: "none",
-                                                padding: 0,
-                                                margin: "0 0 28px",
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                gap: 10,
-                                          }}
-                                    >
+                                    <StyledPricingUl>
                                           {[
                                                 "Accès complet",
                                                 "Challenge Ramadan 30j",
@@ -1985,36 +919,20 @@ function Pricing() {
                                                 "Habitudes personnalisées",
                                                 "Lecture hybride papier + app",
                                           ].map((f) => (
-                                                <li
+                                                <StyledPricingLi
                                                       key={f}
-                                                      style={{
-                                                            fontFamily:
-                                                                  "'Epilogue', sans-serif",
-                                                            fontSize: isMobile
-                                                                  ? 13
-                                                                  : 14,
-                                                            color: C.bg,
-                                                            opacity: 0.78,
-                                                            display: "flex",
-                                                            gap: 9,
-                                                            alignItems:
-                                                                  "flex-start",
-                                                            lineHeight: 1.45,
-                                                      }}
+                                                      $dark={true}
+                                                      $isMobile={isMobile}
                                                 >
-                                                      <span
-                                                            style={{
-                                                                  color: C.accent,
-                                                                  flexShrink: 0,
-                                                                  lineHeight: 1.6,
-                                                            }}
+                                                      <StyledPricingCheck
+                                                            $dark={true}
                                                       >
                                                             ✓
-                                                      </span>
+                                                      </StyledPricingCheck>
                                                       {f}
-                                                </li>
+                                                </StyledPricingLi>
                                           ))}
-                                    </ul>
+                                    </StyledPricingUl>
 
                                     <CTAButton
                                           style={{
@@ -2024,131 +942,138 @@ function Pricing() {
                                     >
                                           Choisir l'annuel
                                     </CTAButton>
-                              </div>
+                              </StyledPricingTier>
 
-                              {/* Mensuel */}
-                              <div
-                                    style={{
-                                          backgroundColor: C.beige,
-                                          borderRadius: 20,
-                                          padding: isMobile
-                                                ? "28px 24px"
-                                                : "36px 32px",
-                                          ...(isMobile ? { order: 3 } : {}),
-                                    }}
+                              <StyledPricingTier
+                                    $dark={false}
+                                    $isMobile={isMobile}
+                                    $order={isMobile ? 3 : undefined}
                               >
-                                    <div
-                                          style={{
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 10,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.13em",
-                                                color: C.text,
-                                                opacity: 0.42,
-                                                marginBottom: 24,
-                                          }}
-                                    >
+                                    <StyledPricingLabel $dark={false}>
                                           Mensuel
-                                    </div>
-                                    <div
-                                          style={{
-                                                fontFamily:
-                                                      "'Epilogue', sans-serif",
-                                                fontSize: isMobile ? 38 : 46,
-                                                fontWeight: 900,
-                                                color: C.text,
-                                                letterSpacing: "-0.025em",
-                                                lineHeight: 1,
-                                                marginBottom: 6,
-                                          }}
+                                    </StyledPricingLabel>
+                                    <StyledPricingPrice
+                                          $dark={false}
+                                          $isMobile={isMobile}
                                     >
                                           X,XX €
-                                    </div>
-                                    <div
-                                          style={{
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 11,
-                                                color: C.text,
-                                                opacity: 0.4,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.09em",
-                                                marginBottom: 28,
-                                          }}
-                                    >
+                                    </StyledPricingPrice>
+                                    <StyledPricingSub $dark={false}>
                                           Par mois
-                                    </div>
+                                    </StyledPricingSub>
 
-                                    <ul
-                                          style={{
-                                                listStyle: "none",
-                                                padding: 0,
-                                                margin: "0 0 28px",
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                gap: 10,
-                                          }}
-                                    >
+                                    <StyledPricingUl>
                                           {[
                                                 "Accès complet",
                                                 "Sans engagement",
                                                 "Tarif plein (pas de promo Ramadan)",
                                           ].map((f) => (
-                                                <li
+                                                <StyledPricingLi
                                                       key={f}
-                                                      style={{
-                                                            fontFamily:
-                                                                  "'Epilogue', sans-serif",
-                                                            fontSize: isMobile
-                                                                  ? 13
-                                                                  : 14,
-                                                            color: C.text,
-                                                            opacity: 0.68,
-                                                            display: "flex",
-                                                            gap: 9,
-                                                            alignItems:
-                                                                  "flex-start",
-                                                            lineHeight: 1.45,
-                                                      }}
+                                                      $dark={false}
+                                                      $isMobile={isMobile}
                                                 >
-                                                      <span
-                                                            style={{
-                                                                  color: C.cta,
-                                                                  flexShrink: 0,
-                                                                  lineHeight: 1.6,
-                                                            }}
+                                                      <StyledPricingCheck
+                                                            $dark={false}
                                                       >
                                                             ✓
-                                                      </span>
+                                                      </StyledPricingCheck>
                                                       {f}
-                                                </li>
+                                                </StyledPricingLi>
                                           ))}
-                                    </ul>
+                                    </StyledPricingUl>
 
-                                    <button
+                                    <StyledPricingGhostBtn>
+                                          Choisir le mensuel
+                                    </StyledPricingGhostBtn>
+                              </StyledPricingTier>
+                        </StyledPricingGrid>
+                  </StyledPricingInner>
+            </StyledPricingSection>
+      );
+}
+
+// ── Download CTA (avant footer) ───────────────────────────────────────────
+function DownloadCTA() {
+      const isMobile = useMediaQuery("(max-width: 768px)");
+      const deviceStore = useDeviceStore();
+
+      const storeLink =
+            deviceStore === "ios"
+                  ? APP_STORE_LINK
+                  : deviceStore === "android"
+                    ? PLAY_STORE_LINK
+                    : null;
+
+      return (
+            <StyledDownloadCTA $isMobile={isMobile}>
+                  <StyledDownloadCTAInner>
+                        <StyledDownloadCTAH2 $isMobile={isMobile}>
+                              Prêt.e à te reconnecter au Coran ?
+                        </StyledDownloadCTAH2>
+                        <StyledDownloadCTAP $isMobile={isMobile}>
+                              Télécharge l'app gratuitement
+                        </StyledDownloadCTAP>
+                        <StyledDownloadCTABtns $isMobile={isMobile}>
+                              {deviceStore === "other" ? (
+                                    <>
+                                          <CTAButton
+                                                href={
+                                                      APP_STORE_LINK !== "#"
+                                                            ? APP_STORE_LINK
+                                                            : undefined
+                                                }
+                                                style={
+                                                      isMobile
+                                                            ? {
+                                                                    width: "100%",
+                                                                    maxWidth: 280,
+                                                              }
+                                                            : undefined
+                                                }
+                                          >
+                                                App Store
+                                          </CTAButton>
+                                          <CTAButton
+                                                href={
+                                                      PLAY_STORE_LINK !== "#"
+                                                            ? PLAY_STORE_LINK
+                                                            : undefined
+                                                }
+                                                style={
+                                                      isMobile
+                                                            ? {
+                                                                    width: "100%",
+                                                                    maxWidth: 280,
+                                                              }
+                                                            : undefined
+                                                }
+                                          >
+                                                Play Store
+                                          </CTAButton>
+                                    </>
+                              ) : (
+                                    <CTAButton
+                                          href={
+                                                storeLink && storeLink !== "#"
+                                                      ? storeLink
+                                                      : undefined
+                                          }
                                           style={{
-                                                width: "100%",
-                                                padding: "13px",
-                                                border: "1.5px solid rgba(59,35,10,0.3)",
-                                                borderRadius: 10,
-                                                backgroundColor: "transparent",
-                                                fontFamily:
-                                                      "'Roboto Mono', monospace",
-                                                fontSize: 11,
-                                                textTransform: "uppercase",
-                                                letterSpacing: "0.09em",
-                                                color: C.text,
-                                                cursor: "pointer",
-                                                opacity: 0.72,
+                                                width: isMobile
+                                                      ? "100%"
+                                                      : "auto",
+                                                maxWidth: isMobile
+                                                      ? 280
+                                                      : "none",
                                           }}
                                     >
-                                          Choisir le mensuel
-                                    </button>
-                              </div>
-                        </div>
-                  </div>
-            </section>
+                                          Télécharger l'app
+                                    </CTAButton>
+                              )}
+                        </StyledDownloadCTABtns>
+                  </StyledDownloadCTAInner>
+            </StyledDownloadCTA>
       );
 }
 
@@ -2158,197 +1083,1469 @@ function Footer() {
       const isTablet = useMediaQuery("(max-width: 1024px)");
 
       return (
-            <footer
-                  style={{
-                        backgroundColor: C.text,
-                        padding: isMobile ? "48px 24px 32px" : "64px 56px 40px",
-                  }}
-            >
-                  <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-                        <div
-                              style={{
-                                    display: "flex",
-                                    flexDirection: isMobile ? "column" : "row",
-                                    justifyContent: "space-between",
-                                    alignItems: isMobile
-                                          ? "center"
-                                          : "flex-start",
-                                    marginBottom: isMobile ? 36 : 52,
-                                    gap: isMobile ? 32 : 48,
-                                    textAlign: isMobile ? "center" : "left",
-                              }}
-                        >
-                              {/* Brand */}
-                              <div
-                                    style={{
-                                          maxWidth: isMobile ? "100%" : 280,
-                                          order: isMobile ? 1 : 0,
-                                    }}
-                              >
-                                    <img
+            <StyledFooter $isMobile={isMobile}>
+                  <StyledFooterInner>
+                        <StyledFooterTop $isMobile={isMobile}>
+                              <StyledFooterBrand $isMobile={isMobile}>
+                                    <StyledFooterLogo
                                           src="/images/logosuhab.png"
                                           alt="Suhab"
-                                          style={{
-                                                height: isMobile ? 28 : 32,
-                                                marginBottom: 16,
-                                                filter: "invert(1) brightness(1.1)",
-                                                opacity: 0.88,
-                                          }}
+                                          $isMobile={isMobile}
                                     />
-                                    <p
-                                          style={{
-                                                fontFamily:
-                                                      "'Epilogue', sans-serif",
-                                                fontSize: isMobile ? 13 : 14,
-                                                color: C.bg,
-                                                opacity: 0.48,
-                                                margin: 0,
-                                                lineHeight: 1.65,
-                                          }}
-                                    >
-                                          Reconnecte-toi au Coran, à ton rythme.
-                                          Sans pression, avec assiduité.
-                                    </p>
-                              </div>
+                                    <StyledFooterBrandP $isMobile={isMobile}>
+                                          Fais du Coran ton compagnon de vie
+                                    </StyledFooterBrandP>
+                              </StyledFooterBrand>
 
-                              {/* Nav links */}
-                              <div
-                                    style={{
-                                          display: "flex",
-                                          flexDirection: isMobile
-                                                ? "column"
-                                                : "row",
-                                          gap: isMobile ? 24 : 64,
-                                          order: isMobile ? 2 : 0,
-                                    }}
-                              >
+                              <StyledFooterNav $isMobile={isMobile}>
                                     {[
-                                          {
-                                                title: "Application",
-                                                links: [
-                                                      "Fonctionnalités",
-                                                      "Parcours",
-                                                      "Tarifs",
-                                                ],
-                                          },
                                           {
                                                 title: "Légal",
                                                 links: [
-                                                      "Politique de confidentialité",
-                                                      "CGU",
-                                                      "Contact",
+                                                      {
+                                                            label: "Politique de confidentialité",
+                                                            to: "/politique-confidentialite",
+                                                      },
+                                                      {
+                                                            label: "CGU",
+                                                            to: "/cgu",
+                                                      },
+                                                      {
+                                                            label: "Contact",
+                                                            to: "/contact",
+                                                      },
                                                 ],
                                           },
                                     ].map((col) => (
-                                          <div
+                                          <StyledFooterCol
                                                 key={col.title}
-                                                style={{
-                                                      textAlign: isMobile
-                                                            ? "center"
-                                                            : "left",
-                                                }}
+                                                $isMobile={isMobile}
                                           >
-                                                <div
-                                                      style={{
-                                                            fontFamily:
-                                                                  "'Roboto Mono', monospace",
-                                                            fontSize: 10,
-                                                            textTransform:
-                                                                  "uppercase",
-                                                            letterSpacing:
-                                                                  "0.13em",
-                                                            color: C.bg,
-                                                            opacity: 0.32,
-                                                            marginBottom: 18,
-                                                      }}
-                                                >
+                                                <StyledFooterColTitle>
                                                       {col.title}
-                                                </div>
+                                                </StyledFooterColTitle>
                                                 {col.links.map((link) => (
-                                                      <a
-                                                            key={link}
-                                                            href="#"
-                                                            style={{
-                                                                  display: "block",
-                                                                  fontFamily:
-                                                                        "'Epilogue', sans-serif",
-                                                                  fontSize: isMobile
-                                                                        ? 13
-                                                                        : 14,
-                                                                  color: C.bg,
-                                                                  opacity: 0.58,
-                                                                  textDecoration:
-                                                                        "none",
-                                                                  marginBottom: 10,
-                                                                  lineHeight: 1.45,
-                                                            }}
+                                                      <StyledFooterLink
+                                                            key={link.to}
+                                                            as={Link}
+                                                            to={link.to}
+                                                            $isMobile={isMobile}
                                                       >
-                                                            {link}
-                                                      </a>
+                                                            {link.label}
+                                                      </StyledFooterLink>
                                                 ))}
-                                          </div>
+                                          </StyledFooterCol>
                                     ))}
-                              </div>
-                        </div>
+                              </StyledFooterNav>
+                        </StyledFooterTop>
 
-                        {/* Bottom bar */}
-                        <div
-                              style={{
-                                    borderTop:
-                                          "1px solid rgba(238,235,230,0.1)",
-                                    paddingTop: 24,
-                                    display: "flex",
-                                    flexDirection: isMobile ? "column" : "row",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    gap: isMobile ? 12 : 0,
-                                    textAlign: "center",
-                              }}
-                        >
-                              <span
-                                    style={{
-                                          fontFamily:
-                                                "'Roboto Mono', monospace",
-                                          fontSize: 10,
-                                          color: C.bg,
-                                          opacity: 0.28,
-                                          textTransform: "uppercase",
-                                          letterSpacing: "0.1em",
-                                    }}
-                              >
-                                    © 2025 Suhab. Tous droits réservés.
-                              </span>
-                              <span
-                                    style={{
-                                          fontFamily: "'Epilogue', sans-serif",
-                                          fontSize: 13,
-                                          color: C.bg,
-                                          opacity: 0.32,
-                                    }}
-                              >
-                                    Fait avec 🤍
-                              </span>
-                        </div>
-                  </div>
-            </footer>
+                        <StyledFooterBottom $isMobile={isMobile}>
+                              <StyledFooterCopyright>
+                                    © 2026 Minimo inc. - Suhab. Tous droits
+                                    réservés.
+                              </StyledFooterCopyright>
+                              <StyledFooterLove>Fait avec 🧡</StyledFooterLove>
+                        </StyledFooterBottom>
+                  </StyledFooterInner>
+            </StyledFooter>
       );
 }
 
 // ── App ─────────────────────────────────────────────────────────────────
 export default function App() {
       return (
-            <div style={{ backgroundColor: C.bg, minHeight: "100vh" }}>
+            <StyledAppRoot>
                   <Grain />
                   <Navbar />
                   <main>
-                        <Hero />
-                        <QuoteBanner />
-                        <Features />
-                        <StreakSection />
-                        <TwoPaths />
-                        <Pricing />
+                        <Routes>
+                              <Route
+                                    path="/"
+                                    element={
+                                          <>
+                                                <Hero />
+                                                <QuoteBanner />
+                                                <ReadingInterface />
+                                                <StreakSection />
+                                                <TwoPaths />
+                                                <DownloadCTA />
+                                          </>
+                                    }
+                              />
+                              <Route
+                                    path="/politique-confidentialite"
+                                    element={<PolitiqueConfidentialite />}
+                              />
+                              <Route path="/cgu" element={<CGU />} />
+                              <Route path="/contact" element={<Contact />} />
+                        </Routes>
                   </main>
                   <Footer />
-            </div>
+            </StyledAppRoot>
       );
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STYLED COMPONENTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+const StyledAppRoot = styled.div`
+      background-color: ${C.beigeMid};
+      min-height: 100vh;
+`;
+
+const StyledGrainSvg = styled.svg`
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.6;
+      mix-blend-mode: overlay;
+`;
+
+const StyledCTAButton = styled.button<{ $pressed?: boolean }>`
+      background-color: ${C.cta};
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 28px;
+      font-family: "Roboto Mono", monospace;
+      letter-spacing: 2px;
+      font-size: 13px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transform: ${(p) => (p.$pressed ? "translateY(3px)" : "translateY(0)")};
+      box-shadow: ${(p) => (p.$pressed ? "none" : `0 3px 0 ${C.ctaShadow}`)};
+      transition:
+            transform 80ms ease,
+            box-shadow 80ms ease;
+      white-space: nowrap;
+`;
+
+const StyledCTAButtonLink = styled.a<{ $pressed?: boolean }>`
+      background-color: ${C.cta};
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 28px;
+      font-family: "Roboto Mono", monospace;
+      letter-spacing: 2px;
+      font-size: 13px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transform: ${(p) => (p.$pressed ? "translateY(3px)" : "translateY(0)")};
+      box-shadow: ${(p) => (p.$pressed ? "none" : `0 3px 0 ${C.ctaShadow}`)};
+      transition:
+            transform 80ms ease,
+            box-shadow 80ms ease;
+      white-space: nowrap;
+`;
+
+const StyledGhostButton = styled.button<{ $light?: boolean }>`
+      background-color: transparent;
+      color: ${(p) => (p.$light ? C.bg : C.text)};
+      border: 1px solid ${(p) => (p.$light ? C.bg : C.text)};
+      border-radius: 10px;
+      padding: 13px 28px;
+      font-family: "Roboto Mono", monospace;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      opacity: 0.75;
+      white-space: nowrap;
+      transition: opacity 0.18s ease;
+`;
+
+const StyledPhoneMockup = styled.div<{ $dark?: boolean }>`
+      width: 178px;
+      height: 356px;
+      border-radius: 28px;
+      border: 2px solid ${(p) => (p.$dark ? "rgba(238,235,230,0.16)" : C.text)};
+      background-color: ${(p) => (p.$dark ? "#1E0E02" : "#F5F0E8")};
+      position: relative;
+      box-shadow: ${(p) =>
+            p.$dark
+                  ? "4px 5px 0 rgba(238,235,230,0.09)"
+                  : `4px 5px 0 ${C.text}`};
+      overflow: hidden;
+      flex-shrink: 0;
+`;
+
+const StyledPhoneStatusBar = styled.div<{ $dark?: boolean }>`
+      height: 40px;
+      background-color: ${(p) => (p.$dark ? "rgba(0,0,0,0.28)" : C.beigeMid)};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+`;
+
+const StyledPhoneNotch = styled.div<{ $dark?: boolean }>`
+      width: 58px;
+      height: 13px;
+      border-radius: 7px;
+      background-color: ${(p) =>
+            p.$dark ? "rgba(238,235,230,0.18)" : "rgba(59,35,10,0.18)"};
+`;
+
+const StyledPhoneContent = styled.div`
+      padding: 14px 14px 0;
+`;
+
+const StyledPhoneLanternPlaceholder = styled.div<{ $dark?: boolean }>`
+      height: 90px;
+      border-radius: 14px;
+      background-color: ${(p) =>
+            p.$dark ? "rgba(240,94,32,0.10)" : "rgba(240,94,32,0.07)"};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+`;
+
+const StyledPhoneLanternCircle = styled.div<{ $dark?: boolean }>`
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background-color: ${(p) =>
+            p.$dark ? "rgba(240,94,32,0.22)" : "rgba(240,94,32,0.12)"};
+`;
+
+const StyledPhoneSkeletonLine = styled.div<{
+      $w: number;
+      $line: string;
+}>`
+      height: 8px;
+      border-radius: 4px;
+      width: ${(p) => p.$w}%;
+      background-color: ${(p) => p.$line};
+      margin-bottom: 8px;
+`;
+
+const StyledPhoneSkeletonCard = styled.div<{ $bar: string }>`
+      height: 44px;
+      border-radius: 10px;
+      background-color: ${(p) => p.$bar};
+      margin-bottom: 8px;
+`;
+
+const StyledPhoneSkeletonRow = styled.div`
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+`;
+
+const StyledPhoneSkeletonBlock = styled.div<{ $w: number; $bar: string }>`
+      height: 34px;
+      border-radius: 8px;
+      width: ${(p) => p.$w}%;
+      background-color: ${(p) => p.$bar};
+`;
+
+const StyledPhoneLabel = styled.div<{ $dark?: boolean }>`
+      position: absolute;
+      bottom: 14px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: "Roboto Mono", monospace;
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: ${(p) =>
+            p.$dark ? "rgba(238,235,230,0.22)" : "rgba(59,35,10,0.18)"};
+`;
+
+const StyledNav = styled.nav<{ $scrolled: boolean; $isMobile: boolean }>`
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: ${(p) => (p.$isMobile ? "14px 24px" : "18px 56px")};
+      background-color: ${C.beigeMid};
+      backdrop-filter: ${(p) => (p.$scrolled ? "blur(18px)" : "none")};
+      -webkit-backdrop-filter: ${(p) => (p.$scrolled ? "blur(18px)" : "none")};
+      border-bottom: ${(p) =>
+            p.$scrolled
+                  ? "1px solid rgba(59,35,10,0.08)"
+                  : "1px solid transparent"};
+      transition:
+            background-color 0.35s,
+            border-color 0.35s;
+`;
+
+const StyledNavLogo = styled.img<{ $isMobile: boolean }>`
+      height: ${(p) => (p.$isMobile ? 28 : 34)}px;
+`;
+
+const StyledHamburgerBtn = styled.button`
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px;
+`;
+
+const StyledHamburgerLine = styled.div<{
+      $open: boolean;
+      $i: number;
+}>`
+      width: 20px;
+      height: 2px;
+      background-color: ${C.text};
+      border-radius: 1px;
+      transition: all 0.2s ease;
+      opacity: 0.7;
+      transform: ${(p) =>
+            p.$open
+                  ? p.$i === 1
+                        ? "rotate(45deg) translateY(6px)"
+                        : p.$i === 2
+                          ? "opacity(0)"
+                          : "rotate(-45deg) translateY(-6px)"
+                  : "none"};
+`;
+
+const StyledMobileMenuOverlay = styled.div`
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(238, 235, 230, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      z-index: 99;
+`;
+
+const StyledMobileNavLink = styled.a`
+      font-family: "Epilogue", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: ${C.text};
+      text-decoration: none;
+      opacity: 0.8;
+`;
+
+const StyledDesktopNav = styled.div`
+      display: flex;
+      gap: 40px;
+      align-items: center;
+`;
+
+const StyledDesktopNavLink = styled.a`
+      font-family: "Roboto Mono", monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: ${C.text};
+      text-decoration: none;
+      opacity: 0.55;
+`;
+
+const StyledHeroWrapper = styled.div`
+      width: 100%;
+      background-color: ${C.beigeMid};
+`;
+
+const StyledHeroSection = styled.section<{
+      $isMobile: boolean;
+      $isTablet: boolean;
+}>`
+      min-height: 100vh;
+      display: flex;
+      flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
+      align-items: center;
+      padding: ${(p) =>
+            p.$isMobile
+                  ? "100px 24px 60px"
+                  : p.$isTablet
+                    ? "120px 40px 80px"
+                    : "120px 56px 80px"};
+      max-width: 1280px;
+      margin: 0 auto;
+      gap: ${(p) => (p.$isMobile ? 40 : p.$isTablet ? 40 : 56)}px;
+`;
+
+const StyledHeroLeft = styled.div<{
+      $isMobile: boolean;
+}>`
+      flex: ${(p) => (p.$isMobile ? "none" : "0 0 52%")};
+      max-width: ${(p) => (p.$isMobile ? "100%" : "560px")};
+      text-align: ${(p) => (p.$isMobile ? "center" : "left")};
+`;
+
+const StyledHeroBadge = styled.div<{ $isMobile: boolean }>`
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(59, 35, 10, 0.325);
+      border-radius: 100px;
+      padding: 6px 14px 6px 10px;
+      margin-bottom: ${(p) => (p.$isMobile ? 28 : 36)}px;
+`;
+
+const StyledHeroBadgeImg = styled.img`
+      width: 15px;
+      height: 15px;
+      opacity: 1;
+`;
+
+const StyledHeroBadgeText = styled.span`
+      font-family: "Roboto Mono", monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: ${C.text};
+      opacity: 0.7;
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0 2px;
+      line-height: 1;
+`;
+
+const StyledStoreLink = styled.a`
+      color: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: opacity 0.2s ease;
+      &:hover {
+            opacity: 0.85;
+      }
+`;
+
+const StyledHeroH1 = styled.h1<{ $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? "36px" : "clamp(42px, 4.5vw, 68px)")};
+      font-weight: 900;
+      line-height: 1.05;
+      color: ${C.text};
+      letter-spacing: -0.025em;
+      margin-bottom: ${(p) => (p.$isMobile ? 20 : 26)}px;
+`;
+
+const StyledHeroRe = styled.span`
+      font-weight: 100;
+      opacity: 0.75;
+`;
+
+const StyledHeroSubtitle = styled.p<{ $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 16 : 18)}px;
+      line-height: 1.65;
+      color: ${C.text};
+      opacity: 0.68;
+      margin: ${(p) => (p.$isMobile ? "0 auto 32px" : "0 0 44px")};
+      max-width: ${(p) => (p.$isMobile ? "100%" : "450px")};
+`;
+
+const StyledHeroCTAs = styled.div<{ $isMobile: boolean }>`
+      display: flex;
+      flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
+      gap: 14px;
+      align-items: center;
+      justify-content: ${(p) => (p.$isMobile ? "center" : "flex-start")};
+`;
+
+const StyledHeroDisclaimer = styled.p<{ $isMobile: boolean }>`
+      margin-top: 18px;
+      font-family: "Roboto Mono", monospace;
+      font-size: 10px;
+      color: ${C.text};
+      opacity: 0.38;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: ${(p) => (p.$isMobile ? "center" : "left")};
+`;
+
+const StyledHeroVisual = styled.div<{ $isMobile: boolean }>`
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      position: relative;
+      min-height: ${(p) => (p.$isMobile ? 300 : 500)}px;
+      width: 100%;
+`;
+
+const StyledHeroMascotWrap = styled.div<{ $isMobile: boolean }>`
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 1;
+`;
+
+const StyledHeroGlowBlob = styled.div<{ $isMobile: boolean }>`
+      position: absolute;
+      width: ${(p) => (p.$isMobile ? 200 : 260)}px;
+      height: ${(p) => (p.$isMobile ? 200 : 260)}px;
+      border-radius: 50%;
+      background: radial-gradient(
+            circle,
+            rgba(240, 94, 32, 0.11) 0%,
+            transparent 70%
+      );
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 20%);
+`;
+
+const StyledHeroGlowBlob2 = styled.div<{ $isMobile: boolean }>`
+      position: absolute;
+      width: ${(p) => (p.$isMobile ? 200 : 280)}px;
+      height: ${(p) => (p.$isMobile ? 200 : 280)}px;
+      border-radius: 50%;
+      background: radial-gradient(
+            circle,
+            rgba(200, 160, 100, 0.09) 0%,
+            transparent 70%
+      );
+      top: 30%;
+      left: 40%;
+      transform: translate(-50%, -50%);
+`;
+
+const StyledHeroMascot = styled.img<{ $isMobile: boolean }>`
+      width: ${(p) => (p.$isMobile ? 140 : 200)}px;
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 28px 52px rgba(59, 35, 10, 0.1));
+`;
+
+const StyledHeroPhoneWrap = styled.div`
+      position: absolute;
+      right: -10px;
+      bottom: 10px;
+      z-index: 2;
+`;
+
+const StyledHeroScreenshot = styled.img`
+      width: 200px;
+      height: auto;
+      max-height: 420px;
+      display: block;
+      object-fit: contain;
+      border-radius: 24px;
+      border: 2px solid rgba(59, 35, 10, 0.2);
+      flex-shrink: 0;
+`;
+
+const StyledHeroAsterixe1 = styled.img<{ $isMobile: boolean }>`
+      position: absolute;
+      top: ${(p) => (p.$isMobile ? 40 : 80)}px;
+      right: ${(p) => (p.$isMobile ? 40 : 60)}px;
+      width: ${(p) => (p.$isMobile ? 16 : 22)}px;
+      opacity: 0.2;
+      z-index: 0;
+`;
+
+const StyledHeroAsterixe2 = styled.img<{ $isMobile: boolean }>`
+      position: absolute;
+      top: ${(p) => (p.$isMobile ? 140 : 200)}px;
+      left: ${(p) => (p.$isMobile ? 20 : 30)}px;
+      width: ${(p) => (p.$isMobile ? 12 : 14)}px;
+      opacity: 0.15;
+      z-index: 0;
+`;
+
+const StyledQuoteSection = styled.section<{ $isMobile: boolean }>`
+      background-color: ${C.beigeMid};
+      padding: ${(p) => (p.$isMobile ? "64px 24px" : "88px 56px")};
+      text-align: ${(p) => (p.$isMobile ? "left" : "center")};
+      position: relative;
+      overflow: hidden;
+`;
+
+const StyledQuoteAsterixeBig = styled.img`
+      position: absolute;
+      left: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      opacity: 0.1;
+      filter: invert(1);
+`;
+
+const StyledQuoteAsterixeBigR = styled.img`
+      position: absolute;
+      right: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      opacity: 0.1;
+      filter: invert(1);
+`;
+
+const StyledQuoteInner = styled.div<{ $isMobile?: boolean }>`
+      max-width: 760px;
+      margin: ${(p) => (p.$isMobile ? "0" : "0 auto")};
+      position: relative;
+      z-index: 1;
+`;
+
+const StyledQuoteAsterixeSmall = styled.img<{ $isMobile: boolean }>`
+      width: ${(p) => (p.$isMobile ? 18 : 22)}px;
+      height: ${(p) => (p.$isMobile ? 18 : 22)}px;
+      filter: invert(1);
+      opacity: 0.45;
+      margin-bottom: ${(p) => (p.$isMobile ? 20 : 28)}px;
+      display: inline-block;
+`;
+
+const StyledQuoteIntro = styled.span`
+      display: block;
+      font-family: "Epilogue", sans-serif;
+      font-size: 0.82em;
+      font-style: normal;
+      opacity: 0.5;
+      margin-bottom: 1em;
+`;
+
+const StyledQuoteBlockquote = styled.blockquote<{ $isMobile: boolean }>`
+      font-family: "Playfair Display", serif;
+      font-size: ${(p) => (p.$isMobile ? "20px" : "clamp(19px, 2.8vw, 29px)")};
+      font-style: italic;
+      font-weight: 400;
+      color: ${C.text};
+      line-height: 1.65;
+      margin: 0 0 24px;
+      text-align: ${(p) => (p.$isMobile ? "justify" : "inherit")};
+`;
+
+const StyledQuoteCite = styled.cite`
+      font-family: "Roboto Mono", monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: ${C.text};
+      opacity: 0.38;
+      font-style: normal;
+`;
+
+const StyledReadingSection = styled.section<{
+      $isMobile: boolean;
+      $isTablet: boolean;
+}>`
+      padding: ${(p) =>
+            p.$isMobile
+                  ? "80px 24px"
+                  : p.$isTablet
+                    ? "96px 40px"
+                    : "108px 56px"};
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
+      align-items: center;
+      gap: ${(p) => (p.$isMobile ? 56 : 56)}px;
+`;
+
+const StyledReadingLeft = styled.div<{ $isMobile: boolean }>`
+      flex: ${(p) => (p.$isMobile ? "none" : "0 0 45%")};
+      max-width: ${(p) => (p.$isMobile ? "100%" : "480px")};
+`;
+
+const StyledReadingHeader = styled.div<{ $isMobile: boolean }>`
+      text-align: ${(p) => (p.$isMobile ? "center" : "left")};
+      margin-bottom: ${(p) => (p.$isMobile ? 40 : 32)}px;
+`;
+
+const StyledReadingTag = styled.span`
+      font-family: "Roboto Mono", monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: ${C.accent};
+      display: block;
+      margin-bottom: 14px;
+`;
+
+const StyledReadingH2 = styled.h2<{ $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? "32px" : "clamp(28px, 3.5vw, 48px)")};
+      font-weight: 900;
+      color: ${C.text};
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0 0 20px;
+`;
+
+const StyledReadingP = styled.p<{ $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 15 : 17)}px;
+      line-height: 1.65;
+      color: ${C.text};
+      opacity: 0.68;
+      max-width: 560px;
+      margin: 0 auto;
+`;
+
+const StyledReadingFeatures = styled.div<{ $isMobile: boolean }>`
+      display: flex;
+      flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
+      gap: ${(p) => (p.$isMobile ? 20 : 24)}px;
+      justify-content: ${(p) => (p.$isMobile ? "center" : "flex-start")};
+`;
+
+const StyledReadingFeature = styled.div<{ $isMobile?: boolean }>`
+      flex: 1;
+      max-width: 280px;
+      margin: ${(p) => (p.$isMobile ? "0 auto" : "0")};
+      text-align: ${(p) => (p.$isMobile ? "center" : "left")};
+`;
+
+const StyledReadingFeatureTitle = styled.div`
+      font-family: "Roboto Mono", monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: ${C.accent};
+      margin-bottom: 8px;
+`;
+
+const StyledReadingFeatureDesc = styled.div`
+      font-family: "Epilogue", sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: ${C.text};
+      opacity: 0.72;
+`;
+
+const StyledReadingMockups = styled.div<{ $isMobile: boolean }>`
+      flex: ${(p) => (p.$isMobile ? "none" : 1)};
+      display: flex;
+      flex-direction: row;
+      gap: ${(p) => (p.$isMobile ? 16 : 24)}px;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+`;
+
+const StyledReadingMockup = styled.div<{ $isMobile?: boolean }>`
+      flex: 1;
+      max-width: ${(p) => (p.$isMobile ? 140 : 320)}px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+`;
+
+const StyledReadingMockupLabel = styled.span`
+      font-family: "Roboto Mono", monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: ${C.text};
+      font-weight: 600;
+      opacity: 0.6;
+`;
+
+const StyledReadingMockupImg = styled.img<{ $isMobile?: boolean }>`
+      width: 100%;
+      max-width: ${(p) => (p.$isMobile ? 120 : 200)}px;
+      height: auto;
+      display: block;
+      border-radius: 24px;
+      border: 2px solid rgba(59, 35, 10, 0.2);
+      object-fit: contain;
+`;
+
+const StyledFeaturesSection = styled.section<{
+      $isMobile: boolean;
+      $isTablet: boolean;
+}>`
+      padding: ${(p) =>
+            p.$isMobile
+                  ? "80px 24px"
+                  : p.$isTablet
+                    ? "96px 40px"
+                    : "108px 56px"};
+      max-width: 1280px;
+      margin: 0 auto;
+`;
+
+const StyledFeaturesHeader = styled.div<{ $isMobile: boolean }>`
+      margin-bottom: ${(p) => (p.$isMobile ? 40 : 56)}px;
+      text-align: ${(p) => (p.$isMobile ? "center" : "left")};
+`;
+
+const StyledFeaturesTag = styled.span`
+      font-family: "Roboto Mono", monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: ${C.accent};
+      display: block;
+      margin-bottom: 14px;
+`;
+
+const StyledFeaturesH2 = styled.h2<{ $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? "32px" : "clamp(28px, 3.5vw, 48px)")};
+      font-weight: 900;
+      color: ${C.text};
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0;
+`;
+
+const StyledFeaturesGrid = styled.div<{
+      $isMobile: boolean;
+      $isTablet: boolean;
+}>`
+      display: grid;
+      grid-template-columns: ${(p) =>
+            p.$isMobile
+                  ? "1fr"
+                  : p.$isTablet
+                    ? "repeat(2, 1fr)"
+                    : "repeat(3, 1fr)"};
+      gap: 18px;
+`;
+
+const StyledFeatureCard = styled.div<{
+      $dark: boolean;
+      $isMobile: boolean;
+      $isTablet: boolean;
+      $fullWidth: boolean;
+}>`
+      background-color: ${(p) => (p.$dark ? C.text : C.beige)};
+      border-radius: 22px;
+      padding: ${(p) => (p.$isMobile ? "32px 28px" : "40px 36px")};
+      display: flex;
+      flex-direction: column;
+      ${(p) =>
+            p.$fullWidth
+                  ? `
+    grid-column: 1 / -1;
+    max-width: 600px;
+    margin: 0 auto;
+  `
+                  : ""}
+`;
+
+const StyledFeatureEmoji = styled.span<{
+      $emoji: string;
+      $dark: boolean;
+}>`
+      font-size: ${(p) => (p.$emoji === "✦" ? 28 : 34)}px;
+      display: block;
+      margin-bottom: 22px;
+      color: ${(p) => (p.$dark ? C.bg : C.accent)};
+      line-height: 1;
+`;
+
+const StyledFeatureTag = styled.span<{ $dark: boolean }>`
+      font-family: "Roboto Mono", monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: ${(p) => (p.$dark ? C.bg : C.accent)};
+      opacity: ${(p) => (p.$dark ? 0.45 : 1)};
+      display: block;
+      margin-bottom: 12px;
+`;
+
+const StyledFeatureH3 = styled.h3<{ $dark: boolean; $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 20 : 22)}px;
+      font-weight: 800;
+      color: ${(p) => (p.$dark ? C.bg : C.text)};
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+      margin-bottom: 18px;
+      white-space: pre-line;
+`;
+
+const StyledFeatureP = styled.p<{ $dark: boolean; $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 14 : 15)}px;
+      line-height: 1.68;
+      color: ${(p) => (p.$dark ? C.bg : C.text)};
+      opacity: ${(p) => (p.$dark ? 0.65 : 0.68)};
+      margin: 0;
+`;
+
+const StyledStreakSection = styled.section<{
+      $isMobile: boolean;
+      $isTablet: boolean;
+}>`
+      padding: ${(p) =>
+            p.$isMobile
+                  ? "80px 24px"
+                  : p.$isTablet
+                    ? "96px 40px"
+                    : "108px 56px"};
+      background-color: ${C.beigeMid};
+`;
+
+const StyledStreakInner = styled.div`
+      max-width: 1280px;
+      margin: 0 auto;
+`;
+
+const StyledStreakHeader = styled.div<{ $isMobile: boolean }>`
+      text-align: center;
+      margin-bottom: ${(p) => (p.$isMobile ? 48 : 72)}px;
+`;
+
+const StyledStreakTag = styled.span`
+      font-family: "Roboto Mono", monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: ${C.accent};
+      display: block;
+      margin-bottom: 14px;
+`;
+
+const StyledStreakH2 = styled.h2<{ $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? "32px" : "clamp(28px, 3.5vw, 48px)")};
+      font-weight: 900;
+      color: ${C.text};
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+`;
+
+const StyledStreakP = styled.p<{ $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 15 : 17)}px;
+      color: ${C.text};
+      opacity: 0.62;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.62;
+`;
+
+const StyledStreakRow = styled.div<{ $isMobile: boolean; $isTablet: boolean }>`
+      display: flex;
+      flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
+      justify-content: center;
+      align-items: center;
+      gap: ${(p) => (p.$isMobile ? 24 : p.$isTablet ? 24 : 36)}px;
+      ${(p) =>
+            p.$isMobile
+                  ? `
+    max-width: 200px;
+    margin: 0 auto;
+  `
+                  : ""}
+`;
+
+const StyledStreakItem = styled.div<{
+      $isMobile: boolean;
+      $active: boolean;
+      $isRow: boolean;
+}>`
+      display: flex;
+      flex-direction: ${(p) => (p.$isRow ? "row" : "column")};
+      align-items: center;
+      gap: ${(p) => (p.$isMobile ? 16 : 18)}px;
+      cursor: ${(p) => (p.$isMobile ? "pointer" : "default")};
+      transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform: ${(p) =>
+            p.$active
+                  ? `translateY(${p.$isMobile ? -8 : -16}px)`
+                  : "translateY(0)"};
+      ${(p) =>
+            p.$isMobile
+                  ? `
+    width: 100%;
+    justify-content: flex-start;
+    padding: 12px 16px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  `
+                  : ""}
+`;
+
+const StyledStreakImgWrap = styled.div`
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 4px;
+`;
+
+const StyledStreakGlow = styled.div<{ $color: string; $size: number }>`
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: ${(p) => p.$size * 2}px;
+      height: ${(p) => p.$size * 2}px;
+      border-radius: 50%;
+      background-color: ${(p) => p.$color};
+      filter: blur(22px);
+      transition: background-color 0.32s ease;
+`;
+
+const StyledStreakImg = styled.img<{
+      $size: number;
+      $active: boolean;
+      $glowHover: string;
+}>`
+      width: ${(p) => (p.$active ? p.$size * 1.14 : p.$size)}px;
+      position: relative;
+      z-index: 1;
+      transition: width 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: ${(p) =>
+            p.$active ? `drop-shadow(0 6px 16px ${p.$glowHover})` : "none"};
+`;
+
+const StyledStreakLabels = styled.div<{ $isMobile: boolean }>`
+      text-align: ${(p) => (p.$isMobile ? "left" : "center")};
+      flex: ${(p) => (p.$isMobile ? 1 : "none")};
+`;
+
+const StyledStreakLabel = styled.div<{ $active: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: ${C.text};
+      margin-bottom: 2px;
+      opacity: ${(p) => (p.$active ? 1 : 0.75)};
+      transition: opacity 0.2s;
+`;
+
+const StyledStreakSub = styled.div<{ $active: boolean }>`
+      font-family: "Roboto Mono", monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: ${C.text};
+      opacity: ${(p) => (p.$active ? 0.6 : 0.35)};
+      transition: opacity 0.2s;
+`;
+
+const StyledPathsSection = styled.section<{
+      $isMobile: boolean;
+      $isTablet: boolean;
+}>`
+      padding: ${(p) =>
+            p.$isMobile
+                  ? "80px 24px"
+                  : p.$isTablet
+                    ? "96px 40px"
+                    : "108px 56px"};
+      max-width: 1280px;
+      margin: 0 auto;
+`;
+
+const StyledPathsHeader = styled.div<{ $isMobile: boolean }>`
+      text-align: center;
+      margin-bottom: ${(p) => (p.$isMobile ? 40 : 56)}px;
+`;
+
+const StyledPathsGrid = styled.div<{ $isMobile: boolean }>`
+      display: grid;
+      grid-template-columns: ${(p) =>
+            p.$isMobile ? "1fr" : "1fr auto 1fr 1fr"};
+      gap: 22px;
+      align-items: center;
+`;
+
+const StyledPathPlus = styled.div<{ $isMobile: boolean }>`
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 24 : 32)}px;
+      font-weight: 300;
+      color: ${C.text};
+      opacity: 0.5;
+      ${(p) => p.$isMobile && "padding: 12px 0;"}
+`;
+
+const StyledPathCardFree = styled.div<{ $isMobile: boolean }>`
+      background-color: transparent;
+      border: 2px dashed rgba(59, 35, 10, 0.25);
+      border-radius: 24px;
+      padding: ${(p) => (p.$isMobile ? "36px 28px" : "48px 44px")};
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+`;
+
+const StyledPathCard = styled.div<{ $dark: boolean; $isMobile: boolean }>`
+      background-color: ${(p) => (p.$dark ? C.text : C.beige)};
+      border-radius: 24px;
+      padding: ${(p) => (p.$isMobile ? "36px 28px" : "48px 44px")};
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+`;
+
+const StyledPathH3 = styled.h3<{ $dark: boolean; $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 26 : 32)}px;
+      font-weight: 900;
+      color: ${(p) => (p.$dark ? C.bg : C.text)};
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0;
+`;
+
+const StyledPathSpan = styled.span`
+      opacity: 0.38;
+`;
+
+const StyledPathP = styled.p<{ $dark: boolean; $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 14 : 15)}px;
+      line-height: 1.65;
+      color: ${(p) => (p.$dark ? C.bg : C.text)};
+      opacity: ${(p) => (p.$dark ? 0.58 : 0.68)};
+      margin: 0;
+`;
+
+const StyledPathUl = styled.ul`
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+`;
+
+const StyledPathLi = styled.li<{ $dark: boolean; $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 13 : 14)}px;
+      color: ${(p) => (p.$dark ? C.bg : C.text)};
+      opacity: ${(p) => (p.$dark ? 0.75 : 0.78)};
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.45;
+`;
+
+const StyledPathBullet = styled.span<{ $dark: boolean }>`
+      color: ${(p) => (p.$dark ? C.accent : C.text)};
+      font-weight: 400;
+      font-size: 1.2em;
+      line-height: 1.6;
+      flex-shrink: 0;
+`;
+
+const StyledPathCtaWrap = styled.div`
+      margin-top: auto;
+      padding-top: 8px;
+      display: flex;
+      justify-content: center;
+`;
+
+const StyledPathScreenshot = styled.img<{
+      $isMobile?: boolean;
+      $dark?: boolean;
+}>`
+      width: 100%;
+      max-width: ${(p) => (p.$isMobile ? 120 : 200)}px;
+      height: auto;
+      display: block;
+      border-radius: 24px;
+      border: 2px solid
+            ${(p) =>
+                  p.$dark
+                        ? "rgba(238, 235, 230, 0.25)"
+                        : "rgba(59, 35, 10, 0.2)"};
+      object-fit: contain;
+`;
+
+const StyledPricingSection = styled.section<{
+      $isMobile: boolean;
+      $isTablet: boolean;
+}>`
+      padding: ${(p) =>
+            p.$isMobile
+                  ? "80px 24px"
+                  : p.$isTablet
+                    ? "96px 40px"
+                    : "108px 56px"};
+      background-color: ${C.beigeMid};
+`;
+
+const StyledPricingInner = styled.div`
+      max-width: 1280px;
+      margin: 0 auto;
+`;
+
+const StyledPricingHeader = styled.div<{ $isMobile: boolean }>`
+      text-align: center;
+      margin-bottom: ${(p) => (p.$isMobile ? 48 : 64)}px;
+`;
+
+const StyledPricingGrid = styled.div<{
+      $isMobile: boolean;
+      $isTablet: boolean;
+}>`
+      display: grid;
+      grid-template-columns: ${(p) =>
+            p.$isMobile
+                  ? "1fr"
+                  : p.$isTablet
+                    ? "1fr 1.2fr 1fr"
+                    : "1fr 1.08fr 1fr"};
+      gap: 18px;
+      align-items: start;
+`;
+
+const StyledPricingTier = styled.div<{
+      $dark: boolean;
+      $isMobile: boolean;
+      $order?: number;
+}>`
+      background-color: ${(p) => (p.$dark ? C.text : C.beige)};
+      border-radius: 20px;
+      padding: ${(p) => (p.$isMobile ? "28px 24px" : "36px 32px")};
+      ${(p) => (p.$order === 1 ? "position: relative; overflow: hidden;" : "")}
+      ${(p) => (p.$order !== undefined ? `order: ${p.$order};` : "")}
+`;
+
+const StyledPricingLabel = styled.div<{ $dark: boolean }>`
+      font-family: "Roboto Mono", monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: ${(p) => (p.$dark ? C.bg : C.text)};
+      opacity: ${(p) => (p.$dark ? 0.48 : 0.42)};
+      margin-bottom: 24px;
+`;
+
+const StyledPricingPrice = styled.div<{ $dark: boolean; $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 38 : 46)}px;
+      font-weight: 900;
+      color: ${(p) => (p.$dark ? C.bg : C.text)};
+      letter-spacing: -0.025em;
+      line-height: 1;
+      margin-bottom: 6px;
+`;
+
+const StyledPricingSub = styled.div<{ $dark: boolean }>`
+      font-family: "Roboto Mono", monospace;
+      font-size: 11px;
+      color: ${(p) => (p.$dark ? C.bg : C.text)};
+      opacity: ${(p) => (p.$dark ? 0.38 : 0.4)};
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 28px;
+`;
+
+const StyledPricingNote = styled.div<{ $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 12 : 13)}px;
+      color: ${C.accent};
+      margin-bottom: 28px;
+      font-weight: 500;
+`;
+
+const StyledPricingUl = styled.ul`
+      list-style: none;
+      padding: 0;
+      margin: 0 0 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+`;
+
+const StyledPricingLi = styled.li<{ $dark: boolean; $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 13 : 14)}px;
+      color: ${(p) => (p.$dark ? C.bg : C.text)};
+      opacity: ${(p) => (p.$dark ? 0.78 : 0.68)};
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      line-height: 1.45;
+`;
+
+const StyledPricingCheck = styled.span<{ $dark: boolean }>`
+      color: ${(p) => (p.$dark ? C.accent : C.cta)};
+      flex-shrink: 0;
+      line-height: 1.6;
+`;
+
+const StyledPricingGhostBtn = styled.button`
+      width: 100%;
+      padding: 13px;
+      border: 1.5px solid rgba(59, 35, 10, 0.3);
+      border-radius: 10px;
+      background-color: transparent;
+      font-family: "Roboto Mono", monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: ${C.text};
+      cursor: pointer;
+      opacity: 0.72;
+`;
+
+const StyledRamadanBadge = styled.div`
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background-color: ${C.accent};
+      border-radius: 100px;
+      padding: 4px 10px;
+      font-family: "Roboto Mono", monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #fff;
+      font-weight: 700;
+`;
+
+const StyledDownloadCTA = styled.section<{ $isMobile: boolean }>`
+      background-color: ${C.beigeMid};
+      padding: ${(p) => (p.$isMobile ? "72px 24px 64px" : "96px 56px 88px")};
+`;
+
+const StyledDownloadCTAInner = styled.div`
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+`;
+
+const StyledDownloadCTAH2 = styled.h2<{ $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? "28px" : "clamp(26px, 3vw, 40px)")};
+      font-weight: 600;
+      color: ${C.text};
+      margin: 0 0 12px;
+      line-height: 1.25;
+`;
+
+const StyledDownloadCTAP = styled.p<{ $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 15 : 17)}px;
+      color: ${C.text};
+      opacity: 0.72;
+      margin: 0 0 32px;
+`;
+
+const StyledDownloadCTABtns = styled.div<{ $isMobile: boolean }>`
+      display: flex;
+      flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+`;
+
+const StyledFooter = styled.footer<{ $isMobile: boolean }>`
+      background-color: ${C.beigeMid};
+      padding: ${(p) => (p.$isMobile ? "48px 24px 32px" : "64px 56px 40px")};
+`;
+
+const StyledFooterInner = styled.div`
+      max-width: 1280px;
+      margin: 0 auto;
+`;
+
+const StyledFooterTop = styled.div<{ $isMobile: boolean }>`
+      display: flex;
+      flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
+      justify-content: space-between;
+      align-items: ${(p) => (p.$isMobile ? "center" : "flex-start")};
+      margin-bottom: ${(p) => (p.$isMobile ? 36 : 52)}px;
+      gap: ${(p) => (p.$isMobile ? 56 : 48)}px;
+      text-align: ${(p) => (p.$isMobile ? "center" : "left")};
+`;
+
+const StyledFooterBrand = styled.div<{ $isMobile: boolean }>`
+      max-width: ${(p) => (p.$isMobile ? "100%" : "280px")};
+      order: ${(p) => (p.$isMobile ? 1 : 0)};
+`;
+
+const StyledFooterLogo = styled.img<{ $isMobile: boolean }>`
+      height: ${(p) => (p.$isMobile ? 28 : 32)}px;
+      margin-bottom: 16px;
+      opacity: 0.88;
+`;
+
+const StyledFooterBrandP = styled.p<{ $isMobile: boolean }>`
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 13 : 14)}px;
+      color: ${C.text};
+      opacity: 0.48;
+      margin: 0;
+      line-height: 1.65;
+`;
+
+const StyledFooterNav = styled.div<{ $isMobile: boolean }>`
+      display: flex;
+      flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
+      gap: ${(p) => (p.$isMobile ? 24 : 64)}px;
+      order: ${(p) => (p.$isMobile ? 2 : 0)};
+`;
+
+const StyledFooterCol = styled.div<{ $isMobile: boolean }>`
+      text-align: ${(p) => (p.$isMobile ? "center" : "left")};
+`;
+
+const StyledFooterColTitle = styled.div`
+      font-family: "Roboto Mono", monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: ${C.text};
+      opacity: 0.32;
+      margin-bottom: 18px;
+`;
+
+const StyledFooterLink = styled.a<{ $isMobile: boolean }>`
+      display: block;
+      font-family: "Epilogue", sans-serif;
+      font-size: ${(p) => (p.$isMobile ? 13 : 14)}px;
+      color: ${C.text};
+      opacity: 0.58;
+      text-decoration: none;
+      margin-bottom: ${(p) => (p.$isMobile ? 4 : 10)}px;
+      line-height: 1.45;
+`;
+
+const StyledFooterBottom = styled.div<{ $isMobile: boolean }>`
+      border-top: 1px solid rgba(238, 235, 230, 0.1);
+      padding-top: 24px;
+      display: flex;
+      flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
+      justify-content: space-between;
+      align-items: center;
+      gap: ${(p) => (p.$isMobile ? 12 : 0)}px;
+      text-align: center;
+`;
+
+const StyledFooterCopyright = styled.span`
+      font-family: "Roboto Mono", monospace;
+      font-size: 10px;
+      color: ${C.text};
+      opacity: 0.6;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+`;
+
+const StyledFooterLove = styled.span`
+      font-family: "Epilogue", sans-serif;
+      font-size: 13px;
+      color: ${C.text};
+      opacity: 0.6;
+`;
