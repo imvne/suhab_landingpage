@@ -1018,9 +1018,7 @@ function Footer() {
                                     © 2026 {PUBLISHER_LEGAL_NAME} -{" "}
                                     {APP_TRADEMARK}. Tous droits réservés.
                               </StyledFooterCopyright>
-                              <StyledFooterLove>
-                                    Fait avec 🧡 par {PUBLISHER_LEGAL_NAME}
-                              </StyledFooterLove>
+                              <StyledFooterLove>Fait avec 🧡</StyledFooterLove>
                         </StyledFooterBottom>
                   </StyledFooterInner>
             </StyledFooter>
