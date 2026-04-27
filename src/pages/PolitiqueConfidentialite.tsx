@@ -6,7 +6,7 @@ const C = {
   accent: "#F05E20",
 } as const;
 
-const CONTACT = "contact@minimoapps.fr";
+const CONTACT = "support@minimoapps.fr";
 
 export default function PolitiqueConfidentialite() {
   return (
