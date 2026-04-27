@@ -7,6 +7,8 @@ import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 import CGU from "./pages/CGU";
 import Contact from "./pages/Contact";
 
+import { PUBLISHER_LEGAL_NAME, APP_TRADEMARK } from "./config/legal";
+
 // ── Store links (à remplacer quand disponibles) ─────────────────────────
 const APP_STORE_LINK = "#"; // TODO: https://apps.apple.com/app/...
 
@@ -376,7 +378,9 @@ function Hero() {
                                                       aria-hidden="true"
                                                 />
                                                 <StyledHeroMascot
-                                                      src={img("lantern_thumb.png")}
+                                                      src={img(
+                                                            "lantern_thumb.png",
+                                                      )}
                                                       alt="Mascotte Suhab — lanterne avec pouces en l'air"
                                                       $isMobile={false}
                                                 />
@@ -901,21 +905,21 @@ function DownloadCTA() {
                                           style={
                                                 isMobile
                                                       ? {
-                                                                backgroundColor:
-                                                                      C.accent,
-                                                                boxShadow:
-                                                                      "0 3px 0 #B94718",
-                                                                opacity: 1,
-                                                                width: "100%",
-                                                                maxWidth: 280,
-                                                          }
+                                                              backgroundColor:
+                                                                    C.accent,
+                                                              boxShadow:
+                                                                    "0 3px 0 #B94718",
+                                                              opacity: 1,
+                                                              width: "100%",
+                                                              maxWidth: 280,
+                                                        }
                                                       : {
-                                                                backgroundColor:
-                                                                      C.accent,
-                                                                boxShadow:
-                                                                      "0 3px 0 #B94718",
-                                                                opacity: 1,
-                                                          }
+                                                              backgroundColor:
+                                                                    C.accent,
+                                                              boxShadow:
+                                                                    "0 3px 0 #B94718",
+                                                              opacity: 1,
+                                                        }
                                           }
                                     >
                                           <StyledCTAButtonInner>
@@ -1011,10 +1015,12 @@ function Footer() {
 
                         <StyledFooterBottom $isMobile={isMobile}>
                               <StyledFooterCopyright>
-                                    © 2026 Minimo inc. - Suhab. Tous droits
-                                    réservés.
+                                    © 2026 {PUBLISHER_LEGAL_NAME}. -{" "}
+                                    {APP_TRADEMARK}. Tous droits réservés.
                               </StyledFooterCopyright>
-                              <StyledFooterLove>Fait avec 🧡</StyledFooterLove>
+                              <StyledFooterLove>
+                                    Fait avec 🧡 par {PUBLISHER_LEGAL_NAME}
+                              </StyledFooterLove>
                         </StyledFooterBottom>
                   </StyledFooterInner>
             </StyledFooter>
