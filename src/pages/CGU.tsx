@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { SUPPORT_EMAIL } from "../config/contact";
+import { APP_TRADEMARK, PUBLISHER_LEGAL_NAME } from "../config/legal";
 
 const C = {
   text: "#3B230A",
@@ -13,23 +14,29 @@ export default function CGU() {
       <StyledInner>
         <StyledH1>Conditions générales d&apos;utilisation</StyledH1>
         <StyledLead>
-          Application <strong>Suhab</strong> — Dernière mise à jour : 27 avril
-          2026
+          Application <strong>{APP_TRADEMARK}</strong> — Dernière mise à jour : 27
+          avril 2026
         </StyledLead>
         <StyledContent>
           <h2>1. Objet</h2>
           <p>
-            En téléchargeant ou en utilisant l&apos;application mobile{" "}
-            <strong>Suhab</strong>, vous acceptez sans réserve les présentes CGU.
-            Si vous n&apos;acceptez pas ces conditions, veuillez ne pas utiliser
-            l&apos;application.
+            L&apos;application mobile <strong>{APP_TRADEMARK}</strong> est éditée
+            par <strong>{PUBLISHER_LEGAL_NAME}</strong> (ci-après «{" "}
+            <strong>l&apos;Éditeur</strong> »). Les présentes Conditions Générales
+            d&apos;Utilisation (CGU) encadrent l&apos;accès et l&apos;utilisation du
+            service {APP_TRADEMARK}.
+          </p>
+          <p>
+            En téléchargeant ou en utilisant {APP_TRADEMARK}, vous acceptez sans
+            réserve les présentes CGU. Si vous n&apos;acceptez pas ces conditions,
+            veuillez ne pas utiliser l&apos;application.
           </p>
 
           <h2>2. Accès à l&apos;application</h2>
           <h3>2.1 Version gratuite</h3>
           <p>
-            Suhab propose en accès libre et gratuit : la lecture intégrale du
-            Coran, l&apos;écoute audio du Coran, ainsi que les fonctionnalités de
+            {APP_TRADEMARK} propose en accès libre et gratuit : la lecture intégrale
+            du Coran, l&apos;écoute audio du Coran, ainsi que les fonctionnalités de
             navigation et de recherche dans le texte.
           </p>
           <h3>2.2 Fonctionnalités premium</h3>
@@ -62,34 +69,35 @@ export default function CGU() {
           <h3>3.3 Remboursements</h3>
           <p>
             Conformément aux règles de l&apos;App Store, toute demande de
-            remboursement est traitée directement par Apple. L&apos;éditeur de
-            Suhab n&apos;est pas en mesure de procéder à des remboursements en
-            dehors de ce cadre.
+            remboursement est traitée directement par Apple. L&apos;Éditeur (
+            {PUBLISHER_LEGAL_NAME}) n&apos;est pas en mesure de procéder à des
+            remboursements en dehors de ce cadre.
           </p>
 
           <h2>4. Propriété intellectuelle</h2>
           <p>
-            L&apos;application, son interface, son code source, ses graphismes
-            et ses fonctionnalités sont la propriété exclusive de l&apos;éditeur
+            {APP_TRADEMARK}, son interface, son code source, ses graphismes et ses
+            fonctionnalités sont la propriété exclusive de {PUBLISHER_LEGAL_NAME}{" "}
             ou de ses concédants de licence. Le texte coranique est un contenu du
             domaine public ; les traductions éventuelles, récitations audio et
-            autres contenus produits par l&apos;éditeur restent sa propriété. Il
+            autres contenus produits par l&apos;Éditeur restent sa propriété. Il
             est interdit de reproduire, modifier, distribuer ou exploiter tout ou
-            partie de Suhab sans autorisation préalable écrite de l&apos;éditeur.
+            partie de {APP_TRADEMARK} sans autorisation préalable écrite de{" "}
+            {PUBLISHER_LEGAL_NAME}.
           </p>
 
           <h2>5. Comportement de l&apos;utilisateur</h2>
           <p>
-            L&apos;utilisateur s&apos;engage à utiliser Suhab de manière licite
-            et respectueuse. Il est notamment interdit de tenter de contourner les
-            mécanismes de protection des fonctionnalités premium, d&apos;utiliser
+            L&apos;utilisateur s&apos;engage à utiliser {APP_TRADEMARK} de manière
+            licite et respectueuse. Il est notamment interdit de tenter de contourner
+            les mécanismes de protection des fonctionnalités premium, d&apos;utiliser
             l&apos;application à des fins commerciales sans autorisation, ou de
             porter atteinte à son bon fonctionnement.
           </p>
 
           <h2>6. Disponibilité du service</h2>
           <p>
-            L&apos;éditeur s&apos;efforce de maintenir Suhab accessible en
+            L&apos;Éditeur s&apos;efforce de maintenir {APP_TRADEMARK} accessible en
             permanence, mais ne peut garantir une disponibilité ininterrompue. Des
             interruptions peuvent survenir pour maintenance, mise à jour ou pour
             des raisons indépendantes de sa volonté.
@@ -97,10 +105,11 @@ export default function CGU() {
 
           <h2>7. Limitation de responsabilité</h2>
           <p>
-            Suhab est fournie « en l&apos;état ». L&apos;éditeur ne saurait être
-            tenu responsable de tout dommage indirect résultant de
+            {APP_TRADEMARK} est fournie « en l&apos;état ». L&apos;Éditeur (
+            {PUBLISHER_LEGAL_NAME}) ne saurait être tenu responsable de tout dommage
+            indirect résultant de
             l&apos;utilisation ou de l&apos;impossibilité d&apos;utiliser
-            l&apos;application. La responsabilité de l&apos;éditeur est limitée
+            l&apos;application. La responsabilité de l&apos;Éditeur est limitée
             aux seuls dommages directs prouvés, dans la limite du montant payé
             par l&apos;utilisateur pour l&apos;abonnement au cours des 12 derniers
             mois.
@@ -108,10 +117,10 @@ export default function CGU() {
 
           <h2>8. Modifications des CGU</h2>
           <p>
-            L&apos;éditeur se réserve le droit de modifier les présentes CGU à
+            {PUBLISHER_LEGAL_NAME} se réserve le droit de modifier les présentes CGU à
             tout moment. Les utilisateurs seront informés via l&apos;application
             de toute modification substantielle. La poursuite de l&apos;utilisation
-            de Suhab après modification vaut acceptation des nouvelles CGU.
+            de {APP_TRADEMARK} après modification vaut acceptation des nouvelles CGU.
           </p>
 
           <h2>9. Droit applicable et juridiction</h2>
