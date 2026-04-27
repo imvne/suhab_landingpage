@@ -21,6 +21,12 @@ const C = {
       beigeMid: "#E8E0D5",
 } as const;
 
+/** Fichiers dans `public/images/` — compatible GitHub Pages (`base` Vite). */
+function img(name: string) {
+      const clean = name.replace(/^\//, "");
+      return `${import.meta.env.BASE_URL}images/${clean}`;
+}
+
 // ── Device detection (iOS / Android) ───────────────────────────────────
 function useDeviceStore(): "ios" | "android" | "other" {
       const [store, setStore] = useState<"ios" | "android" | "other">("other");
@@ -256,7 +262,7 @@ function Navbar() {
                         onClick={handleLogoClick}
                   >
                         <StyledNavLogo
-                              src="/images/logosuhab.png"
+                              src={img("logosuhab.png")}
                               alt="Suhab"
                               $isMobile={isMobile}
                               $scrolled={scrolled}
@@ -277,7 +283,7 @@ function Hero() {
                         <StyledHeroLeft $isMobile={isMobile}>
                               <StyledHeroBadge $isMobile={isMobile}>
                                     <StyledHeroBadgeImg
-                                          src="/images/asterixe.png"
+                                          src={img("asterixe.png")}
                                           alt=""
                                           $isMobile={isMobile}
                                     />
@@ -301,7 +307,7 @@ function Hero() {
                                     <StyledHeroVisual $isMobile={true}>
                                           <StyledHeroPhoneWrap $isMobile={true}>
                                                 <StyledHeroScreenshot
-                                                      src="/images/IMG_7756.PNG"
+                                                      src={img("IMG_7756.PNG")}
                                                       alt="Aperçu de l'app Suhab"
                                                       $isMobile={true}
                                                 />
@@ -367,7 +373,7 @@ function Hero() {
                                                       aria-hidden="true"
                                                 />
                                                 <StyledHeroMascot
-                                                      src="/images/lantern_thumb.png"
+                                                      src={img("lantern_thumb.png")}
                                                       alt="Mascotte Suhab — lanterne avec pouces en l'air"
                                                       $isMobile={false}
                                                 />
@@ -376,7 +382,7 @@ function Hero() {
                                                 $isMobile={false}
                                           >
                                                 <StyledHeroScreenshot
-                                                      src="/images/IMG_7756.PNG"
+                                                      src={img("IMG_7756.PNG")}
                                                       alt="Aperçu de l'app Suhab"
                                                       $isMobile={false}
                                                 />
@@ -396,7 +402,7 @@ function HeroLanternMobile() {
       return (
             <StyledHeroLanternMobile>
                   <img
-                        src="/images/lantern_thumb.png"
+                        src={img("lantern_thumb.png")}
                         alt=""
                         aria-hidden="true"
                   />
@@ -488,7 +494,7 @@ function ReadingInterface() {
                                     Mode cartes
                               </StyledReadingMockupLabel>
                               <StyledReadingMockupImg
-                                    src="/images/IMG_7758.PNG"
+                                    src={img("IMG_7758.PNG")}
                                     alt="Mode cartes — affichage par cartes"
                                     $isMobile={isMobile}
                               />
@@ -498,7 +504,7 @@ function ReadingInterface() {
                                     Mode défilement
                               </StyledReadingMockupLabel>
                               <StyledReadingMockupImg
-                                    src="/images/IMG_7757.PNG"
+                                    src={img("IMG_7757.PNG")}
                                     alt="Mode défilement — affichage en défilement"
                                     $isMobile={isMobile}
                               />
@@ -615,7 +621,7 @@ function StreakSection() {
 
       const streaks = [
             {
-                  src: "/images/lanterns/streak0.png",
+                  src: img("lanterns/streak0.png"),
                   label: "Jour 0",
                   sub: "Éteinte",
                   size: isMobile ? 50 : 70,
@@ -623,7 +629,7 @@ function StreakSection() {
                   glowHover: "rgba(59,35,10,0.10)",
             },
             {
-                  src: "/images/lanterns/streak1.png",
+                  src: img("lanterns/streak1.png"),
                   label: "Jour 1",
                   sub: "Veille",
                   size: isMobile ? 62 : 88,
@@ -631,7 +637,7 @@ function StreakSection() {
                   glowHover: "rgba(200,160,100,0.20)",
             },
             {
-                  src: "/images/lanterns/streak2.png",
+                  src: img("lanterns/streak2.png"),
                   label: "Jour 3",
                   sub: "S'allume",
                   size: isMobile ? 74 : 104,
@@ -639,7 +645,7 @@ function StreakSection() {
                   glowHover: "rgba(240,94,32,0.24)",
             },
             {
-                  src: "/images/lanterns/streak3.png",
+                  src: img("lanterns/streak3.png"),
                   label: "Jour 7",
                   sub: "Lumineuse",
                   size: isMobile ? 84 : 118,
@@ -647,7 +653,7 @@ function StreakSection() {
                   glowHover: "rgba(240,94,32,0.38)",
             },
             {
-                  src: "/images/lanterns/streak4.png",
+                  src: img("lanterns/streak4.png"),
                   label: "14+ jours",
                   sub: "Rayonnante",
                   size: isMobile ? 94 : 134,
@@ -799,7 +805,7 @@ function TwoPaths() {
 
                               <StyledPathCtaWrap>
                                     <StyledPathScreenshot
-                                          src="/images/IMG_7749.png"
+                                          src={img("IMG_7749.png")}
                                           alt="Aperçu lecture libre"
                                           $isMobile={isMobile}
                                           $dark={false}
@@ -830,7 +836,7 @@ function TwoPaths() {
 
                               <StyledPathCtaWrap>
                                     <StyledPathScreenshot
-                                          src="/images/IMG_7762.png"
+                                          src={img("IMG_7762.png")}
                                           alt="Aperçu habitudes"
                                           $isMobile={isMobile}
                                           $dark={false}
@@ -859,7 +865,7 @@ function TwoPaths() {
 
                               <StyledPathCtaWrap>
                                     <StyledPathScreenshot
-                                          src="/images/IMG_7761.png"
+                                          src={img("IMG_7761.png")}
                                           alt="Aperçu challenges"
                                           $isMobile={isMobile}
                                           $dark={true}
@@ -949,7 +955,7 @@ function Footer() {
                         <StyledFooterTop $isMobile={isMobile}>
                               <StyledFooterBrand $isMobile={isMobile}>
                                     <StyledFooterLogo
-                                          src="/images/logosuhab.png"
+                                          src={img("logosuhab.png")}
                                           alt="Suhab"
                                           $isMobile={isMobile}
                                     />
