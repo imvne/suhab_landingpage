@@ -10,6 +10,9 @@ import Contact from "./pages/Contact";
 // ── Store links (à remplacer quand disponibles) ─────────────────────────
 const APP_STORE_LINK = "#"; // TODO: https://apps.apple.com/app/...
 
+/** Page e-mail / lancement (source unique — évite de dupliquer le projet Tilawa). */
+const SUHAB_LAUNCH_SIGNUP_URL = "https://suhab-app-lancement.netlify.app/";
+
 // ── Design tokens ──────────────────────────────────────────────────────
 const C = {
       bg: "#EEEBE6",
@@ -320,7 +323,7 @@ function Hero() {
                                     $hasVisualAbove={isMobile}
                               >
                                     <CTAButton
-                                          disabled
+                                          href={SUHAB_LAUNCH_SIGNUP_URL}
                                           style={{
                                                 width: isMobile
                                                       ? "100%"
@@ -331,7 +334,7 @@ function Hero() {
                                           }}
                                     >
                                           <StyledCTAButtonInner>
-                                                Télécharger l'app
+                                                Télécharger l&apos;app
                                                 <ClockIcon />
                                           </StyledCTAButtonInner>
                                     </CTAButton>
@@ -922,7 +925,7 @@ function DownloadCTA() {
                                     </CTAButton>
                               ) : (
                                     <CTAButton
-                                          disabled
+                                          href={SUHAB_LAUNCH_SIGNUP_URL}
                                           style={{
                                                 width: isMobile
                                                       ? "100%"
@@ -933,7 +936,7 @@ function DownloadCTA() {
                                           }}
                                     >
                                           <StyledCTAButtonInner>
-                                                Télécharger l'app
+                                                Télécharger l&apos;app
                                                 <ClockIcon />
                                           </StyledCTAButtonInner>
                                     </CTAButton>
@@ -1027,6 +1030,27 @@ function ScrollToTop() {
       return null;
 }
 
+/** /comingsoon et /suhab/comingsoon → même page Netlify (inscription). */
+function SignupLaunchRedirect() {
+      useEffect(() => {
+            window.location.replace(SUHAB_LAUNCH_SIGNUP_URL);
+      }, []);
+      return (
+            <div
+                  style={{
+                        padding: "120px 24px 80px",
+                        textAlign: "center",
+                        fontFamily: '"Epilogue", sans-serif',
+                        fontSize: 16,
+                        color: C.text,
+                        opacity: 0.85,
+                  }}
+            >
+                  <p>Redirection vers la page d&apos;inscription…</p>
+            </div>
+      );
+}
+
 // ── App ─────────────────────────────────────────────────────────────────
 export default function App() {
       return (
@@ -1056,6 +1080,10 @@ export default function App() {
                               />
                               <Route path="/terms-of-use" element={<CGU />} />
                               <Route path="/contact" element={<Contact />} />
+                              <Route
+                                    path="/comingsoon"
+                                    element={<SignupLaunchRedirect />}
+                              />
                         </Routes>
                   </main>
                   <Footer />
