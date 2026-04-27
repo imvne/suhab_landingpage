@@ -1015,7 +1015,7 @@ function Footer() {
 
                         <StyledFooterBottom $isMobile={isMobile}>
                               <StyledFooterCopyright>
-                                    © 2026 {PUBLISHER_LEGAL_NAME}. -{" "}
+                                    © 2026 {PUBLISHER_LEGAL_NAME} -{" "}
                                     {APP_TRADEMARK}. Tous droits réservés.
                               </StyledFooterCopyright>
                               <StyledFooterLove>
