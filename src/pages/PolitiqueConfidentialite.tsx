@@ -1,12 +1,11 @@
 import styled from "styled-components";
+import { SUPPORT_EMAIL } from "../config/contact";
 
 const C = {
   text: "#3B230A",
   beigeMid: "#E8E0D5",
   accent: "#F05E20",
 } as const;
-
-const CONTACT = "support@minimoapps.fr";
 
 export default function PolitiqueConfidentialite() {
   return (
@@ -108,7 +107,7 @@ export default function PolitiqueConfidentialite() {
             Conformément au RGPD et à la loi Informatique et Libertés, vous
             pouvez exercer vos droits d&apos;accès, de rectification, d&apos;effacement,
             de limitation, de portabilité et d&apos;opposition en nous écrivant à{" "}
-            <a href={`mailto:${CONTACT}`}>{CONTACT}</a>. Nous répondrons dans les
+            <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>. Nous répondrons dans les
             délais prévus par la loi. Vous pouvez aussi introduire une réclamation
             auprès de la CNIL (
             <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">
@@ -135,7 +134,7 @@ export default function PolitiqueConfidentialite() {
           <h2>9. Contact</h2>
           <p>
             Pour toute question relative à la protection de vos données :{" "}
-            <a href={`mailto:${CONTACT}`}>{CONTACT}</a>
+            <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
           </p>
         </StyledContent>
       </StyledInner>

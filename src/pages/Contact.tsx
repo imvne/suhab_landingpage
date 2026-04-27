@@ -1,37 +1,38 @@
 import styled from "styled-components";
+import { SUPPORT_EMAIL } from "../config/contact";
 
 const C = {
   text: "#3B230A",
   beigeMid: "#E8E0D5",
+  accent: "#F05E20",
 } as const;
+
+const lanternSrc = `${import.meta.env.BASE_URL}images/lantern_thumb.png`;
 
 export default function Contact() {
   return (
     <StyledPage>
       <StyledInner>
         <StyledH1>Contact</StyledH1>
-        <StyledContent>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </p>
-          <h2>Nous contacter</h2>
-          <p>
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
-          </p>
-          <h2>Horaires</h2>
-          <p>
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae
-            ab illo inventore veritatis et quasi architecto beatae vitae dicta
-            sunt explicabo.
-          </p>
-        </StyledContent>
+        <StyledBlock>
+          <StyledLanternWrap>
+            <img
+              src={lanternSrc}
+              alt="Lanterne Suhab"
+              width={160}
+              height={160}
+              loading="lazy"
+            />
+          </StyledLanternWrap>
+          <StyledContent>
+            <p>
+              Si tu as besoin d&apos;aide ou d&apos;informations, envoie-nous un
+              message à{" "}
+              <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+              &nbsp;: nous te répondrons dès que possible.
+            </p>
+          </StyledContent>
+        </StyledBlock>
       </StyledInner>
     </StyledPage>
   );
@@ -53,7 +54,32 @@ const StyledH1 = styled.h1`
   font-size: clamp(28px, 4vw, 40px);
   font-weight: 800;
   color: ${C.text};
-  margin-bottom: 32px;
+  margin-bottom: 28px;
+`;
+
+const StyledBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+  @media (min-width: 600px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 32px;
+  }
+`;
+
+const StyledLanternWrap = styled.div`
+  flex-shrink: 0;
+
+  img {
+    display: block;
+    width: min(160px, 42vw);
+    height: auto;
+    object-fit: contain;
+  }
 `;
 
 const StyledContent = styled.div`
@@ -62,14 +88,15 @@ const StyledContent = styled.div`
   line-height: 1.75;
   color: ${C.text};
 
-  h2 {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 32px 0 12px;
+  p {
+    margin: 0;
+    opacity: 0.92;
   }
 
-  p {
-    margin-bottom: 16px;
-    opacity: 0.9;
+  a {
+    color: ${C.accent};
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    word-break: break-all;
   }
 `;

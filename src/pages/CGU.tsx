@@ -1,12 +1,11 @@
 import styled from "styled-components";
+import { SUPPORT_EMAIL } from "../config/contact";
 
 const C = {
   text: "#3B230A",
   beigeMid: "#E8E0D5",
   accent: "#F05E20",
 } as const;
-
-const CONTACT = "support@minimoapps.fr";
 
 export default function CGU() {
   return (
@@ -125,7 +124,7 @@ export default function CGU() {
           <h2>10. Contact</h2>
           <p>
             Pour toute question relative aux présentes CGU :{" "}
-            <a href={`mailto:${CONTACT}`}>{CONTACT}</a>
+            <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
           </p>
         </StyledContent>
       </StyledInner>
