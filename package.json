@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "postbuild": "node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
+    "postbuild": "node -e \"const fs=require('fs');fs.copyFileSync('dist/index.html','dist/404.html');fs.mkdirSync('dist/suhab',{recursive:true});fs.copyFileSync('dist/index.html','dist/suhab/index.html');\"",
     "preview": "vite preview"
   },
   "dependencies": {

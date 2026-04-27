@@ -1,5 +1,6 @@
-# Déploie le dossier `dist` sur GitHub Pages (URL : /suhab_landingpage/).
-# Réglages repo : Settings → Pages → Build and deployment → Source : GitHub Actions.
+# Déploie le dossier `dist` sur GitHub Pages.
+# Domaine perso (ex. minimoapps.fr) : garde vite base: "/" (déjà le cas).
+# Réglages : Settings → Pages → Source : GitHub Actions (ou branche, selon ton choix).
 
 name: Deploy GitHub Pages
 
