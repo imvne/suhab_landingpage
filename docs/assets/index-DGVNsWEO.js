@@ -196,7 +196,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
     text-underline-offset: 2px;
     word-break: break-all;
   }
-`,Ga="https://suhab-app-lancement.netlify.app/",P={bg:"#EEEBE6",text:"#3B230A",accent:"#F05E20",cta:"#45B251",ctaShadow:"#2A6E32",beige:"#F5F0E8",beigeMid:"#E8E0D5"};function de(e){return`/images/${e.replace(/^\//,"")}`}function py(){const[e,t]=S.useState("other");return S.useEffect(()=>{const n=navigator.userAgent||navigator.vendor,r=/iPad|iPhone|iPod/.test(n)||navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1,i=/android/i.test(n);t(r?"ios":i?"android":"other")},[]),e}function Le(e){const[t,n]=S.useState(!1);return S.useEffect(()=>{const r=window.matchMedia(e);r.matches!==t&&n(r.matches);const i=()=>n(r.matches);return r.addEventListener("change",i),()=>r.removeEventListener("change",i)},[t,e]),t}function hy(){return c.jsxs(Py,{"aria-hidden":"true",children:[c.jsxs("filter",{id:"grain-filter",children:[c.jsx("feTurbulence",{type:"fractalNoise",baseFrequency:"0.72",numOctaves:"4",stitchTiles:"stitch"}),c.jsx("feColorMatrix",{type:"saturate",values:"0"})]}),c.jsx("rect",{width:"100%",height:"100%",filter:"url(#grain-filter)"})]})}function Ds(){return c.jsxs("svg",{width:18,height:18,viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg","aria-hidden":!0,children:[c.jsx("circle",{cx:"12",cy:"12",r:"9",stroke:"currentColor",strokeWidth:"2"}),c.jsx("path",{d:"M12 7v5l3 2",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"})]})}function As({children:e,onClick:t,href:n,style:r,disabled:i}){const[o,l]=S.useState(!1);return i?c.jsx(Cc,{type:"button",disabled:!0,style:r,children:e}):n?c.jsx(_y,{href:n,target:"_blank",rel:"noopener noreferrer",$pressed:o,onMouseDown:()=>l(!0),onMouseUp:()=>l(!1),onMouseLeave:()=>l(!1),onTouchStart:()=>l(!0),onTouchEnd:()=>l(!1),style:r,children:e}):c.jsx(Cc,{$pressed:o,onClick:t,onMouseDown:()=>l(!0),onMouseUp:()=>l(!1),onMouseLeave:()=>l(!1),onTouchStart:()=>l(!0),onTouchEnd:()=>l(!1),style:r,children:e})}function my({children:e,onClick:t,light:n=!1,style:r}){return c.jsx(Ly,{$light:n,onClick:t,style:r,children:e})}function gy(){const[e,t]=S.useState(!1),n=Le("(max-width: 768px)"),r=ht();S.useEffect(()=>{const o=()=>t(window.scrollY>40);return window.addEventListener("scroll",o,{passive:!0}),()=>window.removeEventListener("scroll",o)},[]);const i=()=>{r.pathname==="/"&&window.scrollTo({top:0,behavior:"smooth"})};return c.jsx(zy,{$scrolled:e,$isMobile:n,children:c.jsx(Vo,{to:"/","aria-label":"Retour à l'accueil",onClick:i,children:c.jsx(Ny,{src:de("logosuhab.png"),alt:"Suhab",$isMobile:n,$scrolled:e})})})}function vy(){const e=Le("(max-width: 768px)"),t=Le("(max-width: 1024px)");return c.jsx(Ty,{children:c.jsxs(by,{$isMobile:e,$isTablet:t,children:[c.jsxs(Dy,{$isMobile:e,children:[c.jsxs(Ay,{$isMobile:e,children:[c.jsx(Fy,{src:de("asterixe.png"),alt:"",$isMobile:e}),c.jsx(Oy,{$isMobile:e,children:"Bientôt disponible sur App Store"})]}),c.jsxs(Uy,{$isMobile:e,children:[c.jsx(By,{children:"(Re)"}),"connecte-toi",c.jsx("br",{}),"au Coran"]}),c.jsx(Hy,{$isMobile:e,children:"Fais du Coran un compagnon de vie"}),e&&c.jsx(Mc,{$isMobile:!0,children:c.jsx(jc,{$isMobile:!0,children:c.jsx(Rc,{src:de("IMG_7756.PNG"),alt:"Aperçu de l'app Suhab",$isMobile:!0})})}),c.jsxs(Wy,{$isMobile:e,$hasVisualAbove:e,children:[c.jsx(As,{href:Ga,style:{width:e?"100%":"auto",maxWidth:e?280:"none"},children:c.jsxs(Fs,{children:["Télécharger l'app",c.jsx(Ds,{})]})}),c.jsx(my,{onClick:()=>{var n;(n=document.getElementById("lecture"))==null||n.scrollIntoView({behavior:"smooth"})},style:{width:e?"100%":"auto",maxWidth:e?280:"none"},children:"Voir les fonctionnalités"})]})]}),!e&&c.jsxs(Mc,{$isMobile:!1,children:[c.jsx(Qy,{$isMobile:e,"aria-hidden":"true"}),c.jsxs(c.Fragment,{children:[c.jsxs(Vy,{$isMobile:!1,children:[c.jsx(Gy,{$isMobile:!1,"aria-hidden":"true"}),c.jsx(Yy,{src:de("lantern_thumb.png"),alt:"Mascotte Suhab — lanterne avec pouces en l'air",$isMobile:!1})]}),c.jsx(jc,{$isMobile:!1,children:c.jsx(Rc,{src:de("IMG_7756.PNG"),alt:"Aperçu de l'app Suhab",$isMobile:!1})})]})]})]})})}function yy(){return Le("(max-width: 768px)")?c.jsx(Iy,{children:c.jsx("img",{src:de("lantern_thumb.png"),alt:"","aria-hidden":"true"})}):null}function xy(){const e=Le("(max-width: 768px)");return c.jsx(Ky,{$isMobile:e,children:c.jsxs(qy,{$isMobile:e,children:[c.jsxs(Jy,{$isMobile:e,children:[c.jsxs(Xy,{children:["Le prophète Muhammad ﷺ a dit :",c.jsx("br",{}),"[...] « Vous devez pratiquer comme acte ce dont vous êtes capables car certes Allah ne se lasse pas tant que vous ne vous lassez pas et certes",c.jsx("br",{})]}),"les actes les plus aimés par Allah sont ceux faits avec assiduité, même s'ils sont peu nombreux. »"]}),c.jsx(Zy,{children:"Rapporté par Mouslim dans son Sahih n°782"})]})})}function wy(){const e=Le("(max-width: 768px)"),t=Le("(max-width: 1024px)");return c.jsxs(e1,{id:"lecture",$isMobile:e,$isTablet:t,children:[c.jsxs(t1,{$isMobile:e,children:[c.jsxs(n1,{$isMobile:e,children:[c.jsx(r1,{children:"Interface"}),c.jsxs(i1,{$isMobile:e,children:["Une lecture sobre",c.jsx("br",{}),"et agréable."]}),c.jsx(o1,{$isMobile:e,children:"L'interface de lecture du Coran est conçue pour rester simple et apaisante. Deux modes d'affichage, des langues au choix — tu lis comme tu préfères."})]}),c.jsxs(l1,{$isMobile:e,children:[c.jsxs(Pc,{$isMobile:e,children:[c.jsx(_c,{children:"Modes d'affichage"}),c.jsx(Lc,{children:"Mode cartes ou mode défilement — choisis celui qui te convient."})]}),c.jsxs(Pc,{$isMobile:e,children:[c.jsx(_c,{children:"Langues"}),c.jsx(Lc,{children:"Français, arabe ou phonétique — affiche les traductions qui t'aident."})]})]})]}),c.jsxs(s1,{$isMobile:e,children:[c.jsxs(zc,{$isMobile:e,children:[c.jsx(Nc,{children:"Mode cartes"}),c.jsx(Tc,{src:de("IMG_7758.PNG"),alt:"Mode cartes — affichage par cartes",$isMobile:e})]}),c.jsxs(zc,{$isMobile:e,children:[c.jsx(Nc,{children:"Mode défilement"}),c.jsx(Tc,{src:de("IMG_7757.PNG"),alt:"Mode défilement — affichage en défilement",$isMobile:e})]})]})]})}function Sy(){const[e,t]=S.useState(null),[n,r]=S.useState(null),i=Le("(max-width: 768px)"),o=Le("(max-width: 1024px)"),l=(u,h)=>{i?r(h?u:null):t(h?u:null)},s=u=>i?n===u:e===u,a=[{src:de("lanterns/streak0.png"),label:"Jour 0",sub:"Éteinte",size:i?50:70,glow:"rgba(59,35,10,0.04)",glowHover:"rgba(59,35,10,0.10)"},{src:de("lanterns/streak1.png"),label:"Jour 1",sub:"Veille",size:i?62:88,glow:"rgba(200,160,100,0.08)",glowHover:"rgba(200,160,100,0.20)"},{src:de("lanterns/streak2.png"),label:"Jour 3",sub:"S'allume",size:i?74:104,glow:"rgba(240,94,32,0.10)",glowHover:"rgba(240,94,32,0.24)"},{src:de("lanterns/streak3.png"),label:"Jour 7",sub:"Lumineuse",size:i?84:118,glow:"rgba(240,94,32,0.18)",glowHover:"rgba(240,94,32,0.38)"},{src:de("lanterns/streak4.png"),label:"14+ jours",sub:"Rayonnante",size:i?94:134,glow:"rgba(240,94,32,0.28)",glowHover:"rgba(240,94,32,0.52)"}];return c.jsx(c1,{$isMobile:i,$isTablet:o,children:c.jsxs(f1,{children:[c.jsxs(d1,{$isMobile:i,children:[c.jsx(p1,{children:"Streak"}),c.jsxs(h1,{$isMobile:i,children:["Ta lanterne,",c.jsx("br",{}),"miroir de ta régularité."]}),c.jsx(m1,{$isMobile:i,children:"Elle brille davantage avec ton streak et s'atténue doucement si tu t'absentes."})]}),c.jsx(g1,{$isMobile:i,$isTablet:o,children:a.map((u,h)=>c.jsxs(v1,{$isMobile:i,$active:s(h),$isRow:i,onMouseEnter:()=>!i&&l(h,!0),onMouseLeave:()=>!i&&l(h,!1),onTouchStart:()=>i&&l(h,!0),onTouchEnd:()=>i&&l(h,!1),children:[c.jsxs(y1,{children:[c.jsx(x1,{"aria-hidden":"true",$color:s(h)?u.glowHover:u.glow,$size:u.size}),c.jsx(w1,{src:u.src,alt:u.label,$size:u.size,$active:s(h),$glowHover:u.glowHover})]}),c.jsx(S1,{$isMobile:i,children:c.jsx($1,{$active:s(h),children:u.label})})]},h))})]})})}function $y(){const e=Le("(max-width: 768px)"),t=Le("(max-width: 1024px)"),n=i=>c.jsxs(Dc,{$dark:!1,$isMobile:e,children:[c.jsx(Ac,{$dark:!1,children:"•"}),i]},i),r=i=>c.jsxs(Dc,{$dark:!0,$isMobile:e,children:[c.jsx(Ac,{$dark:!0,children:"•"}),i]},i);return c.jsxs(k1,{id:"paths",$isMobile:e,$isTablet:t,children:[c.jsxs(E1,{$isMobile:e,children:[c.jsx(a1,{children:"Parcours"}),c.jsxs(u1,{$isMobile:e,children:["Ton besoin,",c.jsx("br",{}),"ton parcours."]})]}),c.jsxs(C1,{$isMobile:e,children:[c.jsxs(j1,{$isMobile:e,children:[c.jsx(zl,{$dark:!1,$isMobile:e,children:"Lecture libre"}),c.jsx(Nl,{$dark:!1,$isMobile:e,children:"Lis à ton rythme, en essayant de maintenir le streak."}),c.jsx(Tl,{children:c.jsx(Il,{src:de("IMG_7749.png"),alt:"Aperçu lecture libre",$isMobile:e,$dark:!1})})]}),c.jsx(M1,{$isMobile:e,children:"+"}),c.jsxs(Ic,{$dark:!1,$isMobile:e,children:[c.jsx(zl,{$dark:!1,$isMobile:e,children:"Habitudes"}),c.jsx(Nl,{$dark:!1,$isMobile:e,children:"Définis tes propres objectifs de lecture régulière. Complète ta lecture et créé une nouvelle habitude."}),c.jsx(bc,{children:["1 verset par jour","Une sourate par semaine","Al-Baqarah le vendredi"].map(n)}),c.jsx(Tl,{children:c.jsx(Il,{src:de("IMG_7762.png"),alt:"Aperçu habitudes",$isMobile:e,$dark:!1})})]}),c.jsxs(Ic,{$dark:!0,$isMobile:e,children:[c.jsx(zl,{$dark:!0,$isMobile:e,children:"Challenges"}),c.jsx(Nl,{$dark:!0,$isMobile:e,children:"Un challenge définit avec des parcours sur plusieurs jours/semaines. Grille interactive et roadmap pour suivre ta progression."}),c.jsx(bc,{children:["Ramadan 30j — Coran en entier","1 juz par jour","D'autres défis à venir"].map(r)}),c.jsx(Tl,{children:c.jsx(Il,{src:de("IMG_7761.png"),alt:"Aperçu challenges",$isMobile:e,$dark:!0})})]})]})]})}function ky(){const e=Le("(max-width: 768px)"),t=py();return c.jsx(R1,{$isMobile:e,children:c.jsxs(P1,{children:[c.jsx(_1,{$isMobile:e,children:"Prêt.e à te reconnecter au Coran ?"}),c.jsx(L1,{$isMobile:e,children:"Télécharge l'app gratuitement"}),c.jsx(z1,{$isMobile:e,children:t==="other"?c.jsx(As,{disabled:!0,style:e?{backgroundColor:P.accent,boxShadow:"0 3px 0 #B94718",opacity:1,width:"100%",maxWidth:280}:{backgroundColor:P.accent,boxShadow:"0 3px 0 #B94718",opacity:1},children:c.jsxs(Fs,{children:["App Store",c.jsx(Ds,{})]})}):c.jsx(As,{href:Ga,style:{width:e?"100%":"auto",maxWidth:e?280:"none"},children:c.jsxs(Fs,{children:["Télécharger l'app",c.jsx(Ds,{})]})})})]})})}function Ey(){const e=Le("(max-width: 768px)");return Le("(max-width: 1024px)"),c.jsx(N1,{$isMobile:e,children:c.jsxs(T1,{children:[c.jsxs(I1,{$isMobile:e,children:[c.jsxs(b1,{$isMobile:e,children:[c.jsx(D1,{src:de("logosuhab.png"),alt:"Suhab",$isMobile:e}),c.jsx(A1,{$isMobile:e,children:"Fais du Coran ton compagnon de vie"})]}),c.jsx(F1,{$isMobile:e,children:[{title:"Légal",links:[{label:"Politique de confidentialité",to:"/privacy-policy"},{label:"CGU",to:"/terms-of-use"},{label:"Contact",to:"/contact"}]}].map(t=>c.jsxs(O1,{$isMobile:e,children:[c.jsx(U1,{children:t.title}),t.links.map(n=>c.jsx(B1,{as:Vo,to:n.to,$isMobile:e,children:n.label},n.to))]},t.title))})]}),c.jsxs(H1,{$isMobile:e,children:[c.jsxs(W1,{children:["© 2026 ",Se," -"," ",oe,". Tous droits réservés."]}),c.jsx(V1,{children:"Fait avec 🧡"})]})]})})}function Cy(){const{pathname:e}=ht();return S.useEffect(()=>{window.scrollTo(0,0)},[e]),null}function My(){return S.useEffect(()=>{window.location.replace(Ga)},[]),c.jsx("div",{style:{padding:"120px 24px 80px",textAlign:"center",fontFamily:'"Epilogue", sans-serif',fontSize:16,color:P.text,opacity:.85},children:c.jsx("p",{children:"Redirection vers la page d'inscription…"})})}function jy(){return c.jsxs(Ry,{children:[c.jsx(Cy,{}),c.jsx(hy,{}),c.jsx(gy,{}),c.jsx("main",{children:c.jsxs(c0,{children:[c.jsx(En,{path:"/",element:c.jsxs(c.Fragment,{children:[c.jsx(vy,{}),c.jsx(yy,{}),c.jsx(xy,{}),c.jsx(wy,{}),c.jsx(Sy,{}),c.jsx($y,{}),c.jsx(ky,{})]})}),c.jsx(En,{path:"/privacy-policy",element:c.jsx(Qv,{})}),c.jsx(En,{path:"/terms-of-use",element:c.jsx(Zv,{})}),c.jsx(En,{path:"/contact",element:c.jsx(ly,{})}),c.jsx(En,{path:"/comingsoon",element:c.jsx(My,{})})]})}),c.jsx(Ey,{})]})}const Ry=$.div`
+`,Ga="https://suhab-app-lancement.netlify.app/",P={bg:"#EEEBE6",text:"#3B230A",accent:"#F05E20",cta:"#45B251",ctaShadow:"#2A6E32",beige:"#F5F0E8",beigeMid:"#E8E0D5"};function de(e){return`/images/${e.replace(/^\//,"")}`}function py(){const[e,t]=S.useState("other");return S.useEffect(()=>{const n=navigator.userAgent||navigator.vendor,r=/iPad|iPhone|iPod/.test(n)||navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1,i=/android/i.test(n);t(r?"ios":i?"android":"other")},[]),e}function Le(e){const[t,n]=S.useState(!1);return S.useEffect(()=>{const r=window.matchMedia(e);r.matches!==t&&n(r.matches);const i=()=>n(r.matches);return r.addEventListener("change",i),()=>r.removeEventListener("change",i)},[t,e]),t}function hy(){return c.jsxs(Py,{"aria-hidden":"true",children:[c.jsxs("filter",{id:"grain-filter",children:[c.jsx("feTurbulence",{type:"fractalNoise",baseFrequency:"0.72",numOctaves:"4",stitchTiles:"stitch"}),c.jsx("feColorMatrix",{type:"saturate",values:"0"})]}),c.jsx("rect",{width:"100%",height:"100%",filter:"url(#grain-filter)"})]})}function Ds(){return c.jsxs("svg",{width:18,height:18,viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg","aria-hidden":!0,children:[c.jsx("circle",{cx:"12",cy:"12",r:"9",stroke:"currentColor",strokeWidth:"2"}),c.jsx("path",{d:"M12 7v5l3 2",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"})]})}function As({children:e,onClick:t,href:n,style:r,disabled:i}){const[o,l]=S.useState(!1);return i?c.jsx(Cc,{type:"button",disabled:!0,style:r,children:e}):n?c.jsx(_y,{href:n,target:"_blank",rel:"noopener noreferrer",$pressed:o,onMouseDown:()=>l(!0),onMouseUp:()=>l(!1),onMouseLeave:()=>l(!1),onTouchStart:()=>l(!0),onTouchEnd:()=>l(!1),style:r,children:e}):c.jsx(Cc,{$pressed:o,onClick:t,onMouseDown:()=>l(!0),onMouseUp:()=>l(!1),onMouseLeave:()=>l(!1),onTouchStart:()=>l(!0),onTouchEnd:()=>l(!1),style:r,children:e})}function my({children:e,onClick:t,light:n=!1,style:r}){return c.jsx(Ly,{$light:n,onClick:t,style:r,children:e})}function gy(){const[e,t]=S.useState(!1),n=Le("(max-width: 768px)"),r=ht();S.useEffect(()=>{const o=()=>t(window.scrollY>40);return window.addEventListener("scroll",o,{passive:!0}),()=>window.removeEventListener("scroll",o)},[]);const i=()=>{r.pathname==="/"&&window.scrollTo({top:0,behavior:"smooth"})};return c.jsx(zy,{$scrolled:e,$isMobile:n,children:c.jsx(Vo,{to:"/","aria-label":"Retour à l'accueil",onClick:i,children:c.jsx(Ny,{src:de("logosuhab.png"),alt:"Suhab",$isMobile:n,$scrolled:e})})})}function vy(){const e=Le("(max-width: 768px)"),t=Le("(max-width: 1024px)");return c.jsx(Ty,{children:c.jsxs(by,{$isMobile:e,$isTablet:t,children:[c.jsxs(Dy,{$isMobile:e,children:[c.jsxs(Ay,{$isMobile:e,children:[c.jsx(Fy,{src:de("asterixe.png"),alt:"",$isMobile:e}),c.jsx(Oy,{$isMobile:e,children:"Bientôt disponible sur App Store"})]}),c.jsxs(Uy,{$isMobile:e,children:[c.jsx(By,{children:"(Re)"}),"connecte-toi",c.jsx("br",{}),"au Coran"]}),e&&c.jsx(Mc,{$isMobile:!0,children:c.jsx(jc,{$isMobile:!0,children:c.jsx(Rc,{src:de("IMG_7756.PNG"),alt:"Aperçu de l'app Suhab",$isMobile:!0})})}),c.jsxs(Hy,{$isMobile:e,$hasVisualAbove:e,children:[c.jsx(As,{href:Ga,style:{width:e?"100%":"auto",maxWidth:e?280:"none"},children:c.jsxs(Fs,{children:["Télécharger l'app",c.jsx(Ds,{})]})}),c.jsx(my,{onClick:()=>{var n;(n=document.getElementById("lecture"))==null||n.scrollIntoView({behavior:"smooth"})},style:{width:e?"100%":"auto",maxWidth:e?280:"none"},children:"Voir les fonctionnalités"})]})]}),!e&&c.jsxs(Mc,{$isMobile:!1,children:[c.jsx(Gy,{$isMobile:e,"aria-hidden":"true"}),c.jsxs(c.Fragment,{children:[c.jsxs(Wy,{$isMobile:!1,children:[c.jsx(Vy,{$isMobile:!1,"aria-hidden":"true"}),c.jsx(Qy,{src:de("lantern_thumb.png"),alt:"Mascotte Suhab — lanterne avec pouces en l'air",$isMobile:!1})]}),c.jsx(jc,{$isMobile:!1,children:c.jsx(Rc,{src:de("IMG_7756.PNG"),alt:"Aperçu de l'app Suhab",$isMobile:!1})})]})]})]})})}function yy(){return Le("(max-width: 768px)")?c.jsx(Iy,{children:c.jsx("img",{src:de("lantern_thumb.png"),alt:"","aria-hidden":"true"})}):null}function xy(){const e=Le("(max-width: 768px)");return c.jsx(Yy,{$isMobile:e,children:c.jsxs(Ky,{$isMobile:e,children:[c.jsxs(Xy,{$isMobile:e,children:[c.jsxs(qy,{children:["Le prophète Muhammad ﷺ a dit :",c.jsx("br",{}),"[...] « Vous devez pratiquer comme acte ce dont vous êtes capables car certes Allah ne se lasse pas tant que vous ne vous lassez pas et certes",c.jsx("br",{})]}),"les actes les plus aimés par Allah sont ceux faits avec assiduité, même s'ils sont peu nombreux. »"]}),c.jsx(Jy,{children:"Rapporté par Mouslim dans son Sahih n°782"})]})})}function wy(){const e=Le("(max-width: 768px)"),t=Le("(max-width: 1024px)");return c.jsxs(Zy,{id:"lecture",$isMobile:e,$isTablet:t,children:[c.jsxs(e1,{$isMobile:e,children:[c.jsxs(t1,{$isMobile:e,children:[c.jsx(n1,{children:"Interface"}),c.jsxs(r1,{$isMobile:e,children:["Une lecture sobre",c.jsx("br",{}),"et agréable."]}),c.jsx(i1,{$isMobile:e,children:"L'interface de lecture du Coran est conçue pour rester simple et apaisante. Deux modes d'affichage, des langues au choix — tu lis comme tu préfères."})]}),c.jsxs(o1,{$isMobile:e,children:[c.jsxs(Pc,{$isMobile:e,children:[c.jsx(_c,{children:"Modes d'affichage"}),c.jsx(Lc,{children:"Mode cartes ou mode défilement — choisis celui qui te convient."})]}),c.jsxs(Pc,{$isMobile:e,children:[c.jsx(_c,{children:"Langues"}),c.jsx(Lc,{children:"Français, arabe ou phonétique — affiche les traductions qui t'aident."})]})]})]}),c.jsxs(l1,{$isMobile:e,children:[c.jsxs(zc,{$isMobile:e,children:[c.jsx(Nc,{children:"Mode cartes"}),c.jsx(Tc,{src:de("IMG_7758.PNG"),alt:"Mode cartes — affichage par cartes",$isMobile:e})]}),c.jsxs(zc,{$isMobile:e,children:[c.jsx(Nc,{children:"Mode défilement"}),c.jsx(Tc,{src:de("IMG_7757.PNG"),alt:"Mode défilement — affichage en défilement",$isMobile:e})]})]})]})}function Sy(){const[e,t]=S.useState(null),[n,r]=S.useState(null),i=Le("(max-width: 768px)"),o=Le("(max-width: 1024px)"),l=(u,h)=>{i?r(h?u:null):t(h?u:null)},s=u=>i?n===u:e===u,a=[{src:de("lanterns/streak0.png"),label:"Jour 0",sub:"Éteinte",size:i?50:70,glow:"rgba(59,35,10,0.04)",glowHover:"rgba(59,35,10,0.10)"},{src:de("lanterns/streak1.png"),label:"Jour 1",sub:"Veille",size:i?62:88,glow:"rgba(200,160,100,0.08)",glowHover:"rgba(200,160,100,0.20)"},{src:de("lanterns/streak2.png"),label:"Jour 3",sub:"S'allume",size:i?74:104,glow:"rgba(240,94,32,0.10)",glowHover:"rgba(240,94,32,0.24)"},{src:de("lanterns/streak3.png"),label:"Jour 7",sub:"Lumineuse",size:i?84:118,glow:"rgba(240,94,32,0.18)",glowHover:"rgba(240,94,32,0.38)"},{src:de("lanterns/streak4.png"),label:"14+ jours",sub:"Rayonnante",size:i?94:134,glow:"rgba(240,94,32,0.28)",glowHover:"rgba(240,94,32,0.52)"}];return c.jsx(u1,{$isMobile:i,$isTablet:o,children:c.jsxs(c1,{children:[c.jsxs(f1,{$isMobile:i,children:[c.jsx(d1,{children:"Streak"}),c.jsxs(p1,{$isMobile:i,children:["Ta lanterne,",c.jsx("br",{}),"miroir de ta régularité."]}),c.jsx(h1,{$isMobile:i,children:"Elle brille davantage avec ton streak et s'atténue doucement si tu t'absentes."})]}),c.jsx(m1,{$isMobile:i,$isTablet:o,children:a.map((u,h)=>c.jsxs(g1,{$isMobile:i,$active:s(h),$isRow:i,onMouseEnter:()=>!i&&l(h,!0),onMouseLeave:()=>!i&&l(h,!1),onTouchStart:()=>i&&l(h,!0),onTouchEnd:()=>i&&l(h,!1),children:[c.jsxs(v1,{children:[c.jsx(y1,{"aria-hidden":"true",$color:s(h)?u.glowHover:u.glow,$size:u.size}),c.jsx(x1,{src:u.src,alt:u.label,$size:u.size,$active:s(h),$glowHover:u.glowHover})]}),c.jsx(w1,{$isMobile:i,children:c.jsx(S1,{$active:s(h),children:u.label})})]},h))})]})})}function $y(){const e=Le("(max-width: 768px)"),t=Le("(max-width: 1024px)"),n=i=>c.jsxs(Dc,{$dark:!1,$isMobile:e,children:[c.jsx(Ac,{$dark:!1,children:"•"}),i]},i),r=i=>c.jsxs(Dc,{$dark:!0,$isMobile:e,children:[c.jsx(Ac,{$dark:!0,children:"•"}),i]},i);return c.jsxs($1,{id:"paths",$isMobile:e,$isTablet:t,children:[c.jsxs(k1,{$isMobile:e,children:[c.jsx(s1,{children:"Parcours"}),c.jsxs(a1,{$isMobile:e,children:["Ton besoin,",c.jsx("br",{}),"ton parcours."]})]}),c.jsxs(E1,{$isMobile:e,children:[c.jsxs(M1,{$isMobile:e,children:[c.jsx(zl,{$dark:!1,$isMobile:e,children:"Lecture libre"}),c.jsx(Nl,{$dark:!1,$isMobile:e,children:"Lis à ton rythme, en essayant de maintenir le streak."}),c.jsx(Tl,{children:c.jsx(Il,{src:de("IMG_7749.png"),alt:"Aperçu lecture libre",$isMobile:e,$dark:!1})})]}),c.jsx(C1,{$isMobile:e,children:"+"}),c.jsxs(Ic,{$dark:!1,$isMobile:e,children:[c.jsx(zl,{$dark:!1,$isMobile:e,children:"Habitudes"}),c.jsx(Nl,{$dark:!1,$isMobile:e,children:"Définis tes propres objectifs de lecture régulière. Complète ta lecture et créé une nouvelle habitude."}),c.jsx(bc,{children:["1 verset par jour","Une sourate par semaine","Al-Baqarah le vendredi"].map(n)}),c.jsx(Tl,{children:c.jsx(Il,{src:de("IMG_7762.png"),alt:"Aperçu habitudes",$isMobile:e,$dark:!1})})]}),c.jsxs(Ic,{$dark:!0,$isMobile:e,children:[c.jsx(zl,{$dark:!0,$isMobile:e,children:"Challenges"}),c.jsx(Nl,{$dark:!0,$isMobile:e,children:"Un challenge définit avec des parcours sur plusieurs jours/semaines. Grille interactive et roadmap pour suivre ta progression."}),c.jsx(bc,{children:["Ramadan 30j — Coran en entier","1 juz par jour","D'autres défis à venir"].map(r)}),c.jsx(Tl,{children:c.jsx(Il,{src:de("IMG_7761.png"),alt:"Aperçu challenges",$isMobile:e,$dark:!0})})]})]})]})}function ky(){const e=Le("(max-width: 768px)"),t=py();return c.jsx(j1,{$isMobile:e,children:c.jsxs(R1,{children:[c.jsx(P1,{$isMobile:e,children:"Prêt.e à te reconnecter au Coran ?"}),c.jsx(_1,{$isMobile:e,children:"Télécharge l'app gratuitement"}),c.jsx(L1,{$isMobile:e,children:t==="other"?c.jsx(As,{disabled:!0,style:e?{backgroundColor:P.accent,boxShadow:"0 3px 0 #B94718",opacity:1,width:"100%",maxWidth:280}:{backgroundColor:P.accent,boxShadow:"0 3px 0 #B94718",opacity:1},children:c.jsxs(Fs,{children:["App Store",c.jsx(Ds,{})]})}):c.jsx(As,{href:Ga,style:{width:e?"100%":"auto",maxWidth:e?280:"none"},children:c.jsxs(Fs,{children:["Télécharger l'app",c.jsx(Ds,{})]})})})]})})}function Ey(){const e=Le("(max-width: 768px)");return Le("(max-width: 1024px)"),c.jsx(z1,{$isMobile:e,children:c.jsxs(N1,{children:[c.jsxs(T1,{$isMobile:e,children:[c.jsxs(I1,{$isMobile:e,children:[c.jsx(b1,{src:de("logosuhab.png"),alt:"Suhab",$isMobile:e}),c.jsx(D1,{$isMobile:e,children:"Fais du Coran ton compagnon de vie"})]}),c.jsx(A1,{$isMobile:e,children:[{title:"Légal",links:[{label:"Politique de confidentialité",to:"/privacy-policy"},{label:"CGU",to:"/terms-of-use"},{label:"Contact",to:"/contact"}]}].map(t=>c.jsxs(F1,{$isMobile:e,children:[c.jsx(O1,{children:t.title}),t.links.map(n=>c.jsx(U1,{as:Vo,to:n.to,$isMobile:e,children:n.label},n.to))]},t.title))})]}),c.jsxs(B1,{$isMobile:e,children:[c.jsxs(H1,{children:["© 2026 ",Se," -"," ",oe,". Tous droits réservés."]}),c.jsx(W1,{children:"Fait avec 🧡"})]})]})})}function Cy(){const{pathname:e}=ht();return S.useEffect(()=>{window.scrollTo(0,0)},[e]),null}function My(){return S.useEffect(()=>{window.location.replace(Ga)},[]),c.jsx("div",{style:{padding:"120px 24px 80px",textAlign:"center",fontFamily:'"Epilogue", sans-serif',fontSize:16,color:P.text,opacity:.85},children:c.jsx("p",{children:"Redirection vers la page d'inscription…"})})}function jy(){return c.jsxs(Ry,{children:[c.jsx(Cy,{}),c.jsx(hy,{}),c.jsx(gy,{}),c.jsx("main",{children:c.jsxs(c0,{children:[c.jsx(En,{path:"/",element:c.jsxs(c.Fragment,{children:[c.jsx(vy,{}),c.jsx(yy,{}),c.jsx(xy,{}),c.jsx(wy,{}),c.jsx(Sy,{}),c.jsx($y,{}),c.jsx(ky,{})]})}),c.jsx(En,{path:"/privacy-policy",element:c.jsx(Qv,{})}),c.jsx(En,{path:"/terms-of-use",element:c.jsx(Zv,{})}),c.jsx(En,{path:"/contact",element:c.jsx(ly,{})}),c.jsx(En,{path:"/comingsoon",element:c.jsx(My,{})})]})}),c.jsx(Ey,{})]})}const Ry=$.div`
       background-color: ${P.beigeMid};
       min-height: 100vh;
 `,Py=$.svg`
@@ -429,7 +429,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
 `,By=$.span`
       font-weight: 100;
       opacity: 0.75;
-`,Hy=$.p`
+`;$.p`
       font-family: "Epilogue", sans-serif;
       font-size: ${e=>e.$isMobile?16:18}px;
       line-height: 1.65;
@@ -437,7 +437,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       opacity: 0.68;
       margin: ${e=>e.$isMobile?"0 auto 24px":"0 0 44px"};
       max-width: ${e=>e.$isMobile?"100%":"450px"};
-`,Wy=$.div`
+`;const Hy=$.div`
       display: flex;
       flex-direction: ${e=>e.$isMobile?"column":"row"};
       gap: 14px;
@@ -454,13 +454,13 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       min-height: ${e=>e.$isMobile?0:500}px;
       width: 100%;
       gap: ${e=>e.$isMobile?0:24}px;
-`,Vy=$.div`
+`,Wy=$.div`
       position: relative;
       display: flex;
       align-items: flex-end;
       justify-content: center;
       z-index: 1;
-`,Gy=$.div`
+`,Vy=$.div`
       position: absolute;
       width: ${e=>e.$isMobile?120:260}px;
       height: ${e=>e.$isMobile?120:260}px;
@@ -473,7 +473,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       bottom: 0;
       left: 50%;
       transform: translate(-50%, 20%);
-`,Qy=$.div`
+`,Gy=$.div`
       position: absolute;
       width: ${e=>e.$isMobile?200:280}px;
       height: ${e=>e.$isMobile?200:280}px;
@@ -486,7 +486,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       top: 30%;
       left: 40%;
       transform: translate(-50%, -50%);
-`,Yy=$.img`
+`,Qy=$.img`
       width: ${e=>e.$isMobile?90:200}px;
       position: relative;
       z-index: 1;
@@ -519,13 +519,13 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       width: ${e=>e.$isMobile?12:14}px;
       opacity: 0.15;
       z-index: 0;
-`;const Ky=$.section`
+`;const Yy=$.section`
       background-color: ${P.beigeMid};
       padding: ${e=>e.$isMobile?"64px 24px":"88px 56px"};
       text-align: ${e=>e.$isMobile?"left":"center"};
       position: relative;
       overflow: hidden;
-`,qy=$.div`
+`,Ky=$.div`
       max-width: 760px;
       margin: ${e=>e.$isMobile?"0":"0 auto"};
       position: relative;
@@ -537,14 +537,14 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       opacity: 0.45;
       margin-bottom: ${e=>e.$isMobile?20:28}px;
       display: inline-block;
-`;const Xy=$.span`
+`;const qy=$.span`
       display: block;
       font-family: "Epilogue", sans-serif;
       font-size: 0.82em;
       font-style: normal;
       opacity: 0.5;
       margin-bottom: 1em;
-`,Jy=$.blockquote`
+`,Xy=$.blockquote`
       font-family: "Playfair Display", serif;
       font-size: ${e=>e.$isMobile?"20px":"clamp(19px, 2.8vw, 29px)"};
       font-style: italic;
@@ -553,7 +553,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       line-height: 1.65;
       margin: 0 0 24px;
       text-align: ${e=>e.$isMobile?"justify":"inherit"};
-`,Zy=$.cite`
+`,Jy=$.cite`
       font-family: "Roboto Mono", monospace;
       font-size: 10px;
       text-transform: uppercase;
@@ -561,7 +561,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       color: ${P.text};
       opacity: 0.38;
       font-style: normal;
-`,e1=$.section`
+`,Zy=$.section`
       padding: ${e=>e.$isMobile?"80px 24px":e.$isTablet?"96px 40px":"108px 56px"};
       max-width: 1280px;
       margin: 0 auto;
@@ -569,13 +569,13 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       flex-direction: ${e=>e.$isMobile?"column":"row"};
       align-items: center;
       gap: ${e=>(e.$isMobile,56)}px;
-`,t1=$.div`
+`,e1=$.div`
       flex: ${e=>e.$isMobile?"none":"0 0 45%"};
       max-width: ${e=>e.$isMobile?"100%":"480px"};
-`,n1=$.div`
+`,t1=$.div`
       text-align: ${e=>e.$isMobile?"center":"left"};
       margin-bottom: ${e=>e.$isMobile?40:32}px;
-`,r1=$.span`
+`,n1=$.span`
       font-family: "Roboto Mono", monospace;
       font-size: 11px;
       text-transform: uppercase;
@@ -583,7 +583,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       color: ${P.accent};
       display: block;
       margin-bottom: 14px;
-`,i1=$.h2`
+`,r1=$.h2`
       font-family: "Epilogue", sans-serif;
       font-size: ${e=>e.$isMobile?"32px":"clamp(28px, 3.5vw, 48px)"};
       font-weight: 900;
@@ -591,7 +591,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       letter-spacing: -0.02em;
       line-height: 1.1;
       margin: 0 0 20px;
-`,o1=$.p`
+`,i1=$.p`
       font-family: "Epilogue", sans-serif;
       font-size: ${e=>e.$isMobile?15:17}px;
       line-height: 1.65;
@@ -599,7 +599,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       opacity: 0.68;
       max-width: 560px;
       margin: 0 auto;
-`,l1=$.div`
+`,o1=$.div`
       display: flex;
       flex-direction: ${e=>e.$isMobile?"column":"row"};
       gap: ${e=>e.$isMobile?20:24}px;
@@ -622,7 +622,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       line-height: 1.5;
       color: ${P.text};
       opacity: 0.72;
-`,s1=$.div`
+`,l1=$.div`
       flex: ${e=>e.$isMobile?"none":1};
       display: flex;
       flex-direction: row;
@@ -657,7 +657,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       padding: ${e=>e.$isMobile?"80px 24px":e.$isTablet?"96px 40px":"108px 56px"};
       max-width: 1280px;
       margin: 0 auto;
-`;const a1=$.span`
+`;const s1=$.span`
       font-family: "Roboto Mono", monospace;
       font-size: 11px;
       text-transform: uppercase;
@@ -665,7 +665,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       color: ${P.accent};
       display: block;
       margin-bottom: 14px;
-`,u1=$.h2`
+`,a1=$.h2`
       font-family: "Epilogue", sans-serif;
       font-size: ${e=>e.$isMobile?"32px":"clamp(28px, 3.5vw, 48px)"};
       font-weight: 900;
@@ -719,16 +719,16 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       color: ${e=>e.$dark?P.bg:P.text};
       opacity: ${e=>e.$dark?.65:.68};
       margin: 0;
-`;const c1=$.section`
+`;const u1=$.section`
       padding: ${e=>e.$isMobile?"80px 24px":e.$isTablet?"96px 40px":"108px 56px"};
       background-color: ${P.beigeMid};
-`,f1=$.div`
+`,c1=$.div`
       max-width: 1280px;
       margin: 0 auto;
-`,d1=$.div`
+`,f1=$.div`
       text-align: center;
       margin-bottom: ${e=>e.$isMobile?48:72}px;
-`,p1=$.span`
+`,d1=$.span`
       font-family: "Roboto Mono", monospace;
       font-size: 11px;
       text-transform: uppercase;
@@ -736,7 +736,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       color: ${P.accent};
       display: block;
       margin-bottom: 14px;
-`,h1=$.h2`
+`,p1=$.h2`
       font-family: "Epilogue", sans-serif;
       font-size: ${e=>e.$isMobile?"32px":"clamp(28px, 3.5vw, 48px)"};
       font-weight: 900;
@@ -744,7 +744,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       letter-spacing: -0.02em;
       line-height: 1.1;
       margin-bottom: 20px;
-`,m1=$.p`
+`,h1=$.p`
       font-family: "Epilogue", sans-serif;
       font-size: ${e=>e.$isMobile?15:17}px;
       color: ${P.text};
@@ -752,7 +752,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       max-width: 480px;
       margin: 0 auto;
       line-height: 1.62;
-`,g1=$.div`
+`,m1=$.div`
       display: flex;
       flex-direction: ${e=>e.$isMobile?"column":"row"};
       justify-content: center;
@@ -762,7 +762,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
     max-width: 200px;
     margin: 0 auto;
   `:""}
-`,v1=$.div`
+`,g1=$.div`
       display: flex;
       flex-direction: ${e=>e.$isRow?"row":"column"};
       align-items: center;
@@ -777,13 +777,13 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
     -webkit-tap-highlight-color: transparent;
     user-select: none;
   `:""}
-`,y1=$.div`
+`,v1=$.div`
       position: relative;
       display: flex;
       align-items: flex-end;
       justify-content: center;
       padding-bottom: 4px;
-`,x1=$.div`
+`,y1=$.div`
       position: absolute;
       bottom: -10px;
       left: 50%;
@@ -794,16 +794,16 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       background-color: ${e=>e.$color};
       filter: blur(22px);
       transition: background-color 0.32s ease;
-`,w1=$.img`
+`,x1=$.img`
       width: ${e=>e.$active?e.$size*1.14:e.$size}px;
       position: relative;
       z-index: 1;
       transition: width 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
       filter: ${e=>e.$active?`drop-shadow(0 6px 16px ${e.$glowHover})`:"none"};
-`,S1=$.div`
+`,w1=$.div`
       text-align: ${e=>e.$isMobile?"left":"center"};
       flex: ${e=>e.$isMobile?1:"none"};
-`,$1=$.div`
+`,S1=$.div`
       font-family: "Epilogue", sans-serif;
       font-size: 13px;
       font-weight: 700;
@@ -819,19 +819,19 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       color: ${P.text};
       opacity: ${e=>e.$active?.6:.35};
       transition: opacity 0.2s;
-`;const k1=$.section`
+`;const $1=$.section`
       padding: ${e=>e.$isMobile?"80px 24px":e.$isTablet?"96px 40px":"108px 56px"};
       max-width: 1280px;
       margin: 0 auto;
-`,E1=$.div`
+`,k1=$.div`
       text-align: center;
       margin-bottom: ${e=>e.$isMobile?40:56}px;
-`,C1=$.div`
+`,E1=$.div`
       display: grid;
       grid-template-columns: ${e=>e.$isMobile?"1fr":"1fr auto 1fr 1fr"};
       gap: 22px;
       align-items: center;
-`,M1=$.div`
+`,C1=$.div`
       display: flex;
       align-items: center;
       justify-content: center;
@@ -841,7 +841,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       color: ${P.text};
       opacity: 0.5;
       ${e=>e.$isMobile&&"padding: 12px 0;"}
-`,j1=$.div`
+`,M1=$.div`
       background-color: transparent;
       border: 2px dashed rgba(59, 35, 10, 0.25);
       border-radius: 24px;
@@ -907,39 +907,39 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       border: 2px solid
             ${e=>e.$dark?"rgba(238, 235, 230, 0.25)":"rgba(59, 35, 10, 0.2)"};
       object-fit: contain;
-`,R1=$.section`
+`,j1=$.section`
       background-color: ${P.beigeMid};
       padding: ${e=>e.$isMobile?"72px 24px 64px":"96px 56px 88px"};
-`,P1=$.div`
+`,R1=$.div`
       max-width: 640px;
       margin: 0 auto;
       text-align: center;
-`,_1=$.h2`
+`,P1=$.h2`
       font-family: "Epilogue", sans-serif;
       font-size: ${e=>e.$isMobile?"28px":"clamp(26px, 3vw, 40px)"};
       font-weight: 600;
       color: ${P.text};
       margin: 0 0 12px;
       line-height: 1.25;
-`,L1=$.p`
+`,_1=$.p`
       font-family: "Epilogue", sans-serif;
       font-size: ${e=>e.$isMobile?15:17}px;
       color: ${P.text};
       opacity: 0.72;
       margin: 0 0 32px;
-`,z1=$.div`
+`,L1=$.div`
       display: flex;
       flex-direction: ${e=>e.$isMobile?"column":"row"};
       justify-content: center;
       align-items: center;
       gap: 16px;
-`,N1=$.footer`
+`,z1=$.footer`
       background-color: ${P.beigeMid};
       padding: ${e=>e.$isMobile?"48px 24px 32px":"64px 56px 40px"};
-`,T1=$.div`
+`,N1=$.div`
       max-width: 1280px;
       margin: 0 auto;
-`,I1=$.div`
+`,T1=$.div`
       display: flex;
       flex-direction: ${e=>e.$isMobile?"column":"row"};
       justify-content: space-between;
@@ -947,28 +947,28 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       margin-bottom: ${e=>e.$isMobile?36:52}px;
       gap: ${e=>e.$isMobile?56:48}px;
       text-align: ${e=>e.$isMobile?"center":"left"};
-`,b1=$.div`
+`,I1=$.div`
       max-width: ${e=>e.$isMobile?"100%":"280px"};
       order: ${e=>e.$isMobile?1:0};
-`,D1=$.img`
+`,b1=$.img`
       height: ${e=>e.$isMobile?28:32}px;
       margin-bottom: 16px;
       opacity: 0.88;
-`,A1=$.p`
+`,D1=$.p`
       font-family: "Epilogue", sans-serif;
       font-size: ${e=>e.$isMobile?13:14}px;
       color: ${P.text};
       opacity: 0.48;
       margin: 0;
       line-height: 1.65;
-`,F1=$.div`
+`,A1=$.div`
       display: flex;
       flex-direction: ${e=>e.$isMobile?"column":"row"};
       gap: ${e=>e.$isMobile?24:64}px;
       order: ${e=>e.$isMobile?2:0};
-`,O1=$.div`
+`,F1=$.div`
       text-align: ${e=>e.$isMobile?"center":"left"};
-`,U1=$.div`
+`,O1=$.div`
       font-family: "Roboto Mono", monospace;
       font-size: 10px;
       text-transform: uppercase;
@@ -976,7 +976,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       color: ${P.text};
       opacity: 0.32;
       margin-bottom: 18px;
-`,B1=$.a`
+`,U1=$.a`
       display: block;
       font-family: "Epilogue", sans-serif;
       font-size: ${e=>e.$isMobile?13:14}px;
@@ -985,7 +985,7 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       text-decoration: none;
       margin-bottom: ${e=>e.$isMobile?4:10}px;
       line-height: 1.45;
-`,H1=$.div`
+`,B1=$.div`
       border-top: 1px solid rgba(238, 235, 230, 0.1);
       padding-top: 24px;
       display: flex;
@@ -994,16 +994,16 @@ Please change the parent <Route path="${d}"> to <Route path="${d==="/"?"*":`${d}
       align-items: center;
       gap: ${e=>e.$isMobile?12:0}px;
       text-align: center;
-`,W1=$.span`
+`,H1=$.span`
       font-family: "Roboto Mono", monospace;
       font-size: 10px;
       color: ${P.text};
       opacity: 0.6;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-`,V1=$.span`
+`,W1=$.span`
       font-family: "Epilogue", sans-serif;
       font-size: 13px;
       color: ${P.text};
       opacity: 0.6;
-`;function G1(){if(typeof window>"u")return;const e=window.location.pathname;if(e==="/suhab"||e.startsWith("/suhab/"))return"/suhab"}Jd(document.getElementById("root")).render(c.jsx(S.StrictMode,{children:c.jsx(T0,{basename:G1(),children:c.jsx(jy,{})})}));
+`;function V1(){if(typeof window>"u")return;const e=window.location.pathname;if(e==="/suhab"||e.startsWith("/suhab/"))return"/suhab"}Jd(document.getElementById("root")).render(c.jsx(S.StrictMode,{children:c.jsx(T0,{basename:V1(),children:c.jsx(jy,{})})}));

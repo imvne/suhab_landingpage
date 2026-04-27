@@ -304,9 +304,9 @@ function Hero() {
                                     au Coran
                               </StyledHeroH1>
 
-                              <StyledHeroSubtitle $isMobile={isMobile}>
+                              {/* <StyledHeroSubtitle $isMobile={isMobile}>
                                     Fais du Coran un compagnon de vie
-                              </StyledHeroSubtitle>
+                              </StyledHeroSubtitle> */}
 
                               {isMobile && (
                                     <StyledHeroVisual $isMobile={true}>
