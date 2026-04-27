@@ -9,7 +9,6 @@ import Contact from "./pages/Contact";
 
 // ── Store links (à remplacer quand disponibles) ─────────────────────────
 const APP_STORE_LINK = "#"; // TODO: https://apps.apple.com/app/...
-const PLAY_STORE_LINK = "#"; // TODO: https://play.google.com/store/apps/details?id=...
 
 // ── Design tokens ──────────────────────────────────────────────────────
 const C = {
@@ -79,19 +78,57 @@ function Grain() {
       );
 }
 
+function ClockIcon() {
+      return (
+            <svg
+                  width={18}
+                  height={18}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden
+            >
+                  <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                  />
+                  <path
+                        d="M12 7v5l3 2"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                  />
+            </svg>
+      );
+}
+
 // ── 3D CTA Button ──────────────────────────────────────────────────────
 function CTAButton({
       children,
       onClick,
       href,
       style,
+      disabled,
 }: {
       children: ReactNode;
       onClick?: () => void;
       href?: string;
       style?: CSSProperties;
+      disabled?: boolean;
 }) {
       const [pressed, setPressed] = useState(false);
+
+      if (disabled) {
+            return (
+                  <StyledCTAButton type="button" disabled style={style}>
+                        {children}
+                  </StyledCTAButton>
+            );
+      }
 
       if (href) {
             return (
@@ -233,14 +270,6 @@ function Navbar() {
 function Hero() {
       const isMobile = useMediaQuery("(max-width: 768px)");
       const isTablet = useMediaQuery("(max-width: 1024px)");
-      const deviceStore = useDeviceStore();
-
-      const storeLink =
-            deviceStore === "ios"
-                  ? APP_STORE_LINK
-                  : deviceStore === "android"
-                    ? PLAY_STORE_LINK
-                    : null;
 
       return (
             <StyledHeroWrapper>
@@ -253,7 +282,7 @@ function Hero() {
                                           $isMobile={isMobile}
                                     />
                                     <StyledHeroBadgeText $isMobile={isMobile}>
-                                          Disponible sur App Store & Play Store
+                                          Bientôt disponible sur App Store
                                     </StyledHeroBadgeText>
                               </StyledHeroBadge>
 
@@ -285,11 +314,7 @@ function Hero() {
                                     $hasVisualAbove={isMobile}
                               >
                                     <CTAButton
-                                          href={
-                                                storeLink && storeLink !== "#"
-                                                      ? storeLink
-                                                      : undefined
-                                          }
+                                          disabled
                                           style={{
                                                 width: isMobile
                                                       ? "100%"
@@ -299,7 +324,10 @@ function Hero() {
                                                       : "none",
                                           }}
                                     >
-                                          Télécharger l'app
+                                          <StyledCTAButtonInner>
+                                                Télécharger l'app
+                                                <ClockIcon />
+                                          </StyledCTAButtonInner>
                                     </CTAButton>
                                     <GhostButton
                                           onClick={() => {
@@ -848,13 +876,6 @@ function DownloadCTA() {
       const isMobile = useMediaQuery("(max-width: 768px)");
       const deviceStore = useDeviceStore();
 
-      const storeLink =
-            deviceStore === "ios"
-                  ? APP_STORE_LINK
-                  : deviceStore === "android"
-                    ? PLAY_STORE_LINK
-                    : null;
-
       return (
             <StyledDownloadCTA $isMobile={isMobile}>
                   <StyledDownloadCTAInner>
@@ -866,49 +887,36 @@ function DownloadCTA() {
                         </StyledDownloadCTAP>
                         <StyledDownloadCTABtns $isMobile={isMobile}>
                               {deviceStore === "other" ? (
-                                    <>
-                                          <CTAButton
-                                                href={
-                                                      APP_STORE_LINK !== "#"
-                                                            ? APP_STORE_LINK
-                                                            : undefined
-                                                }
-                                                style={
-                                                      isMobile
-                                                            ? {
-                                                                    width: "100%",
-                                                                    maxWidth: 280,
-                                                              }
-                                                            : undefined
-                                                }
-                                          >
+                                    <CTAButton
+                                          disabled
+                                          style={
+                                                isMobile
+                                                      ? {
+                                                                backgroundColor:
+                                                                      C.accent,
+                                                                boxShadow:
+                                                                      "0 3px 0 #B94718",
+                                                                opacity: 1,
+                                                                width: "100%",
+                                                                maxWidth: 280,
+                                                          }
+                                                      : {
+                                                                backgroundColor:
+                                                                      C.accent,
+                                                                boxShadow:
+                                                                      "0 3px 0 #B94718",
+                                                                opacity: 1,
+                                                          }
+                                          }
+                                    >
+                                          <StyledCTAButtonInner>
                                                 App Store
-                                          </CTAButton>
-                                          <CTAButton
-                                                href={
-                                                      PLAY_STORE_LINK !== "#"
-                                                            ? PLAY_STORE_LINK
-                                                            : undefined
-                                                }
-                                                style={
-                                                      isMobile
-                                                            ? {
-                                                                    width: "100%",
-                                                                    maxWidth: 280,
-                                                              }
-                                                            : undefined
-                                                }
-                                          >
-                                                Play Store
-                                          </CTAButton>
-                                    </>
+                                                <ClockIcon />
+                                          </StyledCTAButtonInner>
+                                    </CTAButton>
                               ) : (
                                     <CTAButton
-                                          href={
-                                                storeLink && storeLink !== "#"
-                                                      ? storeLink
-                                                      : undefined
-                                          }
+                                          disabled
                                           style={{
                                                 width: isMobile
                                                       ? "100%"
@@ -918,7 +926,10 @@ function DownloadCTA() {
                                                       : "none",
                                           }}
                                     >
-                                          Télécharger l'app
+                                          <StyledCTAButtonInner>
+                                                Télécharger l'app
+                                                <ClockIcon />
+                                          </StyledCTAButtonInner>
                                     </CTAButton>
                               )}
                         </StyledDownloadCTABtns>
@@ -1066,6 +1077,21 @@ const StyledGrainSvg = styled.svg`
       mix-blend-mode: overlay;
 `;
 
+const StyledCTAButtonInner = styled.span`
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      line-height: 1;
+
+      svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            display: block;
+      }
+`;
+
 const StyledCTAButton = styled.button<{ $pressed?: boolean }>`
       background-color: ${C.cta};
       color: #fff;
@@ -1083,6 +1109,13 @@ const StyledCTAButton = styled.button<{ $pressed?: boolean }>`
             transform 80ms ease,
             box-shadow 80ms ease;
       white-space: nowrap;
+
+      &:disabled {
+            opacity: 0.72;
+            cursor: not-allowed;
+            transform: translateY(0);
+            box-shadow: 0 3px 0 ${C.ctaShadow};
+      }
 `;
 
 const StyledCTAButtonLink = styled.a<{ $pressed?: boolean }>`
