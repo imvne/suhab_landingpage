@@ -837,7 +837,7 @@ function TwoPaths() {
                                     {[
                                           "1 verset par jour",
                                           "Une sourate par semaine",
-                                          "AL-Kahf le vendredi",
+                                          "Al-Kahf le vendredi",
                                     ].map(pathBulletLight)}
                               </StyledPathUl>
 
