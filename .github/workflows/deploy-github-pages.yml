@@ -1,4 +1,4 @@
-# Déploie le dossier `dist` sur GitHub Pages.
+# Déploie la sortie Vite (`docs/`, voir vite.config outDir) sur GitHub Pages.
 # Domaine perso (ex. minimoapps.fr) : garde vite base: "/" (déjà le cas).
 # Réglages : Settings → Pages → Source : GitHub Actions (ou branche, selon ton choix).
 
@@ -30,7 +30,7 @@ jobs:
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: docs
 
   deploy:
     needs: build
