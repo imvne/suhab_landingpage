@@ -531,7 +531,7 @@ function Features() {
                   emoji: "🌱",
                   tag: "Assiduité",
                   title: "Petites habitudes\nrégulières",
-                  desc: "1 verset par jour, Al-Baqarah le vendredi… Personnalise tes habitudes de lecture et suis ta progression sans te prendre la tête.",
+                  desc: "1 verset par jour, Al-Kahf le vendredi… Personnalise tes habitudes de lecture et suis ta progression sans te prendre la tête.",
                   dark: false,
             },
             {
@@ -837,7 +837,7 @@ function TwoPaths() {
                                     {[
                                           "1 verset par jour",
                                           "Une sourate par semaine",
-                                          "Al-Baqarah le vendredi",
+                                          "AL-Kahf le vendredi",
                                     ].map(pathBulletLight)}
                               </StyledPathUl>
 
