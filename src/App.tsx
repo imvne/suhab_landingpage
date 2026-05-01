@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 import CGU from "./pages/CGU";
+import Credits from "./pages/Credits";
 import Contact from "./pages/Contact";
 
 import { PUBLISHER_LEGAL_NAME, APP_TRADEMARK } from "./config/legal";
@@ -985,6 +986,10 @@ function Footer() {
                                                             to: "/terms-of-use",
                                                       },
                                                       {
+                                                            label: "Crédits",
+                                                            to: "/credits",
+                                                      },
+                                                      {
                                                             label: "Contact",
                                                             to: "/contact",
                                                       },
@@ -1083,6 +1088,7 @@ export default function App() {
                                     element={<PolitiqueConfidentialite />}
                               />
                               <Route path="/terms-of-use" element={<CGU />} />
+                              <Route path="/credits" element={<Credits />} />
                               <Route path="/contact" element={<Contact />} />
                               <Route
                                     path="/comingsoon"
