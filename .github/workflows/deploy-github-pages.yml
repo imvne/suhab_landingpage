@@ -1,12 +1,15 @@
 # Déploie la sortie Vite (`docs/`, voir vite.config outDir) sur GitHub Pages.
-# Domaine perso (ex. minimoapps.fr) : garde vite base: "/" (déjà le cas).
-# Réglages : Settings → Pages → Source : GitHub Actions (ou branche, selon ton choix).
+#
+# IMPORTANT — réglage repo (une fois) :
+# Settings → Pages → Build and deployment → Source : « GitHub Actions »
+# (pas « Deploy from a branch », sinon Jekyll plante sur ce projet React/Vite)
 
 name: Deploy GitHub Pages
 
 on:
   push:
     branches: [main, master]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -22,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
