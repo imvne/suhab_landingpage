@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { Routes, Route, Link, useLocation } from "react-router-dom";
+import { Routes, Route, Link, useLocation, Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 import CGU from "./pages/CGU";
 import Credits from "./pages/Credits";
 import Contact from "./pages/Contact";
+import AndroidConfirm from "./pages/AndroidConfirm";
 
+import { ANDROID_CONFIRM_ROUTE } from "./config/androidConfirm";
 import { PUBLISHER_LEGAL_NAME, APP_TRADEMARK } from "./config/legal";
 
 // ── Store links (à remplacer quand disponibles) ─────────────────────────
@@ -1039,6 +1041,16 @@ function ScrollToTop() {
       return null;
 }
 
+/** Pages avec footer (toutes sauf confirmation Android). */
+function PageWithFooter() {
+      return (
+            <>
+                  <Outlet />
+                  <Footer />
+            </>
+      );
+}
+
 /** /comingsoon et /suhab/comingsoon → même page Netlify (inscription). */
 function SignupLaunchRedirect() {
       useEffect(() => {
@@ -1070,33 +1082,49 @@ export default function App() {
                   <main>
                         <Routes>
                               <Route
-                                    path="/"
-                                    element={
-                                          <>
-                                                <Hero />
-                                                <HeroLanternMobile />
-                                                <QuoteBanner />
-                                                <ReadingInterface />
-                                                <StreakSection />
-                                                <TwoPaths />
-                                                <DownloadCTA />
-                                          </>
-                                    }
+                                    path={ANDROID_CONFIRM_ROUTE}
+                                    element={<AndroidConfirm />}
                               />
-                              <Route
-                                    path="/privacy-policy"
-                                    element={<PolitiqueConfidentialite />}
-                              />
-                              <Route path="/terms-of-use" element={<CGU />} />
-                              <Route path="/credits" element={<Credits />} />
-                              <Route path="/contact" element={<Contact />} />
-                              <Route
-                                    path="/comingsoon"
-                                    element={<SignupLaunchRedirect />}
-                              />
+                              <Route element={<PageWithFooter />}>
+                                    <Route
+                                          path="/"
+                                          element={
+                                                <>
+                                                      <Hero />
+                                                      <HeroLanternMobile />
+                                                      <QuoteBanner />
+                                                      <ReadingInterface />
+                                                      <StreakSection />
+                                                      <TwoPaths />
+                                                      <DownloadCTA />
+                                                </>
+                                          }
+                                    />
+                                    <Route
+                                          path="/privacy-policy"
+                                          element={
+                                                <PolitiqueConfidentialite />
+                                          }
+                                    />
+                                    <Route
+                                          path="/terms-of-use"
+                                          element={<CGU />}
+                                    />
+                                    <Route
+                                          path="/credits"
+                                          element={<Credits />}
+                                    />
+                                    <Route
+                                          path="/contact"
+                                          element={<Contact />}
+                                    />
+                                    <Route
+                                          path="/comingsoon"
+                                          element={<SignupLaunchRedirect />}
+                                    />
+                              </Route>
                         </Routes>
                   </main>
-                  <Footer />
             </StyledAppRoot>
       );
 }
