@@ -1,12 +1,8 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const C = {
       text: "#3B230A",
       beigeMid: "#E8E0D5",
-      accent: "#F05E20",
-      cta: "#45B251",
-      ctaShadow: "#2A6E32",
 } as const;
 
 const lanternSrc = `${import.meta.env.BASE_URL}images/lantern_thumb.png`;
@@ -59,21 +55,6 @@ const StyledInner = styled.div`
       text-align: center;
 `;
 
-const StyledBadge = styled.div`
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background-color: ${C.cta};
-      color: #fff;
-      font-size: 22px;
-      font-weight: 800;
-      box-shadow: 0 3px 0 ${C.ctaShadow};
-      margin-bottom: 20px;
-`;
-
 const StyledH1 = styled.h1`
       font-family: "Epilogue", sans-serif;
       font-size: clamp(28px, 4vw, 40px);
@@ -118,19 +99,5 @@ const StyledContent = styled.div`
 
       strong {
             font-weight: 700;
-      }
-`;
-
-const StyledHomeLink = styled(Link)`
-      display: inline-block;
-      font-family: "Epilogue", sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: ${C.accent};
-      text-decoration: underline;
-      text-underline-offset: 3px;
-
-      &:hover {
-            opacity: 0.85;
       }
 `;
