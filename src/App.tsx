@@ -13,7 +13,8 @@ import { ANDROID_CONFIRM_ROUTE } from "./config/androidConfirm";
 import { PUBLISHER_LEGAL_NAME, APP_TRADEMARK } from "./config/legal";
 
 // ── Store links (à remplacer quand disponibles) ─────────────────────────
-const APP_STORE_LINK = "#"; // TODO: https://apps.apple.com/app/...
+const APP_STORE_LINK =
+      "https://apps.apple.com/fr/app/%E1%B9%A3u%E1%B8%A5ab-lis-et-%C3%A9coute-le-coran/id6760666090";
 
 /** Page e-mail / lancement (source unique — évite de dupliquer le projet Tilawa). */
 const SUHAB_LAUNCH_SIGNUP_URL = "https://suhab-app-lancement.netlify.app/";
@@ -33,24 +34,6 @@ const C = {
 function img(name: string) {
       const clean = name.replace(/^\//, "");
       return `${import.meta.env.BASE_URL}images/${clean}`;
-}
-
-// ── Device detection (iOS / Android) ───────────────────────────────────
-function useDeviceStore(): "ios" | "android" | "other" {
-      const [store, setStore] = useState<"ios" | "android" | "other">("other");
-
-      useEffect(() => {
-            const ua = navigator.userAgent || navigator.vendor;
-            const isIOS =
-                  /iPad|iPhone|iPod/.test(ua) ||
-                  (navigator.platform === "MacIntel" &&
-                        navigator.maxTouchPoints > 1);
-            const isAndroid = /android/i.test(ua);
-
-            setStore(isIOS ? "ios" : isAndroid ? "android" : "other");
-      }, []);
-
-      return store;
 }
 
 // ── Responsive utilities ───────────────────────────────────────────────
@@ -89,34 +72,6 @@ function Grain() {
                         filter="url(#grain-filter)"
                   />
             </StyledGrainSvg>
-      );
-}
-
-function ClockIcon() {
-      return (
-            <svg
-                  width={18}
-                  height={18}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden
-            >
-                  <circle
-                        cx="12"
-                        cy="12"
-                        r="9"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                  />
-                  <path
-                        d="M12 7v5l3 2"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                  />
-            </svg>
       );
 }
 
@@ -296,7 +251,7 @@ function Hero() {
                                           $isMobile={isMobile}
                                     />
                                     <StyledHeroBadgeText $isMobile={isMobile}>
-                                          Bientôt disponible sur App Store
+                                          Disponible sur App Store
                                     </StyledHeroBadgeText>
                               </StyledHeroBadge>
 
@@ -328,7 +283,7 @@ function Hero() {
                                     $hasVisualAbove={isMobile}
                               >
                                     <CTAButton
-                                          href={SUHAB_LAUNCH_SIGNUP_URL}
+                                          href={APP_STORE_LINK}
                                           style={{
                                                 width: isMobile
                                                       ? "100%"
@@ -340,7 +295,6 @@ function Hero() {
                                     >
                                           <StyledCTAButtonInner>
                                                 Télécharger l&apos;app
-                                                <ClockIcon />
                                           </StyledCTAButtonInner>
                                     </CTAButton>
                                     <GhostButton
@@ -890,7 +844,6 @@ function TwoPaths() {
 // ── Download CTA (avant footer) ───────────────────────────────────────────
 function DownloadCTA() {
       const isMobile = useMediaQuery("(max-width: 768px)");
-      const deviceStore = useDeviceStore();
 
       return (
             <StyledDownloadCTA $isMobile={isMobile}>
@@ -902,52 +855,17 @@ function DownloadCTA() {
                               Télécharge l'app gratuitement
                         </StyledDownloadCTAP>
                         <StyledDownloadCTABtns $isMobile={isMobile}>
-                              {deviceStore === "other" ? (
-                                    <CTAButton
-                                          disabled
-                                          style={
-                                                isMobile
-                                                      ? {
-                                                              backgroundColor:
-                                                                    C.accent,
-                                                              boxShadow:
-                                                                    "0 3px 0 #B94718",
-                                                              opacity: 1,
-                                                              width: "100%",
-                                                              maxWidth: 280,
-                                                        }
-                                                      : {
-                                                              backgroundColor:
-                                                                    C.accent,
-                                                              boxShadow:
-                                                                    "0 3px 0 #B94718",
-                                                              opacity: 1,
-                                                        }
-                                          }
-                                    >
-                                          <StyledCTAButtonInner>
-                                                App Store
-                                                <ClockIcon />
-                                          </StyledCTAButtonInner>
-                                    </CTAButton>
-                              ) : (
-                                    <CTAButton
-                                          href={SUHAB_LAUNCH_SIGNUP_URL}
-                                          style={{
-                                                width: isMobile
-                                                      ? "100%"
-                                                      : "auto",
-                                                maxWidth: isMobile
-                                                      ? 280
-                                                      : "none",
-                                          }}
-                                    >
-                                          <StyledCTAButtonInner>
-                                                Télécharger l&apos;app
-                                                <ClockIcon />
-                                          </StyledCTAButtonInner>
-                                    </CTAButton>
-                              )}
+                              <CTAButton
+                                    href={APP_STORE_LINK}
+                                    style={{
+                                          width: isMobile ? "100%" : "auto",
+                                          maxWidth: isMobile ? 280 : "none",
+                                    }}
+                              >
+                                    <StyledCTAButtonInner>
+                                          Télécharger sur l&apos;App Store
+                                    </StyledCTAButtonInner>
+                              </CTAButton>
                         </StyledDownloadCTABtns>
                   </StyledDownloadCTAInner>
             </StyledDownloadCTA>
@@ -1102,9 +1020,7 @@ export default function App() {
                                     />
                                     <Route
                                           path="/privacy-policy"
-                                          element={
-                                                <PolitiqueConfidentialite />
-                                          }
+                                          element={<PolitiqueConfidentialite />}
                                     />
                                     <Route
                                           path="/terms-of-use"
