@@ -11,10 +11,12 @@ import AndroidConfirm from "./pages/AndroidConfirm";
 
 import { ANDROID_CONFIRM_ROUTE } from "./config/androidConfirm";
 import { PUBLISHER_LEGAL_NAME, APP_TRADEMARK } from "./config/legal";
-
-// ── Store links (à remplacer quand disponibles) ─────────────────────────
-const APP_STORE_LINK =
-      "https://apps.apple.com/fr/app/%E1%B9%A3u%E1%B8%A5ab-lis-et-%C3%A9coute-le-coran/id6760666090";
+import {
+      APP_STORE_LINK,
+      PLAY_STORE_LINK,
+      openAppStore,
+      openPlayStore,
+} from "./config/stores";
 
 /** Page e-mail / lancement (source unique — évite de dupliquer le projet Tilawa). */
 const SUHAB_LAUNCH_SIGNUP_URL = "https://suhab-app-lancement.netlify.app/";
@@ -134,6 +136,51 @@ function CTAButton({
       );
 }
 
+function StoreDownloadBadges({ isMobile }: { isMobile: boolean }) {
+      return (
+            <StyledStoreBadgesRow $isMobile={isMobile}>
+                  <StyledStoreBadgeLink
+                        $isMobile={isMobile}
+                        href={APP_STORE_LINK}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Télécharger sur l'App Store"
+                        onClick={(e) => {
+                              e.preventDefault();
+                              openAppStore();
+                        }}
+                  >
+                        <img
+                              src={img("app-store-badge.png")}
+                              alt="Télécharger sur l'App Store"
+                              width={160}
+                              height={48}
+                              loading="lazy"
+                        />
+                  </StyledStoreBadgeLink>
+                  <StyledStoreBadgeLink
+                        $isMobile={isMobile}
+                        href={PLAY_STORE_LINK}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Disponible sur Google Play"
+                        onClick={(e) => {
+                              e.preventDefault();
+                              openPlayStore();
+                        }}
+                  >
+                        <img
+                              src={img("play-store-badge.png")}
+                              alt="Disponible sur Google Play"
+                              width={180}
+                              height={48}
+                              loading="lazy"
+                        />
+                  </StyledStoreBadgeLink>
+            </StyledStoreBadgesRow>
+      );
+}
+
 // ── Ghost Button ───────────────────────────────────────────────────────
 function GhostButton({
       children,
@@ -240,84 +287,102 @@ function Hero() {
       const isMobile = useMediaQuery("(max-width: 768px)");
       const isTablet = useMediaQuery("(max-width: 1024px)");
 
+      const scrollToFeatures = () => {
+            document.getElementById("lecture")?.scrollIntoView({
+                  behavior: "smooth",
+            });
+      };
+
       return (
             <StyledHeroWrapper>
                   <StyledHeroSection $isMobile={isMobile} $isTablet={isTablet}>
-                        <StyledHeroLeft $isMobile={isMobile}>
-                              <StyledHeroBadge $isMobile={isMobile}>
-                                    <StyledHeroBadgeImg
-                                          src={img("asterixe.png")}
-                                          alt=""
-                                          $isMobile={isMobile}
-                                    />
-                                    <StyledHeroBadgeText $isMobile={isMobile}>
-                                          Disponible sur App Store
-                                    </StyledHeroBadgeText>
-                              </StyledHeroBadge>
-
-                              <StyledHeroH1 $isMobile={isMobile}>
-                                    <StyledHeroRe>(Re)</StyledHeroRe>
-                                    connecte-toi
-                                    <br />
-                                    au Coran
-                              </StyledHeroH1>
-
-                              {/* <StyledHeroSubtitle $isMobile={isMobile}>
-                                    Fais du Coran un compagnon de vie
-                              </StyledHeroSubtitle> */}
-
-                              {isMobile && (
-                                    <StyledHeroVisual $isMobile={true}>
-                                          <StyledHeroPhoneWrap $isMobile={true}>
-                                                <StyledHeroScreenshot
-                                                      src={img("IMG_7756.PNG")}
-                                                      alt="Aperçu de l'app Suhab"
-                                                      $isMobile={true}
+                        {isMobile ? (
+                              <StyledHeroMobileShell>
+                                    <StyledHeroMobileTop>
+                                          <StyledHeroBadge $isMobile={isMobile}>
+                                                <StyledHeroBadgeImg
+                                                      src={img("asterixe.png")}
+                                                      alt=""
+                                                      $isMobile={isMobile}
                                                 />
-                                          </StyledHeroPhoneWrap>
-                                    </StyledHeroVisual>
-                              )}
+                                                <StyledHeroBadgeText
+                                                      $isMobile={isMobile}
+                                                >
+                                                      Disponible sur App Store et
+                                                      Play Store
+                                                </StyledHeroBadgeText>
+                                          </StyledHeroBadge>
 
-                              <StyledHeroCTAs
-                                    $isMobile={isMobile}
-                                    $hasVisualAbove={isMobile}
-                              >
-                                    <CTAButton
-                                          href={APP_STORE_LINK}
-                                          style={{
-                                                width: isMobile
-                                                      ? "100%"
-                                                      : "auto",
-                                                maxWidth: isMobile
-                                                      ? 280
-                                                      : "none",
-                                          }}
-                                    >
-                                          <StyledCTAButtonInner>
-                                                Télécharger l&apos;app
-                                          </StyledCTAButtonInner>
-                                    </CTAButton>
-                                    <GhostButton
-                                          onClick={() => {
-                                                document
-                                                      .getElementById("lecture")
-                                                      ?.scrollIntoView({
-                                                            behavior: "smooth",
-                                                      });
-                                          }}
-                                          style={{
-                                                width: isMobile
-                                                      ? "100%"
-                                                      : "auto",
-                                                maxWidth: isMobile
-                                                      ? 280
-                                                      : "none",
-                                          }}
-                                    >
-                                          Voir les fonctionnalités
-                                    </GhostButton>
-                              </StyledHeroCTAs>
-                        </StyledHeroLeft>
+                                          <StyledHeroH1 $isMobile={isMobile}>
+                                                <StyledHeroRe>(Re)</StyledHeroRe>
+                                                connecte-toi
+                                                <br />
+                                                au Coran
+                                          </StyledHeroH1>
+                                    </StyledHeroMobileTop>
+
+                                    <StyledHeroMobileStreakLantern aria-hidden>
+                                          <StyledHeroStreakGlow />
+                                          <img
+                                                src={img("lanterns/streak2.png")}
+                                                alt=""
+                                          />
+                                    </StyledHeroMobileStreakLantern>
+
+                                    <StyledHeroMobileDownloads>
+                                          <StoreDownloadBadges
+                                                isMobile={isMobile}
+                                          />
+                                    </StyledHeroMobileDownloads>
+
+                                    <StyledHeroMobileBottom>
+                                          <GhostButton
+                                                onClick={scrollToFeatures}
+                                                style={{
+                                                      width: "100%",
+                                                      maxWidth: 280,
+                                                }}
+                                          >
+                                                Voir les fonctionnalités
+                                          </GhostButton>
+                                    </StyledHeroMobileBottom>
+                              </StyledHeroMobileShell>
+                        ) : (
+                              <StyledHeroLeft $isMobile={isMobile}>
+                                    <StyledHeroBadge $isMobile={isMobile}>
+                                          <StyledHeroBadgeImg
+                                                src={img("asterixe.png")}
+                                                alt=""
+                                                $isMobile={isMobile}
+                                          />
+                                          <StyledHeroBadgeText
+                                                $isMobile={isMobile}
+                                          >
+                                                Disponible sur App Store et Play
+                                                Store
+                                          </StyledHeroBadgeText>
+                                    </StyledHeroBadge>
+
+                                    <StyledHeroH1 $isMobile={isMobile}>
+                                          <StyledHeroRe>(Re)</StyledHeroRe>
+                                          connecte-toi
+                                          <br />
+                                          au Coran
+                                    </StyledHeroH1>
+
+                                    <StyledHeroCTAs $isMobile={isMobile}>
+                                          <StoreDownloadBadges
+                                                isMobile={isMobile}
+                                          />
+                                          <GhostButton
+                                                onClick={scrollToFeatures}
+                                                style={{ maxWidth: "none" }}
+                                          >
+                                                Voir les fonctionnalités
+                                          </GhostButton>
+                                    </StyledHeroCTAs>
+                              </StyledHeroLeft>
+                        )}
 
                         {!isMobile && (
                               <StyledHeroVisual $isMobile={false}>
@@ -356,21 +421,6 @@ function Hero() {
                         )}
                   </StyledHeroSection>
             </StyledHeroWrapper>
-      );
-}
-
-// ── Lanterne entre hero et quote (mobile uniquement) ─────────────────────
-function HeroLanternMobile() {
-      const isMobile = useMediaQuery("(max-width: 768px)");
-      if (!isMobile) return null;
-      return (
-            <StyledHeroLanternMobile>
-                  <img
-                        src={img("lantern_thumb.png")}
-                        alt=""
-                        aria-hidden="true"
-                  />
-            </StyledHeroLanternMobile>
       );
 }
 
@@ -855,17 +905,7 @@ function DownloadCTA() {
                               Télécharge l'app gratuitement
                         </StyledDownloadCTAP>
                         <StyledDownloadCTABtns $isMobile={isMobile}>
-                              <CTAButton
-                                    href={APP_STORE_LINK}
-                                    style={{
-                                          width: isMobile ? "100%" : "auto",
-                                          maxWidth: isMobile ? 280 : "none",
-                                    }}
-                              >
-                                    <StyledCTAButtonInner>
-                                          Télécharger sur l&apos;App Store
-                                    </StyledCTAButtonInner>
-                              </CTAButton>
+                              <StoreDownloadBadges isMobile={isMobile} />
                         </StyledDownloadCTABtns>
                   </StyledDownloadCTAInner>
             </StyledDownloadCTA>
@@ -1009,7 +1049,6 @@ export default function App() {
                                           element={
                                                 <>
                                                       <Hero />
-                                                      <HeroLanternMobile />
                                                       <QuoteBanner />
                                                       <ReadingInterface />
                                                       <StreakSection />
@@ -1254,8 +1293,8 @@ const StyledNav = styled.nav<{ $scrolled: boolean; $isMobile: boolean }>`
       padding: ${(p) =>
             p.$isMobile
                   ? p.$scrolled
-                        ? "2px 24px"
-                        : "14px 24px"
+                        ? "calc(2px + env(safe-area-inset-top, 0px)) 24px 2px"
+                        : "calc(14px + env(safe-area-inset-top, 0px)) 24px 14px"
                   : "18px 56px"};
       background-color: ${C.beigeMid};
       backdrop-filter: ${(p) => (p.$scrolled ? "blur(18px)" : "none")};
@@ -1284,41 +1323,103 @@ const StyledHeroWrapper = styled.div`
       background-color: ${C.beigeMid};
 `;
 
-const StyledHeroLanternMobile = styled.div`
-      display: flex;
-      justify-content: center;
-      padding: 70px 0;
-      background-color: ${C.beigeMid};
-
-      img {
-            width: 120px;
-            height: auto;
-      }
-`;
-
 const StyledHeroSection = styled.section<{
       $isMobile: boolean;
       $isTablet: boolean;
 }>`
       min-height: ${(p) => (p.$isMobile ? "100svh" : "100vh")};
+      max-height: ${(p) => (p.$isMobile ? "100svh" : "none")};
+      box-sizing: border-box;
       display: flex;
       flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
-      align-items: center;
+      align-items: ${(p) => (p.$isMobile ? "stretch" : "center")};
+      justify-content: ${(p) => (p.$isMobile ? "flex-start" : "flex-start")};
       padding: ${(p) =>
             p.$isMobile
-                  ? "80px 24px 40px"
+                  ? "calc(env(safe-area-inset-top, 0px) + 56px + 16px) 20px calc(16px + env(safe-area-inset-bottom, 0px))"
                   : p.$isTablet
                     ? "120px 40px 80px"
                     : "120px 56px 80px"};
       max-width: 1280px;
       margin: 0 auto;
-      gap: ${(p) => (p.$isMobile ? 40 : p.$isTablet ? 40 : 56)}px;
+      gap: ${(p) => (p.$isMobile ? 0 : p.$isTablet ? 40 : 56)}px;
+      overflow: ${(p) => (p.$isMobile ? "hidden" : "visible")};
+`;
+
+const StyledHeroMobileShell = styled.div`
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+`;
+
+const StyledHeroMobileTop = styled.div`
+      width: 100%;
+      text-align: center;
+      flex-shrink: 0;
+      padding-top: 4px;
+      margin-top: 14px;
+`;
+
+const StyledHeroMobileStreakLantern = styled.div`
+      position: relative;
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 72px;
+      max-height: min(36svh, 280px);
+      margin: -6px 0 8px;
+
+      img {
+            position: relative;
+            z-index: 1;
+            width: clamp(76px, 22vw, 112px);
+            height: auto;
+            object-fit: contain;
+      }
+`;
+
+const StyledHeroStreakGlow = styled.div`
+      position: absolute;
+      width: clamp(120px, 34vw, 180px);
+      height: clamp(120px, 34vw, 180px);
+      border-radius: 50%;
+      background: radial-gradient(
+            circle,
+            rgba(240, 94, 32, 0.38) 0%,
+            rgba(240, 94, 32, 0.12) 45%,
+            transparent 70%
+      );
+      pointer-events: none;
+`;
+
+const StyledHeroMobileDownloads = styled.div`
+      flex-shrink: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 4px 0 8px;
+`;
+
+const StyledHeroMobileBottom = styled.div`
+      margin-top: auto;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-shrink: 0;
+      padding-bottom: 12px;
+      transform: translateY(-10px);
 `;
 
 const StyledHeroLeft = styled.div<{
       $isMobile: boolean;
 }>`
-      flex: ${(p) => (p.$isMobile ? "none" : "0 0 52%")};
+      flex: ${(p) => (p.$isMobile ? "1" : "0 0 52%")};
+      width: ${(p) => (p.$isMobile ? "100%" : "auto")};
       max-width: ${(p) => (p.$isMobile ? "100%" : "560px")};
       text-align: ${(p) => (p.$isMobile ? "center" : "left")};
 `;
@@ -1331,7 +1432,7 @@ const StyledHeroBadge = styled.div<{ $isMobile: boolean }>`
       border-radius: 100px;
       padding: ${(p) =>
             p.$isMobile ? "4px 10px 4px 8px" : "6px 14px 6px 10px"};
-      margin-bottom: ${(p) => (p.$isMobile ? 20 : 36)}px;
+      margin-bottom: ${(p) => (p.$isMobile ? 12 : 36)}px;
 `;
 
 const StyledHeroBadgeImg = styled.img<{ $isMobile?: boolean }>`
@@ -1357,13 +1458,14 @@ const StyledHeroBadgeText = styled.span<{ $isMobile?: boolean }>`
 
 const StyledHeroH1 = styled.h1<{ $isMobile: boolean }>`
       font-family: "Epilogue", sans-serif;
-      font-size: ${(p) => (p.$isMobile ? "36px" : "clamp(42px, 4.5vw, 68px)")};
+      font-size: ${(p) =>
+            p.$isMobile ? "clamp(28px, 8.5vw, 36px)" : "clamp(42px, 4.5vw, 68px)"};
       font-weight: 900;
       line-height: 1.05;
       color: ${C.text};
       letter-spacing: -0.025em;
-      margin-bottom: ${(p) => (p.$isMobile ? 16 : 26)}px;
-      margin-top: ${(p) => (p.$isMobile ? 20 : 0)}px;
+      margin-bottom: ${(p) => (p.$isMobile ? 0 : 26)}px;
+      margin-top: 0;
 `;
 
 const StyledHeroRe = styled.span`
@@ -1381,16 +1483,48 @@ const StyledHeroSubtitle = styled.p<{ $isMobile: boolean }>`
       max-width: ${(p) => (p.$isMobile ? "100%" : "450px")};
 `;
 
-const StyledHeroCTAs = styled.div<{
-      $isMobile: boolean;
-      $hasVisualAbove?: boolean;
-}>`
+const StyledHeroCTAs = styled.div<{ $isMobile: boolean }>`
       display: flex;
-      flex-direction: ${(p) => (p.$isMobile ? "column" : "row")};
-      gap: 14px;
+      flex-direction: column;
+      gap: ${(p) => (p.$isMobile ? 12 : 16)}px;
+      align-items: ${(p) => (p.$isMobile ? "center" : "flex-start")};
+      justify-content: flex-start;
+      width: ${(p) => (p.$isMobile ? "100%" : "auto")};
+`;
+
+const StyledStoreBadgesRow = styled.div<{ $isMobile: boolean }>`
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: ${(p) => (p.$isMobile ? "center" : "flex-start")};
-      margin-top: ${(p) => (p.$hasVisualAbove ? 32 : 0)}px;
+      gap: ${(p) => (p.$isMobile ? "8px" : "12px")};
+      width: ${(p) => (p.$isMobile ? "100%" : "auto")};
+      max-width: ${(p) => (p.$isMobile ? "100%" : "none")};
+      padding: ${(p) => (p.$isMobile ? "0 4px" : "0")};
+`;
+
+const StyledStoreBadgeLink = styled.a<{ $isMobile?: boolean }>`
+      display: block;
+      line-height: 0;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+
+      img {
+            display: block;
+            width: auto;
+            height: ${(p) => (p.$isMobile ? "54px" : "44px")};
+            max-width: ${(p) =>
+                  p.$isMobile ? "min(172px, 44vw)" : "min(180px, 42vw)"};
+      }
+
+      &:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+      }
+
+      &:active {
+            transform: translateY(0);
+      }
 `;
 
 const StyledHeroVisual = styled.div<{ $isMobile: boolean }>`
